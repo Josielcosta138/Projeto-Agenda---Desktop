@@ -83,14 +83,13 @@ public class CadastroPessoaView extends JFrame {
 				setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			}
 		});
-		setIconImage(Toolkit.getDefaultToolkit()
-				.getImage(CadastroPessoaView.class.getResource("/br/com/senac/view/novaGeracaoAgenda.jpg")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(CadastroPessoaView.class.getResource("/br/com/senac/view/img/LogoSTYLEMANAGER black.png")));
 
 		table = new JTable();
 		tableModel = new TableModel();
 		table.setModel(tableModel);
 
-		setTitle("Agenda - Nova Geração");
+		setTitle("MENU PRINCIPAL -STYLE MANAGER");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1089, 428);
 		contentPane = new JPanel();
@@ -288,7 +287,7 @@ public class CadastroPessoaView extends JFrame {
 		contentPane.add(btnSincronizar);
 
 		JMenuBar menuBar = new JMenuBar();
-		menuBar.setBounds(10, 0, 175, 22);
+		menuBar.setBounds(20, 0, 185, 22);
 		contentPane.add(menuBar);
 
 		JMenu mnEventos = new JMenu("Eventos");

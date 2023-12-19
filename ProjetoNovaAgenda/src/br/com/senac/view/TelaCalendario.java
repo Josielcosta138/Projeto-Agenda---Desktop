@@ -8,6 +8,7 @@ import java.awt.FlowLayout;
 import java.awt.LayoutManager;
 import java.awt.Toolkit;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -60,7 +61,7 @@ public class TelaCalendario extends JFrame {
 		
 		
 		//setTitle("Calendário");
-		  setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		  	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	        setBounds(100, 100, 356, 215);
 	        contentPane = new JPanel();
 	        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -70,6 +71,15 @@ public class TelaCalendario extends JFrame {
 	        //Adiciona o JLabel
 	        JLabel label = new JLabel("Exibir calendário");
 	        contentPane.add(label, BorderLayout.NORTH);
+	        
+	        
+	        // Adiciona um novo JLabel abaixo do "Exibir calendário"
+	        JLabel imagemLabel = new JLabel();
+	        contentPane.add(imagemLabel, BorderLayout.CENTER);
+
+	        // Carrega a imagem e define como ícone para o JLabel
+	        //ImageIcon imagemIcon = new ImageIcon(getClass().getResource("/br/com/senac/view/img/calendario.png)"));
+	        //imagemLabel.setIcon(imagemIcon);
 	        
 	        //FlowLayout para centralizar o componente
 	        contentPane.setLayout((LayoutManager) new FlowLayout(FlowLayout.CENTER, 10, 5));
