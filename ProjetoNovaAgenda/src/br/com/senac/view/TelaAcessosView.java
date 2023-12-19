@@ -35,7 +35,7 @@ public class TelaAcessosView extends JFrame {
 			}
 		});
 	}
-
+//
 	public TelaAcessosView() {
 		addWindowListener(new WindowAdapter() {
 			@Override
