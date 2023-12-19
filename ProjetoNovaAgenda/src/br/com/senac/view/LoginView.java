@@ -17,6 +17,7 @@ import java.awt.event.ActionEvent;
 import java.awt.Toolkit;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.Color;
 
 public class LoginView extends JFrame {
 
@@ -25,10 +26,13 @@ public class LoginView extends JFrame {
 	private JButton btnNewButton;
 	private JButton btnAcessar;
 	private JPasswordField passwordField;
+	private JButton btnNewButton_1;
+	private JButton btnNewButton_2;
+	private JLabel lblNewLabel;
 	
 	public LoginView() {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(LoginView.class.getResource("/br/com/senac/view/novaGeracaoAgenda.jpg")));
-		setTitle("AGENDA - NOVA GERAÇÃO");
+		setTitle("Agenda - Josiel");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 743, 420);
 		contentPane = new JPanel();
@@ -42,22 +46,13 @@ public class LoginView extends JFrame {
 		btnNewButton.setBounds(339, 10, 380, 363);
 		contentPane.add(btnNewButton);
 		
-		JLabel lblUser = new JLabel("Usuário");
-		lblUser.setFont(new Font("Arial", Font.BOLD, 14));
-		lblUser.setBounds(134, 103, 133, 13);
-		contentPane.add(lblUser);
-		
-		JLabel lblPassword = new JLabel("Senha");
-		lblPassword.setFont(new Font("Arial", Font.BOLD, 14));
-		lblPassword.setBounds(134, 156, 133, 13);
-		contentPane.add(lblPassword);
-		
 		tFUser = new JTextField();
-		tFUser.setBounds(60, 126, 220, 19);
+		tFUser.setBounds(60, 148, 220, 19);
 		contentPane.add(tFUser);
 		tFUser.setColumns(10);
+		tFUser.setText("admin@teste.com");
 		
-		btnAcessar = new JButton("ACESSAR");
+		btnAcessar = new JButton("Entre");
 		btnAcessar.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -78,13 +73,29 @@ public class LoginView extends JFrame {
 		
 		
 		btnAcessar.setFont(new Font("Arial", Font.BOLD, 14));
-		btnAcessar.setBounds(60, 227, 220, 21);
+		btnAcessar.setBounds(114, 283, 111, 21);
 		contentPane.add(btnAcessar);
 		
 		passwordField = new JPasswordField();
 		passwordField.setEchoChar('*');
-		passwordField.setBounds(60, 178, 220, 19);
+		passwordField.setBounds(60, 241, 220, 19);
 		contentPane.add(passwordField);
+		passwordField.setText("****");
+		
+		btnNewButton_1 = new JButton("");
+		btnNewButton_1.setIcon(new ImageIcon(LoginView.class.getResource("/br/com/senac/view/img/user2.png")));
+		btnNewButton_1.setBounds(142, 109, 43, 32);
+		contentPane.add(btnNewButton_1);
+		
+		btnNewButton_2 = new JButton("");
+		btnNewButton_2.setIcon(new ImageIcon(LoginView.class.getResource("/br/com/senac/view/img/key.png")));
+		btnNewButton_2.setBounds(142, 198, 43, 32);
+		contentPane.add(btnNewButton_2);
+		
+		lblNewLabel = new JLabel("Seja bem-vindo(a).");
+		lblNewLabel.setFont(new Font("Arial", Font.BOLD, 14));
+		lblNewLabel.setBounds(114, 58, 134, 14);
+		contentPane.add(lblNewLabel);
 	}
 	
 	public void validaSenha() {

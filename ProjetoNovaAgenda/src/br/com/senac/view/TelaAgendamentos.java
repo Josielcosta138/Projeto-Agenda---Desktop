@@ -42,6 +42,7 @@ import javax.persistence.criteria.Root;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.ImageIcon;
 
 public class TelaAgendamentos extends JFrame {
 
@@ -49,6 +50,7 @@ public class TelaAgendamentos extends JFrame {
 	private JTable table;
 	private JTable table_1;
 	private TableModel tableModel;
+	private CadastroPessoaView cadastroPessoaView;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -75,7 +77,7 @@ public class TelaAgendamentos extends JFrame {
 
 		setIconImage(Toolkit.getDefaultToolkit()
 				.getImage(TelaAgendamentos.class.getResource("/br/com/senac/view/novaGeracaoAgenda.jpg")));
-		setTitle("Agendamentos");
+		setTitle("Eventos");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 933, 400);
@@ -91,30 +93,31 @@ public class TelaAgendamentos extends JFrame {
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane.setBounds(23, 74, 867, 233);
 		contentPane.add(scrollPane);
-
+ 
 		tableModel = new TableModel();
 		tableModel.addColumn("Código");
-		tableModel.addColumn("Data hora inicio");
-		tableModel.addColumn("Data hora fim");
 		tableModel.addColumn("Local");
 		tableModel.addColumn("Status");
-		tableModel.addColumn("Pessoa");
-		tableModel.addColumn("Email-Tel");
 		tableModel.addColumn("Participantes");
-
+		tableModel.addColumn("Pessoa");
+		tableModel.addColumn("E-mails-Vinculado(Pessoa)");
+		tableModel.addColumn("Data hora inicio");
+		tableModel.addColumn("Data hora fim");
+		
+		
 		table = new JTable(tableModel);
 		table.setAutoscrolls(true);
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
 		TableColumnModel tcm = table.getColumnModel();
 		tcm.getColumn(0).setPreferredWidth(70);
-		tcm.getColumn(1).setPreferredWidth(120);
-		tcm.getColumn(2).setPreferredWidth(120);
-		tcm.getColumn(3).setPreferredWidth(70);
-		tcm.getColumn(4).setPreferredWidth(70);
-		tcm.getColumn(5).setPreferredWidth(100);
-		tcm.getColumn(6).setPreferredWidth(180);
-		tcm.getColumn(7).setPreferredWidth(120);
+		tcm.getColumn(1).setPreferredWidth(70);
+		tcm.getColumn(2).setPreferredWidth(70);
+		tcm.getColumn(3).setPreferredWidth(100);
+		tcm.getColumn(4).setPreferredWidth(100);
+		tcm.getColumn(5).setPreferredWidth(170);
+		tcm.getColumn(6).setPreferredWidth(130);
+		tcm.getColumn(7).setPreferredWidth(140);
 
 		scrollPane.setViewportView(table);
 
@@ -125,19 +128,41 @@ public class TelaAgendamentos extends JFrame {
 
 		JFormattedTextField ftfDataAtual = new JFormattedTextField();
 		ftfDataAtual.setEditable(false);
-		ftfDataAtual.setBounds(763, 47, 127, 20);
+		ftfDataAtual.setBounds(777, 47, 113, 20);
 		contentPane.add(ftfDataAtual);
 		ftfDataAtual.setText(sdf.format(new Date()));
 
-		JButton btnPesquisar = new JButton("Pesquisar");
+		JButton btnPesquisar = new JButton("Pesq");
+		btnPesquisar.setIcon(new ImageIcon(TelaAgendamentos.class.getResource("/br/com/senac/view/img/pesquisar.png")));
 		btnPesquisar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				listarAgendamentos();
 
 			}
-		});
+		}); 
 		btnPesquisar.setBounds(23, 318, 113, 23);
 		contentPane.add(btnPesquisar);
+		
+		JButton btnNewButton = new JButton("");
+		btnNewButton.setIcon(new ImageIcon(TelaAgendamentos.class.getResource("/br/com/senac/view/img/dateTime.png")));
+		btnNewButton.setBounds(752, 44, 26, 23);
+		contentPane.add(btnNewButton);
+		
+		JButton btnVoltar = new JButton("Volt");
+		btnVoltar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				if (cadastroPessoaView == null) {
+					cadastroPessoaView = new CadastroPessoaView();
+				}
+				cadastroPessoaView.setVisible(true);
+				dispose();
+			}
+				
+		});
+		btnVoltar.setIcon(new ImageIcon(TelaAgendamentos.class.getResource("/br/com/senac/view/img/2303132_arrow_back_direction_left_navigation_icon.png")));
+		btnVoltar.setBounds(796, 318, 94, 23);
+		contentPane.add(btnVoltar);
 
 	}
 
@@ -154,7 +179,6 @@ public class TelaAgendamentos extends JFrame {
 		//List<BigInteger> participantes = null;
 		String status = null;
 		
-		//EventoVO agendamentos = (ContatoVO) tableModel.getRows().get(table.getSelectedRow()).getElement();
 		
 		try {
 			
@@ -171,37 +195,38 @@ public class TelaAgendamentos extends JFrame {
 					Root<EventoVO> agendamentosFrom = criteria.from(EventoVO.class);
 					criteria.select(agendamentosFrom);
 
-					if (id != null) {
-						criteria.where(cb.equal(agendamentosFrom.get("id"), id));
-					}
-
-
+				 
 					TypedQuery<EventoVO> query = em.createQuery(criteria);
 					//Order contatoOrderBy = cb.asc(agendamentosFrom.get("nome"));
 					//criteria.orderBy(contatoOrderBy);
 
 					List<EventoVO> listaAgendamentos = query.getResultList();
+					
 
 					System.out.println("Lista agendamentos --> "+listaAgendamentos);
 					//Collections.sort(listaAgendamentos, (contato1, contato2) -> contato1.getNome().compareTo(contato2.getNome()));
 
 					for (EventoVO eventoVO : listaAgendamentos) {
-						System.out.println("Lista agendamentos --> "+listaAgendamentos);
-						RowData rowData = new RowData();
-						rowData.getValues().put(0, eventoVO.getId().toString());
-						rowData.getValues().put(1, eventoVO.getDataHoraInicio());
-						rowData.getValues().put(2, eventoVO.getDataHoraFim());
-						rowData.getValues().put(3, eventoVO.getLocal());
-						rowData.getValues().put(4, eventoVO.getStatus());
-						rowData.getValues().put(5, eventoVO.getContat().getNome());
-						rowData.getValues().put(6, eventoVO.getContel().getEmails());
-						int quantidadeParticipantes = eventoVO.getParticipantes().lastIndexOf(participantes);
-						rowData.getValues().put(7, quantidadeParticipantes+3);
+						
 
-						System.out.println();
-
-						rowData.setElement(eventoVO);
-						tableModel.addRow(rowData);
+						if (eventoVO.getId() != null) {
+							System.out.println("Lista agendamentos --> "+listaAgendamentos);
+							RowData rowData = new RowData();
+							rowData.getValues().put(0, eventoVO.getId().toString());
+							rowData.getValues().put(1, eventoVO.getLocal());
+							rowData.getValues().put(2, eventoVO.getStatus());
+							rowData.getValues().put(3, eventoVO.getParticipantes());
+							rowData.getValues().put(4, eventoVO.getContat().getNome());
+							rowData.getValues().put(5, eventoVO.getContel().getEmails());
+							rowData.getValues().put(6, eventoVO.getDataHoraInicio());
+							rowData.getValues().put(7, eventoVO.getDataHoraFim());
+		
+							rowData.setElement(eventoVO);
+							tableModel.addRow(rowData);
+						}else {
+							JOptionPane.showMessageDialog(null, "Sem Agendamentos no momento!", null, JOptionPane.WARNING_MESSAGE);
+						}
+						
 					}
 					
 					

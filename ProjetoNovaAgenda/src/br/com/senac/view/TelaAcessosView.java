@@ -48,7 +48,7 @@ public class TelaAcessosView extends JFrame {
 		setForeground(new Color(0, 0, 0));
 		setIconImage(Toolkit.getDefaultToolkit()
 				.getImage(TelaAcessosView.class.getResource("/br/com/senac/view/novaGeracaoAgenda.jpg")));
-		setTitle("AGENDA - NOVA GERAÇÃO");
+		setTitle("Agenda - Josiel");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 490, 435);
 		contentPane = new JPanel();
