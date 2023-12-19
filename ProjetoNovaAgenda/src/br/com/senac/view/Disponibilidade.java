@@ -44,7 +44,7 @@ public class Disponibilidade extends JFrame {
 	 * Create the frame.
 	 */
 	public Disponibilidade() {
-		  setIconImage(Toolkit.getDefaultToolkit().getImage(Disponibilidade.class.getResource("/br/com/senac/view/novaGeracaoAgenda.jpg")));
+		  setIconImage(Toolkit.getDefaultToolkit().getImage(Disponibilidade.class.getResource("/br/com/senac/view/img/LogoSTYLEMANAGER black.png")));
 	        setTitle("Disponibilidade - agenda");
 	        addWindowListener(new WindowAdapter() {
 	            @Override
