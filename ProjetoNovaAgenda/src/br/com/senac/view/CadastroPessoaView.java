@@ -296,6 +296,7 @@ public class CadastroPessoaView extends JFrame {
 		menuBar.add(mnEventos);
 
 		JMenuItem mntmCalendario = new JMenuItem("Calendário ");
+		mntmCalendario.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/calendario.png")));
 		mntmCalendario.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -311,6 +312,7 @@ public class CadastroPessoaView extends JFrame {
 		mnEventos.add(mntmCalendario);
 
 		JMenuItem mntmAgendar = new JMenuItem("Agendar");
+		mntmAgendar.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/novo.png")));
 		mntmAgendar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -325,6 +327,7 @@ public class CadastroPessoaView extends JFrame {
 		mnEventos.add(mntmAgendar);
 
 		JMenuItem mntmDisponibilidades = new JMenuItem("Disponbilidades");
+		mntmDisponibilidades.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/availability.png")));
 		mntmDisponibilidades.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -338,6 +341,7 @@ public class CadastroPessoaView extends JFrame {
 		});
 		
 		JMenuItem mntmAgendamentos = new JMenuItem("Agendamentos");
+		mntmAgendamentos.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/tipo.png")));
 		mntmAgendamentos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				listarAgendamentos();

@@ -55,11 +55,16 @@ public class EventoVO implements Serializable{
     @Column(name = "local", length = 255)
     private String local;
 
+	/*
     @ElementCollection
     @CollectionTable(name = "evento", joinColumns = @JoinColumn(name = "contat_id"))
     @Column(name = "participantes")
-    private List<BigInteger> participantes;
-
+    private List<BigInteger> participantes; */
+	
+	
+	@Basic
+	@Column(name = "participantes")
+	private BigInteger participantes;
 
     @Column(name = "status", length = 20)
     private String status;
@@ -81,7 +86,7 @@ public class EventoVO implements Serializable{
 		super();
 	}
 
-	public EventoVO(BigInteger id, Date  dataHoraInicio, Date  dataHoraFim, String local, List<BigInteger> participantes, String status,
+	public EventoVO(BigInteger id, Date  dataHoraInicio, Date  dataHoraFim, String local, BigInteger participantes, String status,
 			String ocupadoVago, ContatoVO contat, ContelVO contel) {
 		super();
 		this.id = id;
@@ -126,11 +131,11 @@ public class EventoVO implements Serializable{
 		this.local = local;
 	}
 
-	public List<BigInteger> getParticipantes() {
+	public BigInteger getParticipantes() {
 		return participantes;
 	}
 
-	 public void setParticipantes(List<BigInteger> participantes) {
+	 public void setParticipantes(BigInteger participantes) {
 	        this.participantes = participantes;
 	    }
 
