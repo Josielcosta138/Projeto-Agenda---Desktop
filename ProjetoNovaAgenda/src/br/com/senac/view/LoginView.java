@@ -31,7 +31,6 @@ public class LoginView extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField tFUser;
-	private JButton btnNewButton;
 	private JButton btnAcessar;
 	private JPasswordField passwordField;
 	private JLabel lblNewLabel;
@@ -40,17 +39,12 @@ public class LoginView extends JFrame {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(LoginView.class.getResource("/br/com/senac/view/img/stLOG.png")));
 		setTitle("STYLE MANAGER SHOP");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 711, 420);
+		setBounds(100, 100, 614, 386);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
-		btnNewButton = new JButton("");
-		btnNewButton.setIcon(new ImageIcon(LoginView.class.getResource("/br/com/senac/view/img/LogoSTYLEMANAGERCinza.png")));
-		btnNewButton.setBounds(344, 33, 294, 313);
-		contentPane.add(btnNewButton);
 		
 		tFUser = new JTextField();
 		tFUser.setBounds(60, 148, 220, 19);
@@ -104,6 +98,11 @@ public class LoginView extends JFrame {
 		lblNewLabel_2.setIcon(new ImageIcon(LoginView.class.getResource("/br/com/senac/view/img/key.png")));
 		lblNewLabel_2.setBounds(152, 208, 46, 14);
 		contentPane.add(lblNewLabel_2);
+		
+		JLabel lblNewLabel_3 = new JLabel("");
+		lblNewLabel_3.setIcon(new ImageIcon(LoginView.class.getResource("/br/com/senac/view/img/BarbeariaAgendaAberta - Copia.png")));
+		lblNewLabel_3.setBounds(331, 43, 220, 233);
+		contentPane.add(lblNewLabel_3);
 	}
 	
 	public void validaSenha() {

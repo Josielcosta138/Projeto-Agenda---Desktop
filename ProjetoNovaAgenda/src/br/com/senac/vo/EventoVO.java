@@ -80,9 +80,6 @@ public class EventoVO implements Serializable{
 
     
     
-    
-
-    
 	public EventoVO() {
 		super();
 	}

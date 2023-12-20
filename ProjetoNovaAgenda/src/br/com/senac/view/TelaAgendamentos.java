@@ -76,7 +76,7 @@ public class TelaAgendamentos extends JFrame {
 		});
 
 		setIconImage(Toolkit.getDefaultToolkit().getImage(TelaAgendamentos.class.getResource("/br/com/senac/view/img/LogoSTYLEMANAGER black.png")));
-		setTitle("Eventos");
+		setTitle("EVENTOS - AGENDA");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1016, 400);
