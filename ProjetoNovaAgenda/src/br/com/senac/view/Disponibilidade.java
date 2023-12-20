@@ -45,7 +45,7 @@ public class Disponibilidade extends JFrame {
 	 */
 	public Disponibilidade() {
 		  setIconImage(Toolkit.getDefaultToolkit().getImage(Disponibilidade.class.getResource("/br/com/senac/view/img/LogoSTYLEMANAGER black.png")));
-	        setTitle("Disponibilidade - agenda");
+	        setTitle("DISPONIBILIDADE");
 	        addWindowListener(new WindowAdapter() {
 	            @Override
 	            public void windowClosing(WindowEvent e) {
@@ -63,11 +63,14 @@ public class Disponibilidade extends JFrame {
 
 	        // Adicione os botões acima do modelo de tabela
 	        JButton btnBotao1 = new JButton("");
+	        btnBotao1.addActionListener(new ActionListener() {
+	        	public void actionPerformed(ActionEvent e) {
+	        	}
+	        });
 	        btnBotao1.setIcon(new ImageIcon(Disponibilidade.class.getResource("/br/com/senac/view/img/planlist.png")));
 
 	        contentPane.add(btnBotao1, BorderLayout.NORTH);
-
-	        
+        
 
 	        // Cria um modelo de tabela simples para exemplo
 	        DefaultTableModel model = new DefaultTableModel(new Object[][] {}, new String[] { "Data", "Status" });
