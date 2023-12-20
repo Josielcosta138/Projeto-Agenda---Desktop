@@ -79,6 +79,11 @@ public class EventoVO implements Serializable{
     private ContelVO contel;
     
     
+    @Column(name = "tiposervico", length = 100)
+    private String tipoServico;
+
+    
+    
     
 
     
@@ -87,7 +92,7 @@ public class EventoVO implements Serializable{
 	}
 
 	public EventoVO(BigInteger id, Date  dataHoraInicio, Date  dataHoraFim, String local, BigInteger participantes, String status,
-			String ocupadoVago, ContatoVO contat, ContelVO contel) {
+			String ocupadoVago, ContatoVO contat, ContelVO contel, String tipoServico) {
 		super();
 		this.id = id;
 		this.dataHoraInicio = dataHoraInicio;
@@ -97,6 +102,8 @@ public class EventoVO implements Serializable{
 		this.status = status;
 		this.contat = contat;
 		this.contel = contel;
+		this.tipoServico = tipoServico;
+		
 	}
 
 	public BigInteger getId() {
@@ -166,19 +173,28 @@ public class EventoVO implements Serializable{
 	}
 
 	
+	public String getTipoServico() {
+		return tipoServico;
+	}
 
+	public void setTipoServico(String tipoServico) {
+		this.tipoServico = tipoServico;
+	}
+
+
+	
 
 
 	@Override
 	public String toString() {
-		return "Evento [id=" + id + ", dataHoraInicio=" + dataHoraInicio + ", dataHoraFim=" + dataHoraFim + ", local="
-				+ local + ", participantes=" + participantes + ", status=" + status 
-				+ ", contat=" + contat + ", contel=" + contel + "]";
+		return "EventoVO [id=" + id + ", dataHoraInicio=" + dataHoraInicio + ", dataHoraFim=" + dataHoraFim + ", local="
+				+ local + ", participantes=" + participantes + ", status=" + status + ", contat=" + contat + ", contel="
+				+ contel + ", tipoServico=" + tipoServico + "]";
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(contat, contel, dataHoraFim, dataHoraInicio, id, local, participantes, status);
+		return Objects.hash(contat, contel, dataHoraFim, dataHoraInicio, id, local, participantes, status, tipoServico);
 	}
 
 	@Override
@@ -194,8 +210,10 @@ public class EventoVO implements Serializable{
 				&& Objects.equals(dataHoraFim, other.dataHoraFim)
 				&& Objects.equals(dataHoraInicio, other.dataHoraInicio) && Objects.equals(id, other.id)
 				&& Objects.equals(local, other.local) && Objects.equals(participantes, other.participantes)
-				&& Objects.equals(status, other.status);
+				&& Objects.equals(status, other.status) && Objects.equals(tipoServico, other.tipoServico);
 	}
+
+	
 	
 
 } 
