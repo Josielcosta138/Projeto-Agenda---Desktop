@@ -15,11 +15,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.MaskFormatter;
 
 import br.com.senac.dao.HibernateUtil;
 import br.com.senac.exception.BOValidationException;
 import br.com.senac.service.Service;
 import br.com.senac.vo.ContatoVO;
+import br.com.senac.vo.ContelVO;
 import br.com.senac.vo.EventoVO;
 import br.com.senac.vo.StatusEnum;
 import br.com.senac.vo.StatusServico;
@@ -52,6 +54,13 @@ public class TelaAgendar extends JFrame {
 	private JComboBox comboBoxStatusServico;
 	private JFormattedTextField ftfNome;
 	private JFormattedTextField ftfEmail;
+	private JFormattedTextField ftfQntParticipantes;
+	private JFormattedTextField ftfLocal;
+	private JTextField ftfHoraInicio;
+	private JFormattedTextField ftfHoraFim;
+	private JFormattedTextField ftfCodigo;
+	
+	
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -92,13 +101,15 @@ public class TelaAgendar extends JFrame {
 		contentPane.add(lblTipoServico);
 
 		// Exibe a data e hora atuais no campo "Data e Hora"
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		//MaskFormatter mask = new MaskFormatter("##/##/#### ##:##:##");
+		
 
 		JLabel lblDataHoraInicio = new JLabel("Data e Hora Inicio:");
 		lblDataHoraInicio.setBounds(10, 74, 112, 20);
 		contentPane.add(lblDataHoraInicio);
 
-		JTextField ftfHoraInicio = new JTextField();
+		ftfHoraInicio = new JTextField();
 		ftfHoraInicio.setBounds(120, 74, 150, 20);
 		contentPane.add(ftfHoraInicio);
 		ftfHoraInicio.setColumns(10);
@@ -129,7 +140,7 @@ public class TelaAgendar extends JFrame {
 		lblDataHoraFim.setBounds(10, 108, 100, 14);
 		contentPane.add(lblDataHoraFim);
 
-		JFormattedTextField ftfHoraFim = new JFormattedTextField();
+		ftfHoraFim = new JFormattedTextField();
 		ftfHoraFim.setBounds(120, 105, 150, 20);
 		contentPane.add(ftfHoraFim);
 		ftfHoraFim.setText(sdf.format(new Date()));
@@ -163,7 +174,7 @@ public class TelaAgendar extends JFrame {
 		btnCancelar.setBounds(571, 279, 98, 28);
 		contentPane.add(btnCancelar);
 
-		JFormattedTextField ftfQntParticipantes = new JFormattedTextField();
+		ftfQntParticipantes = new JFormattedTextField();
 		ftfQntParticipantes.setBounds(120, 195, 83, 20);
 		contentPane.add(ftfQntParticipantes);
 
@@ -192,7 +203,7 @@ public class TelaAgendar extends JFrame {
 		lblNewLabel_2.setBounds(10, 262, 46, 14);
 		contentPane.add(lblNewLabel_2);
 
-		JFormattedTextField ftfLocal = new JFormattedTextField();
+		ftfLocal = new JFormattedTextField();
 		ftfLocal.setBounds(120, 257, 155, 20);
 		contentPane.add(ftfLocal);
 
@@ -238,11 +249,22 @@ public class TelaAgendar extends JFrame {
 		btnNewButton.setIcon(new ImageIcon(TelaAgendar.class.getResource("/br/com/senac/view/img/pesquisar.png")));
 		btnNewButton.setBounds(308, 164, 24, 23);
 		contentPane.add(btnNewButton);
+		
+		JLabel lblCodigo = new JLabel("Cód:");
+		lblCodigo.setEnabled(false);
+		lblCodigo.setBounds(10, 290, 46, 14);
+		contentPane.add(lblCodigo);
+		
+		ftfCodigo = new JFormattedTextField();
+		ftfCodigo.setEditable(false);
+		ftfCodigo.setEnabled(false);
+		ftfCodigo.setBounds(120, 287, 83, 20);
+		contentPane.add(ftfCodigo);
 
 	}
 
 	protected void pesquisarPorNomeEmail() {
-		
+
 		CadastroPessoaView cadastroPessoaView = new CadastroPessoaView();
 		cadastroPessoaView.pesquisar();
 
@@ -254,10 +276,10 @@ public class TelaAgendar extends JFrame {
 			EntityManager em = HibernateUtil.getEntityManager();
 
 			CriteriaBuilder cb = em.getCriteriaBuilder();
-			CriteriaQuery<ContatoVO> criteria = cb.createQuery(ContatoVO.class);
+			CriteriaQuery<ContelVO> criteria = cb.createQuery(ContelVO.class);
 
 			// Clausula from
-			Root<ContatoVO> contatosFrom = criteria.from(ContatoVO.class);
+			Root<ContelVO> contatosFrom = criteria.from(ContelVO.class);
 			criteria.select(contatosFrom);
 
 			if (this.ftfEmail.getText() != null && ftfEmail.getText().trim().length() > 0) {
@@ -269,26 +291,22 @@ public class TelaAgendar extends JFrame {
 				criteria.where(cb.like(cb.lower(contatosFrom.get("emails")), searchTerm));
 			}
 
-			TypedQuery<ContatoVO> query = em.createQuery(criteria);
-			List<ContatoVO> listaContat = query.getResultList();
+			TypedQuery<ContelVO> query = em.createQuery(criteria);
+			List<ContelVO> listaContat = query.getResultList();
 			System.out.println(listaContat);
 
-			String nome2 = null;
-			for (ContatoVO contatoVO : listaContat) {
+			String email2 = null;
+			for (ContelVO contelVO : listaContat) {
 
-				nome2 = contatoVO.getNome();
+				email2 = contelVO.getEmails();
 
 			}
 
-			ftfNome.setText(nome2);
+			ftfEmail.setText(email2);
 
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(this, e.getMessage(), "Erro de sistema", JOptionPane.ERROR_MESSAGE);
 		}
-		
-		
-		
-		
 
 	}
 
@@ -339,50 +357,103 @@ public class TelaAgendar extends JFrame {
 	}
 
 	protected void agendar() {
-		/*
-		 * 
-		 * try { Service service = new Service(); ContatoVO contatoVO = new ContatoVO();
-		 * EventoVO eventoVO = new EventoVO();
-		 * 
-		 * String nome = comboBoxNome.getText().trim(); String datNasc =
-		 * ftfDataNasc.getText().trim(); String observ = ftfObservacao.getText().trim();
-		 * String status = null; StatusEnum statusEnum =
-		 * (StatusEnum)cbStatus.getSelectedItem(); if (statusEnum != null) { status =
-		 * statusEnum.name(); }
-		 * 
-		 * if (codigo != null && codigo.length() > 0) { contatoVO.setId(new
-		 * BigInteger(codigo)); contatoVO = service.buscarContatosPorId(contatoVO); }
-		 * 
-		 * String pattern = "dd/MM/yyyy HH:mm:ss"; DateFormat dateFormat = new
-		 * SimpleDateFormat(pattern);
-		 * 
-		 * try { if (!datNasc.isEmpty()) { Date date = dateFormat.parse(datNasc +
-		 * " 00:00:00"); contatoVO.setDatnas(date); } else {
-		 * JOptionPane.showMessageDialog(this, "Data de nascimento vazia!", "Erro",
-		 * JOptionPane.ERROR_MESSAGE); return; } } catch (ParseException e) { // Trata a
-		 * exceção de formato de data inválido e.printStackTrace();
-		 * JOptionPane.showMessageDialog(this,
-		 * "Formato de data inválido! Formato correto dd/MM/yyyy HH:mm:ss", "Erro",
-		 * JOptionPane.ERROR_MESSAGE); return; }
-		 * 
-		 * contatoVO.setNome(nome); contatoVO.setObserv(observ);
-		 * 
-		 * service.salvar(contatoVO);
-		 * 
-		 * JOptionPane.showMessageDialog(null, "Cadastro salvo com sucesso!");
-		 * setVisible(false); dispose();
-		 * 
-		 * } catch (BOValidationException b) { b.printStackTrace();
-		 * JOptionPane.showMessageDialog(this, b.getMessage(), "Mensagem de aviso",
-		 * JOptionPane.WARNING_MESSAGE);
-		 * 
-		 * } catch (Exception b) { b.printStackTrace();
-		 * JOptionPane.showMessageDialog(this,
-		 * "Ocorreu um erro ao realizar a operação!", "Erro",
-		 * JOptionPane.ERROR_MESSAGE); } finally { System.out.println("Finally"); }
-		 * 
-		 */
+		
+		try {
+			
+			Service service = new Service();
+			EventoVO eventoVO = new EventoVO();
+		
+					
+			String codigo = ftfCodigo.getText().trim();
+			String nome = ftfNome.getText().trim();
+			String email = ftfEmail.getText().trim();
+			String qntParticipantes = ftfQntParticipantes.getText().trim();
+			String local = ftfLocal.getText().trim();
+			String dataHoraInicio = ftfHoraInicio.getText().trim();
+			String dataHoraFim = ftfHoraFim.getText().trim();
+			
+			
+			if (codigo != null && codigo.length() > 0) {
+				eventoVO.setId(new BigInteger(codigo));
+				eventoVO = service.buscarContatosPorId(eventoVO);
+			}
+				
+			String statusTipoServico = null;
+			StatusServico statusServico = (StatusServico)comboBoxStatusServico.getSelectedItem();
+			if (statusServico != null) {
+				statusTipoServico = statusServico.name();
+			}
+			
+			String status = null;
+			StatusEnum statusEnum = (StatusEnum)comboBoxStatus.getSelectedItem();
+			if (statusEnum != null) {
+				status = statusEnum.name();
+			}
+			
 
+			String pattern = "dd/MM/yyyy HH:mm:ss";
+			DateFormat dateFormat = new SimpleDateFormat(pattern);
+			
+			try {
+			    if (!dataHoraInicio.isEmpty()) {
+			        Date date = dateFormat.parse(dataHoraInicio + " 00:00:00");
+			        eventoVO.setDataHoraInicio(date);
+			    } else {
+			        JOptionPane.showMessageDialog(this, "Data de nascimento vazia!", "Erro",
+			                JOptionPane.ERROR_MESSAGE);
+			        return;
+			    }
+			    if (!dataHoraFim.isEmpty()) {
+			        Date date2 = dateFormat.parse(dataHoraFim + " 00:00:00");
+			        eventoVO.setDataHoraFim(date2);
+			    } else {
+			        JOptionPane.showMessageDialog(this, "Data de nascimento vazia!", "Erro",
+			                JOptionPane.ERROR_MESSAGE);
+			        return;
+			    }
+  
+			} catch (ParseException e) {
+			    // Trata a exceção de formato de data inválido
+			    e.printStackTrace();
+			    JOptionPane.showMessageDialog(this, "Formato de data inválido! Formato correto dd/MM/yyyy HH:mm:ss", "Erro",
+			            JOptionPane.ERROR_MESSAGE);
+			    return;
+			}
+
+			if (status != null) {
+				eventoVO.setStatus(status);
+			}
+			
+			if (statusTipoServico != null) {
+				eventoVO.setTipoServico(statusTipoServico);
+			}
+			
+			eventoVO.setNomeCliente(nome);
+			eventoVO.setEmail(email);
+			BigInteger participantes = new BigInteger(qntParticipantes);
+			eventoVO.setParticipantes(participantes);
+			eventoVO.setLocal(local);
+			
+			//CRIAR salvarEventoVO
+			service.salvar(eventoVO);
+
+			JOptionPane.showMessageDialog(null, "Cadastro salvo com sucesso!");
+			setVisible(true);
+			
+
+		} catch (BOValidationException b) {
+			b.printStackTrace();
+			JOptionPane.showMessageDialog(this, b.getMessage(), "Mensagem de aviso", JOptionPane.WARNING_MESSAGE);
+
+		} catch (Exception b) {
+			b.printStackTrace();
+			JOptionPane.showMessageDialog(this, "Ocorreu um erro ao realizar a operação!", "Erro",
+					JOptionPane.ERROR_MESSAGE);
+		} finally {
+			System.out.println("Finally");
+		}
+		 
+		 
 	}
 
 	protected void cancelarVoltar() {

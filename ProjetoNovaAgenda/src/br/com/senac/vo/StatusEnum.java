@@ -2,9 +2,9 @@ package br.com.senac.vo;
 
 public enum StatusEnum {
 
-	L("Liberado"),
-	A("Agendado"),
-	AC("Aguardando confirmação");
+	LIBERADO("Liberado"),
+	AGENDADO("Agendado"),
+	AGUARDANDO_CONFIRMACAO("Aguardando confirmação");
 
 	private String status;
 

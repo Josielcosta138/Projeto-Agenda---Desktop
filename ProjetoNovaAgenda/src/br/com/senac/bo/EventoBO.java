@@ -20,8 +20,13 @@ public class EventoBO implements IEventoBO {
 
 	@Override
 	public EventoVO buscarContatoPorId(EventoVO eventoVO) throws BOException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		if (eventoVO == null || eventoVO.getId() == null) {
+			//GRAVAR EM ARQUIVO LOG.
+			throw new BOException("Código identificador inválido.");
+		}
+		
+		return eventoDAO.buscarAgendamentoPorId(eventoVO);
 	}
 
 	@Override
@@ -34,13 +39,27 @@ public class EventoBO implements IEventoBO {
 
 	@Override
 	public void salvar(EventoVO eventoVO) throws BOValidationException, BOException {
-		// TODO Auto-generated method stub
-
+		if (eventoVO == null) {
+			throw new BOException("Contato nulo ou inválido.");
+		}else if (eventoVO.getNomeCliente() == null) {
+			throw new BOException("Descrição: Erro de validação: " + "descrição do contato nulo. ");
+		}else if (eventoVO.getNomeCliente().length() < 2) {
+			throw new BOValidationException("Descrição: Erro de validação: " + "a descrição do contato é muito curta.");
+		}else if (eventoVO.getDataHoraInicio() == null) {
+			throw new BOException("Data: Erro de validação: " + "data do contato nula. ");
+		}
+		
+		eventoDAO.salvar(eventoVO);
+		
 	}
 
 	@Override
 	public void excluir(EventoVO eventoVO) throws BOValidationException, BOException {
-		// TODO Auto-generated method stub
+		if (eventoVO == null || eventoVO.getId() == null) {
+			throw new BOException("Produto nulo ou inválido." + "Impossivel de excluir.");
+		}
+		
+		eventoDAO.excluir(eventoVO);
 
 	}
 

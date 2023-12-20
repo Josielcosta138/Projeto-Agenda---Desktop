@@ -98,7 +98,7 @@ public class TelaAgendamentos extends JFrame {
 		tableModel.addColumn("Local");
 		tableModel.addColumn("Status");
 		tableModel.addColumn("Participantes");
-		tableModel.addColumn("Pessoa");
+		tableModel.addColumn("Cliente");
 		tableModel.addColumn("Tipo serviço");
 		tableModel.addColumn("E-mails-Vinculado(Pessoa)");
 		tableModel.addColumn("Data hora inicio");
@@ -217,9 +217,9 @@ public class TelaAgendamentos extends JFrame {
 							rowData.getValues().put(1, eventoVO.getLocal());
 							rowData.getValues().put(2, eventoVO.getStatus());
 							rowData.getValues().put(3, eventoVO.getParticipantes());
-							rowData.getValues().put(4, eventoVO.getContat().getNome());
+							rowData.getValues().put(4, eventoVO.getNomeCliente());
 							rowData.getValues().put(5, eventoVO.getTipoServico());
-							rowData.getValues().put(6, eventoVO.getContel().getEmails());
+							rowData.getValues().put(6, eventoVO.getEmail());
 							rowData.getValues().put(7, eventoVO.getDataHoraInicio());
 							rowData.getValues().put(8, eventoVO.getDataHoraFim());
 		
