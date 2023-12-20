@@ -97,6 +97,7 @@ public class CadastroPessoaView extends JFrame {
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		setLocationRelativeTo(null);
 
 		panel = new JPanel();
 		panel.setBorder(new LineBorder(new Color(192, 192, 192)));

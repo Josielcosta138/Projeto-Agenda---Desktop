@@ -65,6 +65,7 @@ public class TelaAcessosView extends JFrame {
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		setLocationRelativeTo(null);
 		
 		
 

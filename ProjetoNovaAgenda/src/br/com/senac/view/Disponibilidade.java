@@ -60,6 +60,7 @@ public class Disponibilidade extends JFrame {
 	        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 	        setContentPane(contentPane);
 	        contentPane.setLayout(new BorderLayout(0, 0));
+	        setLocationRelativeTo(null);
 
 	        // Adicione os botões acima do modelo de tabela
 	        JButton btnBotao1 = new JButton("");

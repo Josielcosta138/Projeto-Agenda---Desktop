@@ -45,6 +45,7 @@ public class LoginView extends JFrame {
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		setLocationRelativeTo(null);
 		
 		tFUser = new JTextField();
 		tFUser.setBounds(60, 148, 220, 19);
