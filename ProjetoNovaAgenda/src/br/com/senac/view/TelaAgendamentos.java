@@ -79,7 +79,7 @@ public class TelaAgendamentos extends JFrame {
 		setTitle("Eventos");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 933, 400);
+		setBounds(100, 100, 1016, 400);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -90,7 +90,7 @@ public class TelaAgendamentos extends JFrame {
 
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollPane.setBounds(23, 74, 867, 233);
+		scrollPane.setBounds(23, 74, 952, 233);
 		contentPane.add(scrollPane);
  
 		tableModel = new TableModel();
@@ -99,6 +99,7 @@ public class TelaAgendamentos extends JFrame {
 		tableModel.addColumn("Status");
 		tableModel.addColumn("Participantes");
 		tableModel.addColumn("Pessoa");
+		tableModel.addColumn("Tipo serviço");
 		tableModel.addColumn("E-mails-Vinculado(Pessoa)");
 		tableModel.addColumn("Data hora inicio");
 		tableModel.addColumn("Data hora fim");
@@ -109,14 +110,15 @@ public class TelaAgendamentos extends JFrame {
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
 		TableColumnModel tcm = table.getColumnModel();
-		tcm.getColumn(0).setPreferredWidth(70);
-		tcm.getColumn(1).setPreferredWidth(70);
-		tcm.getColumn(2).setPreferredWidth(70);
+		tcm.getColumn(0).setPreferredWidth(60);
+		tcm.getColumn(1).setPreferredWidth(60);
+		tcm.getColumn(2).setPreferredWidth(60);
 		tcm.getColumn(3).setPreferredWidth(100);
 		tcm.getColumn(4).setPreferredWidth(100);
-		tcm.getColumn(5).setPreferredWidth(170);
-		tcm.getColumn(6).setPreferredWidth(130);
+		tcm.getColumn(5).setPreferredWidth(100);
+		tcm.getColumn(6).setPreferredWidth(180);
 		tcm.getColumn(7).setPreferredWidth(140);
+		tcm.getColumn(8).setPreferredWidth(150);
 
 		scrollPane.setViewportView(table);
 
@@ -127,7 +129,7 @@ public class TelaAgendamentos extends JFrame {
 
 		JFormattedTextField ftfDataAtual = new JFormattedTextField();
 		ftfDataAtual.setEditable(false);
-		ftfDataAtual.setBounds(777, 47, 113, 20);
+		ftfDataAtual.setBounds(859, 43, 113, 20);
 		contentPane.add(ftfDataAtual);
 		ftfDataAtual.setText(sdf.format(new Date()));
 
@@ -144,7 +146,7 @@ public class TelaAgendamentos extends JFrame {
 		
 		JButton btnNewButton = new JButton("");
 		btnNewButton.setIcon(new ImageIcon(TelaAgendamentos.class.getResource("/br/com/senac/view/img/dateTime.png")));
-		btnNewButton.setBounds(752, 44, 26, 23);
+		btnNewButton.setBounds(834, 40, 26, 23);
 		contentPane.add(btnNewButton);
 		
 		JButton btnVoltar = new JButton("Volt");
@@ -160,7 +162,7 @@ public class TelaAgendamentos extends JFrame {
 				
 		});
 		btnVoltar.setIcon(new ImageIcon(TelaAgendamentos.class.getResource("/br/com/senac/view/img/2303132_arrow_back_direction_left_navigation_icon.png")));
-		btnVoltar.setBounds(796, 318, 94, 23);
+		btnVoltar.setBounds(881, 318, 94, 23);
 		contentPane.add(btnVoltar);
 
 	}
@@ -177,6 +179,7 @@ public class TelaAgendamentos extends JFrame {
 		BigInteger participantes = null;
 		//List<BigInteger> participantes = null;
 		String status = null;
+		String tipoServico = null;
 		
 		
 		try {
@@ -206,7 +209,6 @@ public class TelaAgendamentos extends JFrame {
 					//Collections.sort(listaAgendamentos, (contato1, contato2) -> contato1.getNome().compareTo(contato2.getNome()));
 
 					for (EventoVO eventoVO : listaAgendamentos) {
-						
 
 						if (eventoVO.getId() != null) {
 							System.out.println("Lista agendamentos --> "+listaAgendamentos);
@@ -216,9 +218,10 @@ public class TelaAgendamentos extends JFrame {
 							rowData.getValues().put(2, eventoVO.getStatus());
 							rowData.getValues().put(3, eventoVO.getParticipantes());
 							rowData.getValues().put(4, eventoVO.getContat().getNome());
-							rowData.getValues().put(5, eventoVO.getContel().getEmails());
-							rowData.getValues().put(6, eventoVO.getDataHoraInicio());
-							rowData.getValues().put(7, eventoVO.getDataHoraFim());
+							rowData.getValues().put(5, eventoVO.getTipoServico());
+							rowData.getValues().put(6, eventoVO.getContel().getEmails());
+							rowData.getValues().put(7, eventoVO.getDataHoraInicio());
+							rowData.getValues().put(8, eventoVO.getDataHoraFim());
 		
 							rowData.setElement(eventoVO);
 							tableModel.addRow(rowData);
