@@ -73,12 +73,37 @@ public class Service implements IService {
 		contatoTelBO.excluir(contelVO);
 
 	}
+	
+	
+	
+	// EVENTO
 
 	@Override
 	public List<EventoVO> listarAgendamentos(EventoVO eventoVO) throws BOException {
 		
 		IEventoBO eventoBO = new EventoBO();
 		return eventoBO.listarContato(eventoVO);
+	}
+
+	@Override
+	public EventoVO buscarContatosPorId(EventoVO eventoVO) throws BOException {
+		IEventoBO eventoBO = new EventoBO();
+		return eventoBO.buscarContatoPorId(eventoVO);
+	}
+
+	@Override
+	public void salvar(EventoVO eventoVO) throws BOValidationException, BOException {
+		IEventoBO eventoBO = new EventoBO();
+		eventoBO.salvar(eventoVO);
+		
+	}
+
+	@Override
+	public void excluir(EventoVO eventoVO) throws BOValidationException, BOException {
+		
+		IEventoBO eventoBO = new EventoBO();
+		eventoBO.excluir(eventoVO);
+		
 	}
 
 }

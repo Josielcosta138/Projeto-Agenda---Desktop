@@ -2,18 +2,15 @@ package br.com.senac.vo;
 
 public enum StatusServico {
 
-	C("Cabelo"),
-	CB("Cabelo e Barba"),
-	B("Barba");
+	CABELO("Cabelo"),
+	CABELO_BARBA("Cabelo e Barba"),
+	BARBA("Barba");
 
 	private String status;
-
-	
 
 	private StatusServico(String status) {
 		this.status = status;
 	}
-
 
 
 	@Override

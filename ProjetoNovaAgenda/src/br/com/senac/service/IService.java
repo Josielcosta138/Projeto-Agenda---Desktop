@@ -24,6 +24,8 @@ public interface IService {
 
 	public abstract void excluir(ContatoVO produtoVO) throws BOValidationException, BOException;
 
+	
+	
 // CONTATO TELEFONICO
 	public abstract ContelVO buscarContatosTelPorId(ContelVO contelVO) throws BOException;
 
@@ -33,8 +35,15 @@ public interface IService {
 
 	public abstract void excluir(ContelVO contelVO) throws BOValidationException, BOException;
 	
+	
+	
 // AGENDAMENTO
 	
 	public abstract List<EventoVO> listarAgendamentos(EventoVO eventoVO) throws BOException;
+	
+	public abstract EventoVO buscarContatosPorId(EventoVO eventoVO) throws BOException;
+	
+	public abstract void salvar(EventoVO eventoVO) throws BOValidationException, BOException;
 
+	public abstract void excluir(EventoVO eventoVO) throws BOValidationException, BOException;	
 }
