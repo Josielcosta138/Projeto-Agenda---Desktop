@@ -43,6 +43,7 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
+import java.awt.Color;
 
 public class TelaAgendamentos extends JFrame {
 
@@ -84,6 +85,7 @@ public class TelaAgendamentos extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		setLocationRelativeTo(null);
 
 		// Exibe a data e hora atuais no campo "Data e Hora"
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
@@ -123,8 +125,8 @@ public class TelaAgendamentos extends JFrame {
 		scrollPane.setViewportView(table);
 
 		JLabel lblListaAgendamento = new JLabel("Agendamentos:");
-		lblListaAgendamento.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblListaAgendamento.setBounds(28, 49, 108, 14);
+		lblListaAgendamento.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblListaAgendamento.setBounds(23, 40, 127, 18);
 		contentPane.add(lblListaAgendamento);
 
 		JFormattedTextField ftfDataAtual = new JFormattedTextField();
@@ -164,6 +166,12 @@ public class TelaAgendamentos extends JFrame {
 		btnVoltar.setIcon(new ImageIcon(TelaAgendamentos.class.getResource("/br/com/senac/view/img/2303132_arrow_back_direction_left_navigation_icon.png")));
 		btnVoltar.setBounds(881, 318, 94, 23);
 		contentPane.add(btnVoltar);
+		
+		JLabel lbliconePessoasAgend = new JLabel("");
+		lbliconePessoasAgend.setIcon(new ImageIcon(TelaAgendamentos.class.getResource("/br/com/senac/view/img/46832_group_search_icon.png")));
+		lbliconePessoasAgend.setBackground(new Color(192, 192, 192));
+		lbliconePessoasAgend.setBounds(453, 11, 60, 54);
+		contentPane.add(lbliconePessoasAgend);
 
 	}
 
