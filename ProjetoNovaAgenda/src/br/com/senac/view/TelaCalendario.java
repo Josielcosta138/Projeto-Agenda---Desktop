@@ -68,9 +68,11 @@ public class TelaCalendario extends JFrame {
 	        contentPane.setLayout(new BorderLayout(0, 0));
 	        setContentPane(contentPane);
 	        
+	        
 	        //Adiciona o JLabel
 	        JLabel label = new JLabel("Exibir calendário");
 	        contentPane.add(label, BorderLayout.NORTH);
+	        setLocationRelativeTo(null);
 	        
 	        
 	        // Adiciona um novo JLabel abaixo do "Exibir calendário"

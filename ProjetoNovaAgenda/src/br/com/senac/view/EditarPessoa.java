@@ -50,7 +50,7 @@ public class EditarPessoa extends JFrame {
 	}
 
 	public EditarPessoa() throws ParseException {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(EditarPessoa.class.getResource("/br/com/senac/view/novaGeracaoAgenda.jpg")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(EditarPessoa.class.getResource("/br/com/senac/view/img/LogoSTYLEMANAGER black.png")));
 		contatoAtual = new ContatoVO();
 
 		setTitle("Pessoa");
@@ -61,6 +61,7 @@ public class EditarPessoa extends JFrame {
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		setLocationRelativeTo(null);
 
 		JLabel lblCodigo = new JLabel("Código:");
 		lblCodigo.setBounds(24, 36, 46, 14);

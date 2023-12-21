@@ -62,7 +62,7 @@ public class EditarContato extends JFrame {
 	}
 
 	public EditarContato(ContatoVO contato) throws ParseException {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(EditarContato.class.getResource("/br/com/senac/view/novaGeracaoAgenda.jpg")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(EditarContato.class.getResource("/br/com/senac/view/img/LogoSTYLEMANAGER black.png")));
 		contatoAtual = new ContelVO();
 		
 		this.contato = contato;
@@ -75,6 +75,7 @@ public class EditarContato extends JFrame {
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		setLocationRelativeTo(null);
 
 		JLabel lblCodigo = new JLabel("Código:");
 		lblCodigo.setBounds(24, 36, 46, 14);

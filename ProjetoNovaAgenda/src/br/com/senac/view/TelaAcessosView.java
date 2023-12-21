@@ -25,11 +25,16 @@ import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JMenuItem;
+import javax.swing.border.LineBorder;
 
 public class TelaAcessosView extends JFrame {
 
 	private JPanel contentPane;
 	private LoginView loginView;
+	private CadastroPessoaView cadastroPessoaView;
+	private TelaAgendar telaAgendar;
+	private TelaAgendamentos telaAgendamentos;
+	private Disponibilidade disponibilidade;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -91,15 +96,6 @@ public class TelaAcessosView extends JFrame {
 		btnBtnSystem.setBounds(310, 74, 199, 194);
 		contentPane.add(btnBtnSystem);
 		
-		JLabel lblAgendaInicio = new JLabel("Inciei seus Agendamentos!");
-		lblAgendaInicio.setIcon(new ImageIcon(TelaAcessosView.class.getResource("/br/com/senac/view/img/8956785_login_arrow_enter_button_BLUE_icon.png")));
-		lblAgendaInicio.setBackground(new Color(30, 144, 255));
-		lblAgendaInicio.setFont(new Font("Arial", Font.BOLD, 14));
-		lblAgendaInicio.setBounds(10, 25, 286, 42);
-		GridBagConstraints gbc_lblAgendaInicio = new GridBagConstraints();
-		gbc_lblAgendaInicio.gridy = 0;
-		contentPane.add(lblAgendaInicio, gbc_lblAgendaInicio);
-		
 		JButton btnVoltarLogin = new JButton("");
 		btnVoltarLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -112,63 +108,109 @@ public class TelaAcessosView extends JFrame {
 		contentPane.add(btnVoltarLogin);
 		
 		JLabel lblNewLabel = new JLabel("Voltar");
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 11));
+		lblNewLabel.setForeground(new Color(131, 131, 131));
 		lblNewLabel.setBounds(474, 302, 46, 14);
 		contentPane.add(lblNewLabel);
 		
-		JButton btnAgendar = new JButton("");
+		JPanel panel = new JPanel();
+		panel.setBorder(new LineBorder(new Color(128, 128, 128)));
+		panel.setBackground(new Color(192, 192, 192));
+		panel.setBounds(45, 44, 188, 272);
+		contentPane.add(panel);
+		panel.setLayout(null);
+		
+		JButton btnCadastroPessoas = new JButton("Cadastro");
+		btnCadastroPessoas.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cadastrar();
+				
+			}
+		});
+		btnCadastroPessoas.setIcon(new ImageIcon(TelaAcessosView.class.getResource("/br/com/senac/view/img/user222.png")));
+		btnCadastroPessoas.setBackground(new Color(214, 214, 214));
+		btnCadastroPessoas.setFont(new Font("Tahoma", Font.BOLD, 13));
+		btnCadastroPessoas.setBounds(10, 29, 168, 33);
+		panel.add(btnCadastroPessoas);
+		
+		JButton btnAgendar = new JButton("Agendar");
 		btnAgendar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				TelaAgendar agendar = new TelaAgendar();
-				agendar.setVisible(true);
-				dispose(); 
-			} 
+				
+				if (telaAgendar == null) {
+					telaAgendar = new TelaAgendar();
+				}
+				telaAgendar.setVisible(true);
+				dispose();
+			}
 		});
-		btnAgendar.setIcon(new ImageIcon(TelaAcessosView.class.getResource("/br/com/senac/view/img/agendamentoMenu.png")));
-		btnAgendar.setBackground(new Color(192, 192, 192));
-		btnAgendar.setBounds(157, 88, 89, 65);
-		contentPane.add(btnAgendar);
+		btnAgendar.setIcon(new ImageIcon(TelaAcessosView.class.getResource("/br/com/senac/view/img/novo.png")));
+		btnAgendar.setFont(new Font("Tahoma", Font.BOLD, 13));
+		btnAgendar.setBackground(new Color(214, 214, 214));
+		btnAgendar.setBounds(10, 73, 168, 33);
+		panel.add(btnAgendar);
 		
-		JButton btnPessoas = new JButton("");
-		btnPessoas.addActionListener(new ActionListener() {
+		JButton btnAgendamento = new JButton("Agendamentos");
+		btnAgendamento.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				CadastroPessoaView cadastroPessoaView= new CadastroPessoaView();
-				cadastroPessoaView.setVisible(true);
+				
+				if (telaAgendamentos == null) {
+					telaAgendamentos = new TelaAgendamentos();
+				}
+				telaAgendamentos.setVisible(true);
+				dispose();
+			}
+		});
+		btnAgendamento.setIcon(new ImageIcon(TelaAcessosView.class.getResource("/br/com/senac/view/img/tipo.png")));
+		btnAgendamento.setFont(new Font("Tahoma", Font.BOLD, 13));
+		btnAgendamento.setBackground(new Color(214, 214, 214));
+		btnAgendamento.setBounds(10, 117, 168, 33);
+		panel.add(btnAgendamento);
+		
+		JButton btnDisponibilidade = new JButton("Disponibilidade");
+		btnDisponibilidade.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				if (disponibilidade == null) {
+					disponibilidade = new Disponibilidade();
+				}
+				disponibilidade.setVisible(true);
 				dispose();
 				
 			}
 		});
-		btnPessoas.setBackground(new Color(192, 192, 192));
-		btnPessoas.setIcon(new ImageIcon(TelaAcessosView.class.getResource("/br/com/senac/view/img/userInicial.png")));
-		btnPessoas.setBounds(20, 88, 89, 65);
-		contentPane.add(btnPessoas);
+		btnDisponibilidade.setIcon(new ImageIcon(TelaAcessosView.class.getResource("/br/com/senac/view/img/planlist.png")));
+		btnDisponibilidade.setFont(new Font("Tahoma", Font.BOLD, 13));
+		btnDisponibilidade.setBackground(new Color(214, 214, 214));
+		btnDisponibilidade.setBounds(10, 161, 168, 33);
+		panel.add(btnDisponibilidade);
 		
-		JButton btnAgendamentos = new JButton("");
-		btnAgendamentos.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				TelaAgendamentos agendamentos = new TelaAgendamentos();
-				agendamentos.setVisible(true);
-				
-			}
-		});
-		btnAgendamentos.setBackground(new Color(192, 192, 192));
-		btnAgendamentos.setIcon(new ImageIcon(TelaAcessosView.class.getResource("/br/com/senac/view/img/listaAgenda.png")));
-		btnAgendamentos.setBounds(20, 197, 89, 65);
-		contentPane.add(btnAgendamentos);
+		JButton btnFinanceiro = new JButton("Financeiro");
+		btnFinanceiro.setIcon(new ImageIcon(TelaAcessosView.class.getResource("/br/com/senac/view/img/financ2.png")));
+		btnFinanceiro.setFont(new Font("Tahoma", Font.BOLD, 13));
+		btnFinanceiro.setBackground(new Color(214, 214, 214));
+		btnFinanceiro.setBounds(10, 205, 168, 33);
+		panel.add(btnFinanceiro);
 		
-		JButton btnNewButton = new JButton("");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Disponibilidade disponibilidade = new Disponibilidade();
-				disponibilidade.setVisible(true);
-				
-			}
-		});
-		btnNewButton.setBackground(new Color(201, 201, 201));
-		btnNewButton.setIcon(new ImageIcon(TelaAcessosView.class.getResource("/br/com/senac/view/img/disponibilidade.png")));
-		btnNewButton.setBounds(157, 197, 89, 65);
-		contentPane.add(btnNewButton);
+		JLabel lblMenuRapido = new JLabel("Menu rápido");
+		lblMenuRapido.setForeground(new Color(128, 128, 128));
+		lblMenuRapido.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblMenuRapido.setBounds(89, 19, 99, 14);
+		contentPane.add(lblMenuRapido);
+		
+		JButton button = new JButton("New button");
+		button.setBounds(383, 150, 89, 23);
+		contentPane.add(button);
 	}
 
+	protected void cadastrar() {
+		if (cadastroPessoaView == null) {
+			cadastroPessoaView = new CadastroPessoaView();
+		}
+		cadastroPessoaView.setVisible(true);
+		dispose();
+		
+	}
 	protected void voltarLogin() {
 		if (loginView == null) {
 			loginView = new LoginView();
