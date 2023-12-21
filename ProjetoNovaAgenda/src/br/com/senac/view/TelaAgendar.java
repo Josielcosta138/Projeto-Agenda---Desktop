@@ -43,6 +43,7 @@ import javax.persistence.criteria.Root;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import java.awt.Font;
+import java.awt.Color;
 
 public class TelaAgendar extends JFrame {
 
@@ -99,6 +100,7 @@ public class TelaAgendar extends JFrame {
 		//
 
 		JLabel lblTipoServico = new JLabel("Tipo de serviço:");
+		lblTipoServico.setForeground(new Color(103, 103, 103));
 		lblTipoServico.setBounds(10, 44, 100, 20);
 		contentPane.add(lblTipoServico);
 
@@ -108,6 +110,7 @@ public class TelaAgendar extends JFrame {
 		
 
 		JLabel lblDataHoraInicio = new JLabel("Data e Hora Inicio:");
+		lblDataHoraInicio.setForeground(new Color(103, 103, 103));
 		lblDataHoraInicio.setBounds(10, 74, 112, 20);
 		contentPane.add(lblDataHoraInicio);
 
@@ -139,6 +142,7 @@ public class TelaAgendar extends JFrame {
 		tftHoraAtual.setText(sdf.format(new Date()));
 
 		JLabel lblDataHoraFim = new JLabel("Data e Hora Fim:");
+		lblDataHoraFim.setForeground(new Color(103, 103, 103));
 		lblDataHoraFim.setBounds(10, 108, 100, 14);
 		contentPane.add(lblDataHoraFim);
 
@@ -148,15 +152,17 @@ public class TelaAgendar extends JFrame {
 		ftfHoraFim.setText(sdf.format(new Date()));
 
 		JLabel lblParticipantes = new JLabel("N° Participantes:");
-		lblParticipantes.setBounds(10, 198, 100, 14);
+		lblParticipantes.setForeground(new Color(103, 103, 103));
+		lblParticipantes.setBounds(10, 263, 100, 14);
 		contentPane.add(lblParticipantes);
 
 		JLabel lblStatus = new JLabel("Status:");
-		lblStatus.setBounds(10, 229, 46, 14);
+		lblStatus.setForeground(new Color(103, 103, 103));
+		lblStatus.setBounds(10, 198, 46, 14);
 		contentPane.add(lblStatus);
 
 		comboBoxStatus = new JComboBox();
-		comboBoxStatus.setBounds(120, 226, 130, 20);
+		comboBoxStatus.setBounds(120, 195, 183, 20);
 
 		// testeStatus
 		DefaultComboBoxModel defaultComboBoxModel = new DefaultComboBoxModel<>(StatusEnum.values());
@@ -177,10 +183,11 @@ public class TelaAgendar extends JFrame {
 		contentPane.add(btnCancelar);
 
 		ftfQntParticipantes = new JFormattedTextField();
-		ftfQntParticipantes.setBounds(120, 195, 83, 20);
+		ftfQntParticipantes.setBounds(120, 260, 83, 20);
 		contentPane.add(ftfQntParticipantes);
 
 		JLabel lblPessoa = new JLabel("Nome:");
+		lblPessoa.setForeground(new Color(103, 103, 103));
 		lblPessoa.setBounds(10, 136, 86, 14);
 		contentPane.add(lblPessoa);
 
@@ -188,6 +195,7 @@ public class TelaAgendar extends JFrame {
 		defaultComboBoxModel.insertElementAt(null, 0);
 
 		JLabel lblNewLabel = new JLabel("Agendamento de horários");
+		lblNewLabel.setForeground(new Color(103, 103, 103));
 		lblNewLabel.setFont(new Font("Arial", Font.BOLD, 13));
 		lblNewLabel.setBounds(10, 14, 177, 14);
 		contentPane.add(lblNewLabel);
@@ -198,15 +206,17 @@ public class TelaAgendar extends JFrame {
 		contentPane.add(lblNewLabel_1);
 
 		JLabel lblEmailVincPessoa = new JLabel("E-mail:");
+		lblEmailVincPessoa.setForeground(new Color(103, 103, 103));
 		lblEmailVincPessoa.setBounds(10, 168, 86, 14);
 		contentPane.add(lblEmailVincPessoa);
 
 		JLabel lblNewLabel_2 = new JLabel("Local:");
-		lblNewLabel_2.setBounds(10, 262, 46, 14);
+		lblNewLabel_2.setForeground(new Color(103, 103, 103));
+		lblNewLabel_2.setBounds(10, 232, 46, 14);
 		contentPane.add(lblNewLabel_2);
 
 		ftfLocal = new JFormattedTextField();
-		ftfLocal.setBounds(120, 257, 155, 20);
+		ftfLocal.setBounds(120, 229, 183, 20);
 		contentPane.add(ftfLocal);
 
 		comboBoxStatusServico = new JComboBox();
@@ -219,7 +229,7 @@ public class TelaAgendar extends JFrame {
 		contentPane.add(comboBoxStatusServico);
 
 		ftfNome = new JFormattedTextField();
-		ftfNome.setBounds(120, 133, 150, 20);
+		ftfNome.setBounds(120, 133, 183, 20);
 		contentPane.add(ftfNome);
 
 		JButton btnPesquisarNome = new JButton("");
@@ -234,7 +244,7 @@ public class TelaAgendar extends JFrame {
 			}
 		});
 		btnPesquisarNome.setIcon(new ImageIcon(TelaAgendar.class.getResource("/br/com/senac/view/img/pesquisar.png")));
-		btnPesquisarNome.setBounds(274, 133, 29, 23);
+		btnPesquisarNome.setBounds(310, 133, 24, 17);
 		contentPane.add(btnPesquisarNome);
 
 		ftfEmail = new JFormattedTextField();
@@ -249,7 +259,7 @@ public class TelaAgendar extends JFrame {
 			}
 		});
 		btnNewButton.setIcon(new ImageIcon(TelaAgendar.class.getResource("/br/com/senac/view/img/pesquisar.png")));
-		btnNewButton.setBounds(308, 164, 24, 23);
+		btnNewButton.setBounds(310, 168, 24, 17);
 		contentPane.add(btnNewButton);
 		
 		JLabel lblCodigo = new JLabel("Cód:");

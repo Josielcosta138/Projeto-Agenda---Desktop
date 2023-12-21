@@ -80,7 +80,7 @@ public class TelaAgendamentos extends JFrame {
 		setTitle("EVENTOS - AGENDA");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1016, 400);
+		setBounds(100, 100, 1244, 400);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -92,17 +92,17 @@ public class TelaAgendamentos extends JFrame {
 
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollPane.setBounds(23, 74, 952, 233);
+		scrollPane.setBounds(23, 65, 942, 242);
 		contentPane.add(scrollPane);
  
 		tableModel = new TableModel();
 		tableModel.addColumn("Código");
 		tableModel.addColumn("Local");
 		tableModel.addColumn("Status");
-		tableModel.addColumn("Participantes");
+		tableModel.addColumn("N°-Pessoas");
 		tableModel.addColumn("Cliente");
 		tableModel.addColumn("Tipo serviço");
-		tableModel.addColumn("E-mails-Vinculado(Pessoa)");
+		tableModel.addColumn("E-mail");
 		tableModel.addColumn("Data hora inicio");
 		tableModel.addColumn("Data hora fim");
 		
@@ -112,26 +112,27 @@ public class TelaAgendamentos extends JFrame {
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
 		TableColumnModel tcm = table.getColumnModel();
-		tcm.getColumn(0).setPreferredWidth(60);
-		tcm.getColumn(1).setPreferredWidth(60);
-		tcm.getColumn(2).setPreferredWidth(60);
-		tcm.getColumn(3).setPreferredWidth(100);
-		tcm.getColumn(4).setPreferredWidth(100);
-		tcm.getColumn(5).setPreferredWidth(100);
-		tcm.getColumn(6).setPreferredWidth(180);
-		tcm.getColumn(7).setPreferredWidth(140);
-		tcm.getColumn(8).setPreferredWidth(150);
+		tcm.getColumn(0).setPreferredWidth(40);
+		tcm.getColumn(1).setPreferredWidth(120);
+		tcm.getColumn(2).setPreferredWidth(140);
+		tcm.getColumn(3).setPreferredWidth(60);
+		tcm.getColumn(4).setPreferredWidth(80);
+		tcm.getColumn(5).setPreferredWidth(140);
+		tcm.getColumn(6).setPreferredWidth(160);
+		tcm.getColumn(7).setPreferredWidth(110);
+		tcm.getColumn(8).setPreferredWidth(110);
 
 		scrollPane.setViewportView(table);
 
 		JLabel lblListaAgendamento = new JLabel("Agendamentos:");
+		lblListaAgendamento.setForeground(new Color(131, 131, 131));
 		lblListaAgendamento.setFont(new Font("Tahoma", Font.BOLD, 14));
-		lblListaAgendamento.setBounds(23, 40, 127, 18);
+		lblListaAgendamento.setBounds(79, 31, 127, 18);
 		contentPane.add(lblListaAgendamento);
 
 		JFormattedTextField ftfDataAtual = new JFormattedTextField();
 		ftfDataAtual.setEditable(false);
-		ftfDataAtual.setBounds(859, 43, 113, 20);
+		ftfDataAtual.setBounds(1087, 34, 113, 20);
 		contentPane.add(ftfDataAtual);
 		ftfDataAtual.setText(sdf.format(new Date()));
 
@@ -148,7 +149,7 @@ public class TelaAgendamentos extends JFrame {
 		
 		JButton btnNewButton = new JButton("");
 		btnNewButton.setIcon(new ImageIcon(TelaAgendamentos.class.getResource("/br/com/senac/view/img/dateTime.png")));
-		btnNewButton.setBounds(834, 40, 26, 23);
+		btnNewButton.setBounds(1062, 31, 26, 23);
 		contentPane.add(btnNewButton);
 		
 		JButton btnVoltar = new JButton("Volt");
@@ -164,14 +165,19 @@ public class TelaAgendamentos extends JFrame {
 				
 		});
 		btnVoltar.setIcon(new ImageIcon(TelaAgendamentos.class.getResource("/br/com/senac/view/img/2303132_arrow_back_direction_left_navigation_icon.png")));
-		btnVoltar.setBounds(881, 318, 94, 23);
+		btnVoltar.setBounds(1106, 323, 94, 23);
 		contentPane.add(btnVoltar);
 		
 		JLabel lbliconePessoasAgend = new JLabel("");
 		lbliconePessoasAgend.setIcon(new ImageIcon(TelaAgendamentos.class.getResource("/br/com/senac/view/img/46832_group_search_icon.png")));
 		lbliconePessoasAgend.setBackground(new Color(192, 192, 192));
-		lbliconePessoasAgend.setBounds(453, 11, 60, 54);
+		lbliconePessoasAgend.setBounds(23, 11, 60, 54);
 		contentPane.add(lbliconePessoasAgend);
+		
+		JLabel lblAgendaAberta = new JLabel("");
+		lblAgendaAberta.setIcon(new ImageIcon(TelaAgendamentos.class.getResource("/br/com/senac/view/img/AgendaAberta.png")));
+		lblAgendaAberta.setBounds(994, 70, 206, 235);
+		contentPane.add(lblAgendaAberta);
 
 	}
 

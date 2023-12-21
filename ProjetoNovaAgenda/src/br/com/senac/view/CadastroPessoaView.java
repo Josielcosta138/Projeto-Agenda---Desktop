@@ -45,6 +45,7 @@ import java.awt.event.WindowEvent;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import java.awt.Font;
 
 public class CadastroPessoaView extends JFrame {
 
@@ -106,6 +107,8 @@ public class CadastroPessoaView extends JFrame {
 		panel.setLayout(null);
 
 		JLabel lblCodigo = new JLabel("Código:");
+		lblCodigo.setForeground(new Color(92, 92, 92));
+		lblCodigo.setFont(new Font("Tahoma", Font.BOLD, 11));
 		lblCodigo.setBounds(10, 10, 74, 13);
 		panel.add(lblCodigo);
 
@@ -114,6 +117,8 @@ public class CadastroPessoaView extends JFrame {
 		panel.add(ftfCodigo);
 
 		JLabel lblNome = new JLabel("Nome:");
+		lblNome.setForeground(new Color(92, 92, 92));
+		lblNome.setFont(new Font("Tahoma", Font.BOLD, 11));
 		lblNome.setBounds(160, 10, 54, 13);
 		panel.add(lblNome);
 
@@ -271,8 +276,11 @@ public class CadastroPessoaView extends JFrame {
 		btnExcluir1.setBounds(853, 341, 85, 21);
 		contentPane.add(btnExcluir1);
 
-		JLabel lblContatoTelef = new JLabel("Contatos telefônicos");
-		lblContatoTelef.setBounds(794, 16, 144, 13);
+		JLabel lblContatoTelef = new JLabel("Contatos");
+		lblContatoTelef.setForeground(new Color(92, 92, 92));
+		lblContatoTelef.setFont(new Font("Tahoma", Font.BOLD, 11));
+		lblContatoTelef.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/zap.png")));
+		lblContatoTelef.setBounds(815, 11, 79, 31);
 		contentPane.add(lblContatoTelef);
 
 		JButton btnSincronizar = new JButton("Sinc");
@@ -292,10 +300,14 @@ public class CadastroPessoaView extends JFrame {
 		contentPane.add(menuBar);
 
 		JMenu mnEventos = new JMenu("Eventos");
+		mnEventos.setForeground(new Color(92, 92, 92));
+		mnEventos.setFont(new Font("Segoe UI", Font.BOLD, 12));
 		mnEventos.setMnemonic('E');
 		menuBar.add(mnEventos);
 
 		JMenuItem mntmCalendario = new JMenuItem("Calendário ");
+		mntmCalendario.setForeground(new Color(92, 92, 92));
+		mntmCalendario.setFont(new Font("Segoe UI", Font.BOLD, 12));
 		mntmCalendario.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/calendario.png")));
 		mntmCalendario.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -312,6 +324,8 @@ public class CadastroPessoaView extends JFrame {
 		mnEventos.add(mntmCalendario);
 
 		JMenuItem mntmAgendar = new JMenuItem("Agendar");
+		mntmAgendar.setForeground(new Color(92, 92, 92));
+		mntmAgendar.setFont(new Font("Segoe UI", Font.BOLD, 12));
 		mntmAgendar.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/novo.png")));
 		mntmAgendar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -327,6 +341,8 @@ public class CadastroPessoaView extends JFrame {
 		mnEventos.add(mntmAgendar);
 
 		JMenuItem mntmDisponibilidades = new JMenuItem("Disponbilidades");
+		mntmDisponibilidades.setForeground(new Color(92, 92, 92));
+		mntmDisponibilidades.setFont(new Font("Segoe UI", Font.BOLD, 12));
 		mntmDisponibilidades.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/availability.png")));
 		mntmDisponibilidades.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -341,6 +357,8 @@ public class CadastroPessoaView extends JFrame {
 		});
 		
 		JMenuItem mntmAgendamentos = new JMenuItem("Agendamentos");
+		mntmAgendamentos.setForeground(new Color(92, 92, 92));
+		mntmAgendamentos.setFont(new Font("Segoe UI", Font.BOLD, 12));
 		mntmAgendamentos.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/tipo.png")));
 		mntmAgendamentos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -352,6 +370,8 @@ public class CadastroPessoaView extends JFrame {
 		mnEventos.add(mntmDisponibilidades);
 
 		JMenu mnManutencao = new JMenu("Manutençao");
+		mnManutencao.setForeground(new Color(92, 92, 92));
+		mnManutencao.setFont(new Font("Segoe UI", Font.BOLD, 12));
 		mnManutencao.setMnemonic('M');
 		menuBar.add(mnManutencao);
 
@@ -359,6 +379,8 @@ public class CadastroPessoaView extends JFrame {
 		mnManutencao.add(mntmNewMenuItem);
 
 		JMenu mnAjuda = new JMenu("Ajuda");
+		mnAjuda.setForeground(new Color(92, 92, 92));
+		mnAjuda.setFont(new Font("Segoe UI", Font.BOLD, 12));
 		menuBar.add(mnAjuda);
 		
 		
