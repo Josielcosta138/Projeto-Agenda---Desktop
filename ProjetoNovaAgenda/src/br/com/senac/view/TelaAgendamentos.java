@@ -98,13 +98,14 @@ public class TelaAgendamentos extends JFrame {
 		tableModel = new TableModel();
 		tableModel.addColumn("Código");
 		tableModel.addColumn("Local");
-		tableModel.addColumn("Status");
-		tableModel.addColumn("N°-Pessoas");
-		tableModel.addColumn("Cliente");
-		tableModel.addColumn("Tipo serviço");
-		tableModel.addColumn("E-mail");
 		tableModel.addColumn("Data hora inicio");
 		tableModel.addColumn("Data hora fim");
+		tableModel.addColumn("Status");
+		tableModel.addColumn("Tipo serviço");
+		tableModel.addColumn("Cliente");
+		tableModel.addColumn("E-mail");
+		tableModel.addColumn("N°-Pessoas");
+		
 		
 		
 		table = new JTable(tableModel);
@@ -113,14 +114,15 @@ public class TelaAgendamentos extends JFrame {
 
 		TableColumnModel tcm = table.getColumnModel();
 		tcm.getColumn(0).setPreferredWidth(40);
-		tcm.getColumn(1).setPreferredWidth(120);
+		tcm.getColumn(1).setPreferredWidth(80);
 		tcm.getColumn(2).setPreferredWidth(140);
-		tcm.getColumn(3).setPreferredWidth(60);
-		tcm.getColumn(4).setPreferredWidth(80);
-		tcm.getColumn(5).setPreferredWidth(140);
-		tcm.getColumn(6).setPreferredWidth(160);
-		tcm.getColumn(7).setPreferredWidth(110);
-		tcm.getColumn(8).setPreferredWidth(110);
+		tcm.getColumn(3).setPreferredWidth(140);
+		tcm.getColumn(4).setPreferredWidth(110);
+		tcm.getColumn(5).setPreferredWidth(120);
+		tcm.getColumn(6).setPreferredWidth(80);
+		tcm.getColumn(7).setPreferredWidth(160);
+		tcm.getColumn(8).setPreferredWidth(60);
+		
 
 		scrollPane.setViewportView(table);
 
@@ -229,13 +231,17 @@ public class TelaAgendamentos extends JFrame {
 							RowData rowData = new RowData();
 							rowData.getValues().put(0, eventoVO.getId().toString());
 							rowData.getValues().put(1, eventoVO.getLocal());
-							rowData.getValues().put(2, eventoVO.getStatus());
-							rowData.getValues().put(3, eventoVO.getParticipantes());
-							rowData.getValues().put(4, eventoVO.getNomeCliente());
+							rowData.getValues().put(2, eventoVO.getDataHoraInicio());
+							rowData.getValues().put(3, eventoVO.getDataHoraFim());
+							rowData.getValues().put(4, eventoVO.getStatus());
 							rowData.getValues().put(5, eventoVO.getTipoServico());
-							rowData.getValues().put(6, eventoVO.getEmail());
-							rowData.getValues().put(7, eventoVO.getDataHoraInicio());
-							rowData.getValues().put(8, eventoVO.getDataHoraFim());
+							rowData.getValues().put(6, eventoVO.getNomeCliente());
+							rowData.getValues().put(7, eventoVO.getEmail());
+							rowData.getValues().put(8, eventoVO.getParticipantes());
+							
+							
+							
+							
 		
 							rowData.setElement(eventoVO);
 							tableModel.addRow(rowData);

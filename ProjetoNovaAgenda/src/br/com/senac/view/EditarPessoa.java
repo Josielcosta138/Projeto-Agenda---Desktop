@@ -53,7 +53,7 @@ public class EditarPessoa extends JFrame {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(EditarPessoa.class.getResource("/br/com/senac/view/img/LogoSTYLEMANAGER black.png")));
 		contatoAtual = new ContatoVO();
 
-		setTitle("Pessoa");
+		setTitle("Cliente");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();

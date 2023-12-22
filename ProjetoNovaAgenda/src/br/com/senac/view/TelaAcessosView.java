@@ -13,6 +13,8 @@ import java.awt.event.ActionEvent;
 import java.awt.Color;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.text.ParseException;
+
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -138,7 +140,12 @@ public class TelaAcessosView extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				
 				if (telaAgendar == null) {
-					telaAgendar = new TelaAgendar();
+					try {
+						telaAgendar = new TelaAgendar();
+					} catch (ParseException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 				telaAgendar.setVisible(true);
 				dispose();
@@ -192,10 +199,10 @@ public class TelaAcessosView extends JFrame {
 		btnFinanceiro.setBounds(10, 205, 168, 33);
 		panel.add(btnFinanceiro);
 		
-		JLabel lblMenuRapido = new JLabel("Menu rápido");
+		JLabel lblMenuRapido = new JLabel("Menu de acesso rápido");
 		lblMenuRapido.setForeground(new Color(128, 128, 128));
 		lblMenuRapido.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblMenuRapido.setBounds(89, 19, 99, 14);
+		lblMenuRapido.setBounds(72, 19, 161, 14);
 		contentPane.add(lblMenuRapido);
 		
 		JButton button = new JButton("New button");

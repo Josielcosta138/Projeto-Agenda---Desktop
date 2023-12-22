@@ -1,28 +1,32 @@
 package br.com.senac.view;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.EventQueue;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.TableColumnModel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-import java.awt.Toolkit;
+import javax.swing.JLabel;
+import java.awt.Font;
+import java.awt.Color;
 import javax.swing.ImageIcon;
+import java.awt.Toolkit;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import javax.swing.JFormattedTextField;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Disponibilidade extends JFrame {
 
 	private JPanel contentPane;
+	private JTable table;
+	private CadastroPessoaView cadastroPessoaView;
+	private TableModel tableModel;
 
 	/**
 	 * Launch the application.
@@ -44,68 +48,110 @@ public class Disponibilidade extends JFrame {
 	 * Create the frame.
 	 */
 	public Disponibilidade() {
-		  setIconImage(Toolkit.getDefaultToolkit().getImage(Disponibilidade.class.getResource("/br/com/senac/view/img/LogoSTYLEMANAGER black.png")));
-	        setTitle("DISPONIBILIDADE");
-	        addWindowListener(new WindowAdapter() {
-	            @Override
-	            public void windowClosing(WindowEvent e) {
-	                CadastroPessoaView cadastroPessoaView = new CadastroPessoaView();
-	                cadastroPessoaView.setVisible(true);
-	                setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-	            }
-	        });
-	        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	        setBounds(100, 100, 706, 439);
-	        contentPane = new JPanel();
-	        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-	        setContentPane(contentPane);
-	        contentPane.setLayout(new BorderLayout(0, 0));
-	        setLocationRelativeTo(null);
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Disponibilidade.class.getResource("/br/com/senac/view/img/LogoSTYLEMANAGER black.png")));
+		setTitle("DISPONIBILIDADE");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 791, 373);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		setLocationRelativeTo(null);
+		
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 63, 539, 227);
+		contentPane.add(scrollPane);
+		
+		tableModel = new TableModel();
+		tableModel.addColumn("Status");
+		tableModel.addColumn("Data hora inicio");
+		tableModel.addColumn("Data hora fim");
+		tableModel.addColumn("Local");
+		
+		
+		
+		table = new JTable(tableModel);
+		table.setAutoscrolls(true);
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		
+		TableColumnModel tcm = table.getColumnModel();
+		tcm.getColumn(0).setPreferredWidth(140);
+		tcm.getColumn(1).setPreferredWidth(140);
+		tcm.getColumn(2).setPreferredWidth(140);
+		tcm.getColumn(3).setPreferredWidth(120);
+		
 
-	        // Adicione os botões acima do modelo de tabela
-	        JButton btnBotao1 = new JButton("");
-	        btnBotao1.addActionListener(new ActionListener() {
-	        	public void actionPerformed(ActionEvent e) {
-	        	}
-	        });
-	        btnBotao1.setIcon(new ImageIcon(Disponibilidade.class.getResource("/br/com/senac/view/img/planlist.png")));
-
-	        contentPane.add(btnBotao1, BorderLayout.NORTH);
-        
-
-	        // Cria um modelo de tabela simples para exemplo
-	        DefaultTableModel model = new DefaultTableModel(new Object[][] {}, new String[] { "Data", "Status" });
-
-	        // Adiciona algumas datas para teste (substitua isso com suas datas reais)
-	        model.addRow(new Object[] { "2023-12-01", "Ocupada" });
-	        model.addRow(new Object[] { "2023-12-02", "Vaga" });
-	        model.addRow(new Object[] { "2023-12-03", "Ocupada" });
-
-	        JTable table = new JTable(model);
-	        table.getColumnModel().getColumn(0).setPreferredWidth(150);
-	        table.getColumnModel().getColumn(1).setPreferredWidth(150);
-
-	        // Define a cor das células na coluna "Status" com base no valor (Ocupada ou Vaga)
-	        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
-	        renderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
-	        table.getColumnModel().getColumn(1).setCellRenderer(renderer);
-	        table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
-	            @Override
-	            public void setValue(Object value) {
-	                super.setValue(value);
-	                if ("Vaga".equals(value)) {
-	                    setBackground(Color.GREEN);
-	                    super.setValue(value);
-	                } else if ("Ocupada".equals(value)) {
-	                    setBackground(Color.ORANGE);
-	                    super.setValue(value);
-	                }
-	            }
-	        });
-
-	        JScrollPane scrollPane = new JScrollPane(table);
-	        contentPane.add(scrollPane, BorderLayout.CENTER);
-	    }
+		scrollPane.setViewportView(table);
+		
+		//table = new JTable();
+		//scrollPane.setViewportView(table);
+		
+		JLabel lblNewLabel = new JLabel("Disponibilidade de horarios");
+		lblNewLabel.setIcon(new ImageIcon(Disponibilidade.class.getResource("/br/com/senac/view/img/DisPonibilidade (2).png")));
+		lblNewLabel.setForeground(new Color(107, 107, 107));
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 11));
+		lblNewLabel.setBounds(20, 21, 262, 31);
+		contentPane.add(lblNewLabel);
+		
+		JLabel lblNewLabel_1 = new JLabel("");
+		lblNewLabel_1.setIcon(new ImageIcon(Disponibilidade.class.getResource("/br/com/senac/view/img/CopiaDispo.png")));
+		lblNewLabel_1.setBounds(559, 63, 206, 227);
+		contentPane.add(lblNewLabel_1);
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		
+		JFormattedTextField ftfHoraAtual = new JFormattedTextField();
+		ftfHoraAtual.setEditable(false);
+		ftfHoraAtual.setBounds(654, 11, 105, 20);
+		contentPane.add(ftfHoraAtual);
+		ftfHoraAtual.setText(sdf.format(new Date()));
+		
+		JButton btnNewButton = new JButton("Pesq");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				listarDisponibilidade();
+			}
+		});
+		btnNewButton.setIcon(new ImageIcon(Disponibilidade.class.getResource("/br/com/senac/view/img/pesquisar.png")));
+		btnNewButton.setBounds(10, 301, 105, 22);
+		contentPane.add(btnNewButton);
+		
+		JButton btnNewButton_1 = new JButton("Volt");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				voltar();
+			}
+		});
+		btnNewButton_1.setIcon(new ImageIcon(Disponibilidade.class.getResource("/br/com/senac/view/img/2303132_arrow_back_direction_left_navigation_icon.png")));
+		btnNewButton_1.setBounds(670, 301, 89, 23);
+		contentPane.add(btnNewButton_1);
+		
+		JLabel lblNewLabel_2 = new JLabel("");
+		lblNewLabel_2.setIcon(new ImageIcon(Disponibilidade.class.getResource("/br/com/senac/view/img/dateTime.png")));
+		lblNewLabel_2.setBounds(630, 11, 24, 20);
+		contentPane.add(lblNewLabel_2);
 	}
 
+	protected void listarDisponibilidade() {
+		
+		
+		
+		
+		
+		
+		
+		
+	}
 
+	protected void voltar() {
+		if (cadastroPessoaView == null) {
+			cadastroPessoaView = new CadastroPessoaView();
+		}
+		cadastroPessoaView.setVisible(true);
+		dispose();
+	}
+		
+}
