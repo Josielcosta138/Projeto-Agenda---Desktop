@@ -223,7 +223,7 @@ public class TelaAgendamentos extends JFrame {
 
 					System.out.println("Lista agendamentos --> "+listaAgendamentos);
 					//Collections.sort(listaAgendamentos, (contato1, contato2) -> contato1.getNome().compareTo(contato2.getNome()));
-
+//
 					for (EventoVO eventoVO : listaAgendamentos) {
 
 						if (eventoVO.getId() != null) {
