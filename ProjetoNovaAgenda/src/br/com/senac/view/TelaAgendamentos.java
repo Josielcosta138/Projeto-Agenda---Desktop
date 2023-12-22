@@ -239,10 +239,7 @@ public class TelaAgendamentos extends JFrame {
 							rowData.getValues().put(7, eventoVO.getEmail());
 							rowData.getValues().put(8, eventoVO.getParticipantes());
 							
-							
-							
-							
-		
+
 							rowData.setElement(eventoVO);
 							tableModel.addRow(rowData);
 						}else {
