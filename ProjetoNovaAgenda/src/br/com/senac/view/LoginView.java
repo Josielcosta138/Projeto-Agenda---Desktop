@@ -35,6 +35,7 @@ public class LoginView extends JFrame {
 	private JPasswordField passwordField;
 	private JLabel lblNewLabel;
 	private LoginView loginView;
+	private JLabel lblNewLabel_4;
 	
 	public LoginView() {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(LoginView.class.getResource("/br/com/senac/view/img/stLOG.png")));
@@ -122,6 +123,11 @@ public class LoginView extends JFrame {
 		btnNewButton.setIcon(new ImageIcon(LoginView.class.getResource("/br/com/senac/view/img/10131944_door_exit_line_icon - Copia.png")));
 		btnNewButton.setBounds(187, 270, 93, 21);
 		contentPane.add(btnNewButton);
+		
+		lblNewLabel_4 = new JLabel("Versão 1.0");
+		lblNewLabel_4.setForeground(new Color(107, 107, 107));
+		lblNewLabel_4.setBounds(520, 322, 68, 14);
+		contentPane.add(lblNewLabel_4);
 	}
 	
 	public void validaSenha() {

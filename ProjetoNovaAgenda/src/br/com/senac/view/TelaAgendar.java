@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -57,7 +58,7 @@ public class TelaAgendar extends JFrame {
 	private JFormattedTextField ftfEmail;
 	private JFormattedTextField ftfQntParticipantes;
 	private JFormattedTextField ftfLocal;
-	private JTextField ftfHoraInicio;
+	private JFormattedTextField ftfHoraInicio;
 	private JFormattedTextField ftfHoraFim;
 	private JFormattedTextField ftfCodigo;
 	
@@ -76,7 +77,7 @@ public class TelaAgendar extends JFrame {
 		});
 	}
 
-	public TelaAgendar() {
+	public TelaAgendar() throws ParseException {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -106,15 +107,14 @@ public class TelaAgendar extends JFrame {
 
 		// Exibe a data e hora atuais no campo "Data e Hora"
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-		//MaskFormatter mask = new MaskFormatter("##/##/#### ##:##:##");
+		MaskFormatter mask = new MaskFormatter("##/##/#### ##:##:##");
 		
-
 		JLabel lblDataHoraInicio = new JLabel("Data e Hora Inicio:");
 		lblDataHoraInicio.setForeground(new Color(103, 103, 103));
 		lblDataHoraInicio.setBounds(10, 74, 112, 20);
 		contentPane.add(lblDataHoraInicio);
 
-		ftfHoraInicio = new JTextField();
+		ftfHoraInicio = new JFormattedTextField(mask);
 		ftfHoraInicio.setBounds(120, 74, 150, 20);
 		contentPane.add(ftfHoraInicio);
 		ftfHoraInicio.setColumns(10);
@@ -134,6 +134,7 @@ public class TelaAgendar extends JFrame {
 		btnAgendar.setBounds(404, 279, 114, 28);
 		contentPane.add(btnAgendar);
 
+
 		tftHoraAtual = new JTextField();
 		tftHoraAtual.setEditable(false);
 		tftHoraAtual.setBounds(494, 11, 130, 20);
@@ -146,7 +147,8 @@ public class TelaAgendar extends JFrame {
 		lblDataHoraFim.setBounds(10, 108, 100, 14);
 		contentPane.add(lblDataHoraFim);
 
-		ftfHoraFim = new JFormattedTextField();
+		
+		ftfHoraFim = new JFormattedTextField(mask);
 		ftfHoraFim.setBounds(120, 105, 150, 20);
 		contentPane.add(ftfHoraFim);
 		ftfHoraFim.setText(sdf.format(new Date()));
@@ -376,6 +378,7 @@ public class TelaAgendar extends JFrame {
 	protected void agendar() {
 		
 		try {
+		
 			
 			Service service = new Service();
 			EventoVO eventoVO = new EventoVO();
@@ -388,6 +391,20 @@ public class TelaAgendar extends JFrame {
 			String local = ftfLocal.getText().trim();
 			String dataHoraInicio = ftfHoraInicio.getText().trim();
 			String dataHoraFim = ftfHoraFim.getText().trim();
+			
+			
+			
+			/////////
+			  List<EventoVO> eventosAgendados = buscarEventosPorPeriodo(eventoVO.getDataHoraInicio(), eventoVO.getDataHoraFim());
+
+			  // Verifica se o intervalo de tempo está disponível
+		        if (!intervaloDisponivel(dataHoraInicio, dataHoraFim)) {
+		            JOptionPane.showMessageDialog(this, "Ops:x \nO horário especificado já está ocupado! "
+		            		+ "\nConsulte o módulo Disponibilidade de horários! ", "Aviso",
+		                    JOptionPane.WARNING_MESSAGE);
+		            return;
+		        }
+			
 			
 			
 			if (codigo != null && codigo.length() > 0) {
@@ -481,4 +498,53 @@ public class TelaAgendar extends JFrame {
 		dispose();
 
 	}
+	
+	private List<EventoVO> buscarEventosPorPeriodo(Date dataHoraInicio, Date dataHoraFim) {
+	    try {
+	        EntityManager em = HibernateUtil.getEntityManager();
+
+	        CriteriaBuilder cb = em.getCriteriaBuilder();
+	        CriteriaQuery<EventoVO> criteria = cb.createQuery(EventoVO.class);
+
+	        Root<EventoVO> eventosFrom = criteria.from(EventoVO.class);
+	        criteria.select(eventosFrom);
+
+	        // Adicione as condições para verificar se existe algum evento no período
+	        criteria.where(
+	            cb.or(
+	                cb.between(eventosFrom.get("dataHoraInicio"), dataHoraInicio, dataHoraFim),
+	                cb.between(eventosFrom.get("dataHoraFim"), dataHoraInicio, dataHoraFim)
+	            )
+	        );
+
+	        TypedQuery<EventoVO> query = em.createQuery(criteria);
+	        return query.getResultList();
+	    } catch (Exception e) {
+	        e.printStackTrace(); // Tratamento adequado para o erro no seu ambiente
+	        return Collections.emptyList(); // Retorna uma lista vazia em caso de erro
+	    }
+	}
+	
+	
+	private boolean intervaloDisponivel(String dataHoraInicioStr, String dataHoraFimStr) {
+	    try {
+	        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+
+	        // Convertendo as strings para objetos Date
+	        Date dataHoraInicio = dateFormat.parse(dataHoraInicioStr + " 00:00:00");
+	        Date dataHoraFim = dateFormat.parse(dataHoraFimStr + " 00:00:00");
+
+	        // Obtendo a lista de eventos já agendados para o período especificado
+	        List<EventoVO> eventosAgendados = buscarEventosPorPeriodo(dataHoraInicio, dataHoraFim);
+
+	        // Verificar se já existem eventos agendados para o período
+	        return eventosAgendados.isEmpty();
+	    } catch (ParseException e) {
+	        e.printStackTrace(); // Tratamento adequado para o erro no seu ambiente
+	        return false;
+	    }
+	}
+	
+	
+	
 }

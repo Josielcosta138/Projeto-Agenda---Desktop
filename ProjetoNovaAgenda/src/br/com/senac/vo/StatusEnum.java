@@ -2,7 +2,7 @@ package br.com.senac.vo;
 
 public enum StatusEnum {
 
-	LIBERADO("Liberado"),
+	CANCELADO("Cancelado"),
 	AGENDADO("Agendado"),
 	AGUARDANDO_CONFIRMACAO("Aguardando confirmação");
 

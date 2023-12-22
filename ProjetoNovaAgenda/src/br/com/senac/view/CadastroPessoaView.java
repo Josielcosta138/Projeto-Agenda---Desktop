@@ -32,6 +32,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.JTable;
 import java.awt.event.ActionListener;
 import java.math.BigInteger;
+import java.text.ParseException;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -305,24 +306,6 @@ public class CadastroPessoaView extends JFrame {
 		mnEventos.setMnemonic('E');
 		menuBar.add(mnEventos);
 
-		JMenuItem mntmCalendario = new JMenuItem("Calendário ");
-		mntmCalendario.setForeground(new Color(92, 92, 92));
-		mntmCalendario.setFont(new Font("Segoe UI", Font.BOLD, 12));
-		mntmCalendario.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/calendario.png")));
-		mntmCalendario.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-
-				if (telaCalendario == null) {
-					telaCalendario = new TelaCalendario();
-				}
-				telaCalendario.setVisible(true);
-				dispose();
-				System.out.println("Clicou no Calendário");
-
-			}
-		});
-		mnEventos.add(mntmCalendario);
-
 		JMenuItem mntmAgendar = new JMenuItem("Agendar");
 		mntmAgendar.setForeground(new Color(92, 92, 92));
 		mntmAgendar.setFont(new Font("Segoe UI", Font.BOLD, 12));
@@ -331,7 +314,12 @@ public class CadastroPessoaView extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 
 				if (telaAgendar == null) {
-					telaAgendar = new TelaAgendar();
+					try {
+						telaAgendar = new TelaAgendar();
+					} catch (ParseException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 				telaAgendar.setVisible(true);
 				dispose();
@@ -368,6 +356,30 @@ public class CadastroPessoaView extends JFrame {
 		});
 		mnEventos.add(mntmAgendamentos);
 		mnEventos.add(mntmDisponibilidades);
+		
+		JMenuItem mntmNewMenuItem_1 = new JMenuItem("Financeiro");
+		mntmNewMenuItem_1.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/financ2.png")));
+		mntmNewMenuItem_1.setForeground(new Color(107, 107, 107));
+		mntmNewMenuItem_1.setFont(new Font("Segoe UI", Font.BOLD, 12));
+		mnEventos.add(mntmNewMenuItem_1);
+		
+				JMenuItem mntmCalendario = new JMenuItem("Calendário ");
+				mntmCalendario.setForeground(new Color(92, 92, 92));
+				mntmCalendario.setFont(new Font("Segoe UI", Font.BOLD, 12));
+				mntmCalendario.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/calendario.png")));
+				mntmCalendario.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+
+						if (telaCalendario == null) {
+							telaCalendario = new TelaCalendario();
+						}
+						telaCalendario.setVisible(true);
+						dispose();
+						System.out.println("Clicou no Calendário");
+
+					}
+				});
+				mnEventos.add(mntmCalendario);
 
 		JMenu mnManutencao = new JMenu("Manutençao");
 		mnManutencao.setForeground(new Color(92, 92, 92));

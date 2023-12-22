@@ -67,7 +67,7 @@ public class EditarContato extends JFrame {
 		
 		this.contato = contato;
 
-		setTitle("Contatos");
+		setTitle("Contato");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
