@@ -6,7 +6,9 @@ import java.awt.event.ActionListener;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -20,6 +22,7 @@ import javax.swing.text.MaskFormatter;
 
 import br.com.senac.dao.HibernateUtil;
 import br.com.senac.exception.BOValidationException;
+import br.com.senac.service.IService;
 import br.com.senac.service.Service;
 import br.com.senac.vo.ContatoVO;
 import br.com.senac.vo.ContelVO;
@@ -61,7 +64,8 @@ public class TelaAgendar extends JFrame {
 	private JFormattedTextField ftfHoraInicio;
 	private JFormattedTextField ftfHoraFim;
 	private JFormattedTextField ftfCodigo;
-	
+	private String novaDataHoraInicioStr;
+	private String novaDataHoraFimStr;
 	
 
 	public static void main(String[] args) {
@@ -76,6 +80,9 @@ public class TelaAgendar extends JFrame {
 			}
 		});
 	}
+	
+	
+
 
 	public TelaAgendar() throws ParseException {
 		addWindowListener(new WindowAdapter() {
@@ -93,21 +100,57 @@ public class TelaAgendar extends JFrame {
 		setBounds(100, 100, 664, 361);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		
+		// Exibe a data e hora atuais no campo "Data e Hora"
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		MaskFormatter mask = new MaskFormatter("##/##/#### ##:##:##");
+		
+		//Listar age
+		EntityManager em = HibernateUtil.getEntityManager();
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<EventoVO> criteria = cb.createQuery(EventoVO.class);
+		Root<EventoVO> agendamentosFrom = criteria.from(EventoVO.class);
+		criteria.select(agendamentosFrom);
+		TypedQuery<EventoVO> query = em.createQuery(criteria);
+		List<EventoVO> listaAgendamentos = query.getResultList();
 
+		System.out.println("Lista agendamentos ULTIMO --> "+listaAgendamentos);
+		for (EventoVO eventoVO : listaAgendamentos) {
+			System.out.println("ULTIMO HORARIO: " + eventoVO.getDataHoraFim());
+			
+		}
+		
+		if (!listaAgendamentos.isEmpty()) {
+		    // Ordena a lista de eventos pela dataHoraFim em ordem decrescente
+		    Collections.sort(listaAgendamentos, Comparator.comparing(EventoVO::getDataHoraFim).reversed());
+
+		    EventoVO ultimoEvento = listaAgendamentos.get(0);
+		    Date dataHoraFimUltimoEvento = ultimoEvento.getDataHoraFim();
+
+		    //HORAFIM+31
+		    Calendar cal = Calendar.getInstance();
+		    cal.setTime(dataHoraFimUltimoEvento);
+		    cal.add(Calendar.MINUTE, 31);
+		    Date novaDataHoraInicio = cal.getTime();
+		    novaDataHoraInicioStr = sdf.format(novaDataHoraInicio);
+		    
+		    //HORAFIM+31
+		    cal.setTime(novaDataHoraInicio);
+		    cal.add(Calendar.MINUTE, 31);
+		    Date novaDataHoraFim = cal.getTime();
+		    novaDataHoraFimStr = sdf.format(novaDataHoraFim);
+
+		}
+		
+		
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		setLocationRelativeTo(null);
 		
-		//
-
 		JLabel lblTipoServico = new JLabel("Tipo de serviço:");
 		lblTipoServico.setForeground(new Color(103, 103, 103));
 		lblTipoServico.setBounds(10, 44, 100, 20);
 		contentPane.add(lblTipoServico);
-
-		// Exibe a data e hora atuais no campo "Data e Hora"
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-		MaskFormatter mask = new MaskFormatter("##/##/#### ##:##:##");
 		
 		JLabel lblDataHoraInicio = new JLabel("Data e Hora Inicio:");
 		lblDataHoraInicio.setForeground(new Color(103, 103, 103));
@@ -118,7 +161,7 @@ public class TelaAgendar extends JFrame {
 		ftfHoraInicio.setBounds(120, 74, 150, 20);
 		contentPane.add(ftfHoraInicio);
 		ftfHoraInicio.setColumns(10);
-		ftfHoraInicio.setText(sdf.format(new Date()));
+		ftfHoraInicio.setText(novaDataHoraInicioStr);
 
 		JButton btnAgendar = new JButton("Agendar");
 		btnAgendar.setIcon(new ImageIcon(TelaAgendar.class.getResource("/br/com/senac/view/img/edit.png")));
@@ -151,7 +194,7 @@ public class TelaAgendar extends JFrame {
 		ftfHoraFim = new JFormattedTextField(mask);
 		ftfHoraFim.setBounds(120, 105, 150, 20);
 		contentPane.add(ftfHoraFim);
-		ftfHoraFim.setText(sdf.format(new Date()));
+		ftfHoraFim.setText(novaDataHoraFimStr);
 
 		JLabel lblParticipantes = new JLabel("N° Participantes:");
 		lblParticipantes.setForeground(new Color(103, 103, 103));
@@ -279,8 +322,87 @@ public class TelaAgendar extends JFrame {
 		lblNewLabel_3.setIcon(new ImageIcon(TelaAgendar.class.getResource("/br/com/senac/view/img/AgendarFoto - Copia (2).png")));
 		lblNewLabel_3.setBounds(404, 44, 229, 222);
 		contentPane.add(lblNewLabel_3);
+		
+		JButton btnAtualizarHorarios = new JButton("");
+		btnAtualizarHorarios.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					atualizarHorarios();
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		btnAtualizarHorarios.setIcon(new ImageIcon(TelaAgendar.class.getResource("/br/com/senac/view/img/AttHoras.png")));
+		btnAtualizarHorarios.setBounds(280, 74, 24, 20);
+		contentPane.add(btnAtualizarHorarios);
 
 	}
+
+	public void atualizarHorarios() throws ParseException {
+		
+	
+		//Listar age
+				EntityManager em = HibernateUtil.getEntityManager();
+				CriteriaBuilder cb = em.getCriteriaBuilder();
+				CriteriaQuery<EventoVO> criteria = cb.createQuery(EventoVO.class);
+				Root<EventoVO> agendamentosFrom = criteria.from(EventoVO.class);
+				criteria.select(agendamentosFrom);
+				TypedQuery<EventoVO> query = em.createQuery(criteria);
+				List<EventoVO> listaAgendamentos = query.getResultList();
+
+				System.out.println("Lista agendamentos ULTIMO --> "+listaAgendamentos);
+				for (EventoVO eventoVO : listaAgendamentos) {
+					System.out.println("ULTIMO HORARIO: " + eventoVO.getDataHoraFim());
+				}
+				
+				
+		if (!listaAgendamentos.isEmpty()) {
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+			MaskFormatter mask = new MaskFormatter("##/##/#### ##:##:##");
+			
+		    // Ordena a lista de eventos pela dataHoraFim em ordem decrescente
+		    Collections.sort(listaAgendamentos, Comparator.comparing(EventoVO::getDataHoraFim).reversed());
+
+		    EventoVO ultimoEvento = listaAgendamentos.get(0);
+		    Date dataHoraFimUltimoEvento = ultimoEvento.getDataHoraFim();
+
+		    //HORAFIM+31
+		    Calendar cal = Calendar.getInstance();
+		    cal.setTime(dataHoraFimUltimoEvento);
+		    cal.add(Calendar.MINUTE, 31);
+		    Date novaDataHoraInicio = cal.getTime();
+		    novaDataHoraInicioStr = sdf.format(novaDataHoraInicio);
+		    
+		    //HORAFIM+31
+		    cal.setTime(novaDataHoraInicio);
+		    cal.add(Calendar.MINUTE, 31);
+		    Date novaDataHoraFim = cal.getTime();
+		    novaDataHoraFimStr = sdf.format(novaDataHoraFim);
+		   
+		    
+		    ftfHoraFim = new JFormattedTextField(mask);
+			ftfHoraFim.setBounds(120, 105, 150, 20);
+			contentPane.add(ftfHoraFim);
+			ftfHoraFim.setText(novaDataHoraFimStr);
+			
+			ftfHoraInicio = new JFormattedTextField(mask);
+			ftfHoraInicio.setBounds(120, 74, 150, 20);
+			contentPane.add(ftfHoraInicio);
+			ftfHoraInicio.setColumns(10);
+			ftfHoraInicio.setText(novaDataHoraInicioStr);
+			
+			
+			
+
+		}
+		
+		
+	}
+
+
+
 
 	protected void pesquisarPorNomeEmail() {
 
