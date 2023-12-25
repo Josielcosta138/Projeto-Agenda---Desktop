@@ -114,7 +114,7 @@ public class TelaAgendar extends JFrame {
 		TypedQuery<EventoVO> query = em.createQuery(criteria);
 		List<EventoVO> listaAgendamentos = query.getResultList();
 
-		System.out.println("Lista agendamentos ULTIMO --> "+listaAgendamentos);
+		System.out.println("Lista agendamentos ULTIMO --> " + listaAgendamentos);
 		for (EventoVO eventoVO : listaAgendamentos) {
 			System.out.println("ULTIMO HORARIO: " + eventoVO.getDataHoraFim());
 			
@@ -139,6 +139,8 @@ public class TelaAgendar extends JFrame {
 		    cal.add(Calendar.MINUTE, 31);
 		    Date novaDataHoraFim = cal.getTime();
 		    novaDataHoraFimStr = sdf.format(novaDataHoraFim);
+		    
+		    
 
 		}
 		
@@ -172,7 +174,7 @@ public class TelaAgendar extends JFrame {
 
 				System.out.println("Teste agendar");
 				agendar();
-			}
+			} 
 		});
 		btnAgendar.setBounds(404, 279, 114, 28);
 		contentPane.add(btnAgendar);
@@ -380,8 +382,31 @@ public class TelaAgendar extends JFrame {
 		    cal.add(Calendar.MINUTE, 31);
 		    Date novaDataHoraFim = cal.getTime();
 		    novaDataHoraFimStr = sdf.format(novaDataHoraFim);
-		   
 		    
+		    if (!listaAgendamentos.isEmpty()) {
+			    // Ordena a lista de eventos pela dataHoraFim em ordem decrescente
+			    Collections.sort(listaAgendamentos, Comparator.comparing(EventoVO::getDataHoraFim).reversed());
+
+			    EventoVO ultimoEvento1 = listaAgendamentos.get(0);
+			    Date dataHoraFimUltimoEvento1 = ultimoEvento1.getDataHoraFim();
+
+			    //HORAFIM+31
+			    Calendar cal1 = Calendar.getInstance();
+			    cal1.setTime(dataHoraFimUltimoEvento1);
+			    cal1.add(Calendar.MINUTE, 31);
+			    Date novaDataHoraInicio1 = cal1.getTime();
+			    novaDataHoraInicioStr = sdf.format(novaDataHoraInicio1);
+			    
+			    //HORAFIM+31
+			    cal1.setTime(novaDataHoraInicio1);
+			    cal1.add(Calendar.MINUTE, 31);
+			    Date novaDataHoraFim1 = cal1.getTime();
+			    novaDataHoraFimStr = sdf.format(novaDataHoraFim1);
+
+			}
+			
+		    
+  
 		    ftfHoraFim = new JFormattedTextField(mask);
 			ftfHoraFim.setBounds(120, 105, 150, 20);
 			contentPane.add(ftfHoraFim);
@@ -392,8 +417,6 @@ public class TelaAgendar extends JFrame {
 			contentPane.add(ftfHoraInicio);
 			ftfHoraInicio.setColumns(10);
 			ftfHoraInicio.setText(novaDataHoraInicioStr);
-			
-			
 			
 
 		}
@@ -522,7 +545,8 @@ public class TelaAgendar extends JFrame {
 			  // Verifica se o intervalo de tempo está disponível
 		        if (!intervaloDisponivel(dataHoraInicio, dataHoraFim)) {
 		            JOptionPane.showMessageDialog(this, "Ops:x \nO horário especificado já está ocupado! "
-		            		+ "\nConsulte o módulo Disponibilidade de horários! ", "Aviso",
+		            		+ "\nConsulte o módulo Disponibilidade de horários!"
+		            		+ "\nOu atualize o horário.  ", "Aviso",
 		                    JOptionPane.WARNING_MESSAGE);
 		            return;
 		        }
@@ -632,17 +656,31 @@ public class TelaAgendar extends JFrame {
 	        criteria.select(eventosFrom);
 
 	        // Adicione as condições para verificar se existe algum evento no período
-	        criteria.where(
+	       /* criteria.where(
 	            cb.or(
 	                cb.between(eventosFrom.get("dataHoraInicio"), dataHoraInicio, dataHoraFim),
 	                cb.between(eventosFrom.get("dataHoraFim"), dataHoraInicio, dataHoraFim)
 	            )
+	        ); */
+	        // Adicione as condições para verificar se existe algum evento no período
+	        criteria.where(
+	            cb.or(
+	                cb.and(
+	                    cb.lessThanOrEqualTo(eventosFrom.get("dataHoraInicio"), dataHoraInicio),
+	                    cb.greaterThanOrEqualTo(eventosFrom.get("dataHoraFim"), dataHoraInicio)
+	                ),
+	                cb.and(
+	                    cb.lessThanOrEqualTo(eventosFrom.get("dataHoraInicio"), dataHoraFim),
+	                    cb.greaterThanOrEqualTo(eventosFrom.get("dataHoraFim"), dataHoraFim)
+	                )
+	            )
 	        );
-
+	        
 	        TypedQuery<EventoVO> query = em.createQuery(criteria);
 	        return query.getResultList();
 	    } catch (Exception e) {
 	        e.printStackTrace(); // Tratamento adequado para o erro no seu ambiente
+	        System.out.println("Lista vazia horas");
 	        return Collections.emptyList(); // Retorna uma lista vazia em caso de erro
 	    }
 	}

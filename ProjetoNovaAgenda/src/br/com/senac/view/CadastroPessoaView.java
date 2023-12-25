@@ -93,7 +93,7 @@ public class CadastroPessoaView extends JFrame {
 
 		setTitle("MENU PRINCIPAL -STYLE MANAGER");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1089, 428);
+		setBounds(100, 100, 1163, 428);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -120,14 +120,14 @@ public class CadastroPessoaView extends JFrame {
 		JLabel lblNome = new JLabel("Nome:");
 		lblNome.setForeground(new Color(92, 92, 92));
 		lblNome.setFont(new Font("Tahoma", Font.BOLD, 11));
-		lblNome.setBounds(160, 10, 54, 13);
+		lblNome.setBounds(143, 10, 54, 13);
 		panel.add(lblNome);
 
 		ftfNome = new JFormattedTextField();
-		ftfNome.setBounds(159, 30, 312, 19);
+		ftfNome.setBounds(142, 30, 312, 19);
 		panel.add(ftfNome);
 
-		JButton btnPesquisar = new JButton("Pesq");
+		JButton btnPesquisar = new JButton("Pesquisar");
 		btnPesquisar
 				.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/pesquisar.png")));
 		btnPesquisar.addActionListener(new ActionListener() {
@@ -136,10 +136,10 @@ public class CadastroPessoaView extends JFrame {
 			}
 		});
 		btnPesquisar.setMnemonic('P');
-		btnPesquisar.setBounds(481, 29, 100, 21);
+		btnPesquisar.setBounds(464, 29, 131, 21);
 		panel.add(btnPesquisar);
 
-		JButton btnAdcionar = new JButton("Adc");
+		JButton btnAdcionar = new JButton("Adicionar");
 		btnAdcionar
 				.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/adicionar.png")));
 
@@ -150,10 +150,10 @@ public class CadastroPessoaView extends JFrame {
 		});
 
 		btnAdcionar.setMnemonic('A');
-		btnAdcionar.setBounds(20, 137, 85, 23);
+		btnAdcionar.setBounds(20, 139, 121, 21);
 		contentPane.add(btnAdcionar);
 
-		JButton btnEditar = new JButton("Edt");
+		JButton btnEditar = new JButton("Editar");
 		btnEditar.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/editar.png")));
 
 		btnEditar.addActionListener(new ActionListener() {
@@ -162,10 +162,10 @@ public class CadastroPessoaView extends JFrame {
 			}
 		});
 
-		btnEditar.setBounds(165, 139, 85, 21);
+		btnEditar.setBounds(165, 139, 101, 21);
 		contentPane.add(btnEditar);
 
-		JButton btnExcluir = new JButton("Exc");
+		JButton btnExcluir = new JButton("Excluir");
 		btnExcluir.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/remove.png")));
 
 		btnExcluir.addActionListener(new ActionListener() {
@@ -174,7 +174,7 @@ public class CadastroPessoaView extends JFrame {
 			}
 		});
 
-		btnExcluir.setBounds(308, 139, 85, 21);
+		btnExcluir.setBounds(288, 139, 101, 21);
 		contentPane.add(btnExcluir);
 
 		JScrollPane scrollPane = new JScrollPane();
@@ -208,7 +208,7 @@ public class CadastroPessoaView extends JFrame {
 
 		scrollPane.setViewportView(table);
 
-		JButton btnVoltar = new JButton("Volt");
+		JButton btnVoltar = new JButton("Voltar");
 		btnVoltar.setIcon(new ImageIcon(CadastroPessoaView.class
 				.getResource("/br/com/senac/view/img/2303132_arrow_back_direction_left_navigation_icon.png")));
 		btnVoltar.addActionListener(new ActionListener() {
@@ -218,12 +218,12 @@ public class CadastroPessoaView extends JFrame {
 		});
 
 		btnVoltar.setMnemonic('V');
-		btnVoltar.setBounds(530, 139, 85, 21);
+		btnVoltar.setBounds(514, 139, 101, 21);
 		contentPane.add(btnVoltar);
 
 		JScrollPane scrolPContelefone = new JScrollPane();
 		scrolPContelefone.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scrolPContelefone.setBounds(635, 42, 417, 284);
+		scrolPContelefone.setBounds(635, 42, 497, 284);
 		contentPane.add(scrolPContelefone);
 
 		table_1 = new JTable();
@@ -241,14 +241,14 @@ public class CadastroPessoaView extends JFrame {
 		TableColumnModel tcm1 = table_1.getColumnModel();
 		tcm1.getColumn(0).setPreferredWidth(70);
 		tcm1.getColumn(1).setPreferredWidth(60);
-		tcm1.getColumn(2).setPreferredWidth(100);
-		tcm1.getColumn(3).setPreferredWidth(180);
+		tcm1.getColumn(2).setPreferredWidth(160);
+		tcm1.getColumn(3).setPreferredWidth(200);
 
 		scrolPContelefone.setViewportView(table_1);
 
-		JButton btnAdc = new JButton("Adc");
+		JButton btnAdc = new JButton("Adicionar");
 		btnAdc.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/adicionar2.png")));
-		btnAdc.setBounds(645, 341, 101, 21);
+		btnAdc.setBounds(633, 341, 119, 21);
 		contentPane.add(btnAdc);
 
 		btnAdc.addActionListener(new ActionListener() {
@@ -257,34 +257,34 @@ public class CadastroPessoaView extends JFrame {
 			}
 		});
 
-		JButton btnEdtar1 = new JButton("Edt");
+		JButton btnEdtar1 = new JButton("Editar");
 		btnEdtar1.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/editar.png")));
 		btnEdtar1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				editarContatoTelefonico();
 			}
 		});
-		btnEdtar1.setBounds(756, 341, 85, 21);
+		btnEdtar1.setBounds(762, 341, 95, 21);
 		contentPane.add(btnEdtar1);
 
-		JButton btnExcluir1 = new JButton("Exc");
+		JButton btnExcluir1 = new JButton("Excluir");
 		btnExcluir1.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/remove.png")));
 		btnExcluir1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				excluirContatoTelefonico();
 			}
 		});
-		btnExcluir1.setBounds(853, 341, 85, 21);
+		btnExcluir1.setBounds(867, 341, 101, 21);
 		contentPane.add(btnExcluir1);
 
 		JLabel lblContatoTelef = new JLabel("Contatos");
 		lblContatoTelef.setForeground(new Color(92, 92, 92));
 		lblContatoTelef.setFont(new Font("Tahoma", Font.BOLD, 11));
 		lblContatoTelef.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/zap.png")));
-		lblContatoTelef.setBounds(815, 11, 79, 31);
+		lblContatoTelef.setBounds(855, 11, 157, 31);
 		contentPane.add(lblContatoTelef);
 
-		JButton btnSincronizar = new JButton("Sinc");
+		JButton btnSincronizar = new JButton("Sincronizar");
 		btnSincronizar.setIcon(
 				new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/8726304_refresh_icon.png")));
 		btnSincronizar.addActionListener(new ActionListener() {
@@ -293,7 +293,7 @@ public class CadastroPessoaView extends JFrame {
 				sincronizarContTelefonico();
 			}
 		});
-		btnSincronizar.setBounds(952, 340, 89, 23);
+		btnSincronizar.setBounds(1004, 341, 128, 21);
 		contentPane.add(btnSincronizar);
 
 		JMenuBar menuBar = new JMenuBar();
