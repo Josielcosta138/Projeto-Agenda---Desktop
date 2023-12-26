@@ -18,6 +18,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.text.MaskFormatter;
 
 import br.com.senac.dao.HibernateUtil;
@@ -45,6 +47,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import java.awt.Font;
 import java.awt.Color;
@@ -66,7 +69,8 @@ public class TelaAgendar extends JFrame {
 	private JFormattedTextField ftfCodigo;
 	private String novaDataHoraInicioStr;
 	private String novaDataHoraFimStr;
-	
+	private JList<String> nomeList;
+	private JList<String> emailList;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -80,9 +84,6 @@ public class TelaAgendar extends JFrame {
 			}
 		});
 	}
-	
-	
-
 
 	public TelaAgendar() throws ParseException {
 		addWindowListener(new WindowAdapter() {
@@ -100,12 +101,24 @@ public class TelaAgendar extends JFrame {
 		setBounds(100, 100, 686, 425);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		
+
+		// Lista de nomes na busca de campos
+		nomeList = new JList<>();
+		nomeList.setBounds(340, 133, 150, 100);
+		contentPane.add(nomeList);
+		nomeList.setVisible(false);
+
+		// Lista de e-mail na busca de campos
+		emailList = new JList<>();
+		emailList.setBounds(340, 133, 150, 100);
+		contentPane.add(emailList);
+		emailList.setVisible(false);
+
 		// Exibe a data e hora atuais no campo "Data e Hora"
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		MaskFormatter mask = new MaskFormatter("##/##/#### ##:##:##");
-		
-		//Listar age
+
+		// Listar age
 		EntityManager em = HibernateUtil.getEntityManager();
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<EventoVO> criteria = cb.createQuery(EventoVO.class);
@@ -117,43 +130,40 @@ public class TelaAgendar extends JFrame {
 		System.out.println("Lista agendamentos ULTIMO --> " + listaAgendamentos);
 		for (EventoVO eventoVO : listaAgendamentos) {
 			System.out.println("ULTIMO HORARIO: " + eventoVO.getDataHoraFim());
-			
+
 		}
-		
+
 		if (!listaAgendamentos.isEmpty()) {
-		    // Ordena a lista de eventos pela dataHoraFim em ordem decrescente
-		    Collections.sort(listaAgendamentos, Comparator.comparing(EventoVO::getDataHoraFim).reversed());
+			// Ordena a lista de eventos pela dataHoraFim em ordem decrescente
+			Collections.sort(listaAgendamentos, Comparator.comparing(EventoVO::getDataHoraFim).reversed());
 
-		    EventoVO ultimoEvento = listaAgendamentos.get(0);
-		    Date dataHoraFimUltimoEvento = ultimoEvento.getDataHoraFim();
+			EventoVO ultimoEvento = listaAgendamentos.get(0);
+			Date dataHoraFimUltimoEvento = ultimoEvento.getDataHoraFim();
 
-		    //HORAFIM+31
-		    Calendar cal = Calendar.getInstance();
-		    cal.setTime(dataHoraFimUltimoEvento);
-		    cal.add(Calendar.MINUTE, 31);
-		    Date novaDataHoraInicio = cal.getTime();
-		    novaDataHoraInicioStr = sdf.format(novaDataHoraInicio);
-		    
-		    //HORAFIM+31
-		    cal.setTime(novaDataHoraInicio);
-		    cal.add(Calendar.MINUTE, 31);
-		    Date novaDataHoraFim = cal.getTime();
-		    novaDataHoraFimStr = sdf.format(novaDataHoraFim);
-		    
-		    
+			// HORAFIM+31
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(dataHoraFimUltimoEvento);
+			cal.add(Calendar.MINUTE, 31);
+			Date novaDataHoraInicio = cal.getTime();
+			novaDataHoraInicioStr = sdf.format(novaDataHoraInicio);
+
+			// HORAFIM+31
+			cal.setTime(novaDataHoraInicio);
+			cal.add(Calendar.MINUTE, 31);
+			Date novaDataHoraFim = cal.getTime();
+			novaDataHoraFimStr = sdf.format(novaDataHoraFim);
 
 		}
-		
-		
+
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		setLocationRelativeTo(null);
-		
+
 		JLabel lblTipoServico = new JLabel("Tipo de serviço:");
 		lblTipoServico.setForeground(new Color(103, 103, 103));
 		lblTipoServico.setBounds(10, 44, 100, 20);
 		contentPane.add(lblTipoServico);
-		
+
 		JLabel lblDataHoraInicio = new JLabel("Data e Hora Inicio:");
 		lblDataHoraInicio.setForeground(new Color(103, 103, 103));
 		lblDataHoraInicio.setBounds(10, 74, 112, 20);
@@ -174,11 +184,10 @@ public class TelaAgendar extends JFrame {
 
 				System.out.println("Teste agendar");
 				agendar();
-			} 
+			}
 		});
 		btnAgendar.setBounds(24, 336, 114, 28);
 		contentPane.add(btnAgendar);
-
 
 		tftHoraAtual = new JTextField();
 		tftHoraAtual.setEditable(false);
@@ -192,7 +201,6 @@ public class TelaAgendar extends JFrame {
 		lblDataHoraFim.setBounds(10, 108, 100, 14);
 		contentPane.add(lblDataHoraFim);
 
-		
 		ftfHoraFim = new JFormattedTextField(mask);
 		ftfHoraFim.setBounds(120, 105, 150, 20);
 		contentPane.add(ftfHoraFim);
@@ -285,11 +293,40 @@ public class TelaAgendar extends JFrame {
 				try {
 					pesquisarNome();
 				} catch (BOValidationException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
 		});
+
+		// edição campo nome
+		nomeList.addListSelectionListener((ListSelectionListener) new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
+				if (!e.getValueIsAdjusting()) {
+					String selectedNome = nomeList.getSelectedValue();
+					if (selectedNome != null) {
+						ftfNome.setText(selectedNome);
+						nomeList.setVisible(false);
+					}
+				}
+			}
+		});
+		
+		// edição campo email
+		emailList.addListSelectionListener(new ListSelectionListener() {
+		    public void valueChanged(ListSelectionEvent e) {
+		        if (!e.getValueIsAdjusting()) {
+		            String selectedEmail = emailList.getSelectedValue();
+		            if (selectedEmail != null) {
+		                ftfEmail.setText(selectedEmail);
+		                emailList.setVisible(false);
+		            }
+		        }
+		    }
+		});
+		
+		
+		
+
 		btnPesquisarNome.setIcon(new ImageIcon(TelaAgendar.class.getResource("/br/com/senac/view/img/pesquisar.png")));
 		btnPesquisarNome.setBounds(310, 133, 24, 17);
 		contentPane.add(btnPesquisarNome);
@@ -308,124 +345,116 @@ public class TelaAgendar extends JFrame {
 		btnNewButton.setIcon(new ImageIcon(TelaAgendar.class.getResource("/br/com/senac/view/img/pesquisar.png")));
 		btnNewButton.setBounds(310, 168, 24, 17);
 		contentPane.add(btnNewButton);
-		
+
 		JLabel lblCodigo = new JLabel("Cód:");
 		lblCodigo.setEnabled(false);
 		lblCodigo.setBounds(10, 290, 46, 14);
 		contentPane.add(lblCodigo);
-		
+
 		ftfCodigo = new JFormattedTextField();
 		ftfCodigo.setEditable(false);
 		ftfCodigo.setEnabled(false);
 		ftfCodigo.setBounds(120, 287, 83, 20);
 		contentPane.add(ftfCodigo);
-		
+
 		JLabel lblNewLabel_3 = new JLabel("");
-		lblNewLabel_3.setIcon(new ImageIcon(TelaAgendar.class.getResource("/br/com/senac/view/img/AgendarFoto - Copia (2).png")));
+		lblNewLabel_3.setIcon(
+				new ImageIcon(TelaAgendar.class.getResource("/br/com/senac/view/img/AgendarFoto - Copia (2).png")));
 		lblNewLabel_3.setBounds(429, 62, 224, 222);
 		contentPane.add(lblNewLabel_3);
-		
+
 		JButton btnAtualizarHorarios = new JButton("");
 		btnAtualizarHorarios.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					atualizarHorarios();
 				} catch (ParseException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
 		});
-		btnAtualizarHorarios.setIcon(new ImageIcon(TelaAgendar.class.getResource("/br/com/senac/view/img/AttHoras.png")));
+		btnAtualizarHorarios
+				.setIcon(new ImageIcon(TelaAgendar.class.getResource("/br/com/senac/view/img/AttHoras.png")));
 		btnAtualizarHorarios.setBounds(280, 74, 24, 20);
 		contentPane.add(btnAtualizarHorarios);
 
 	}
 
 	public void atualizarHorarios() throws ParseException {
-		
-	
-		//Listar age
-				EntityManager em = HibernateUtil.getEntityManager();
-				CriteriaBuilder cb = em.getCriteriaBuilder();
-				CriteriaQuery<EventoVO> criteria = cb.createQuery(EventoVO.class);
-				Root<EventoVO> agendamentosFrom = criteria.from(EventoVO.class);
-				criteria.select(agendamentosFrom);
-				TypedQuery<EventoVO> query = em.createQuery(criteria);
-				List<EventoVO> listaAgendamentos = query.getResultList();
 
-				System.out.println("Lista agendamentos ULTIMO --> "+listaAgendamentos);
-				for (EventoVO eventoVO : listaAgendamentos) {
-					System.out.println("ULTIMO HORARIO: " + eventoVO.getDataHoraFim());
-				}
-				
-				
+		// Listar age
+		EntityManager em = HibernateUtil.getEntityManager();
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<EventoVO> criteria = cb.createQuery(EventoVO.class);
+		Root<EventoVO> agendamentosFrom = criteria.from(EventoVO.class);
+		criteria.select(agendamentosFrom);
+		TypedQuery<EventoVO> query = em.createQuery(criteria);
+		List<EventoVO> listaAgendamentos = query.getResultList();
+
+		System.out.println("Lista agendamentos ULTIMO --> " + listaAgendamentos);
+		for (EventoVO eventoVO : listaAgendamentos) {
+			System.out.println("ULTIMO HORARIO: " + eventoVO.getDataHoraFim());
+		}
+
 		if (!listaAgendamentos.isEmpty()) {
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 			MaskFormatter mask = new MaskFormatter("##/##/#### ##:##:##");
-			
-		    // Ordena a lista de eventos pela dataHoraFim em ordem decrescente
-		    Collections.sort(listaAgendamentos, Comparator.comparing(EventoVO::getDataHoraFim).reversed());
 
-		    EventoVO ultimoEvento = listaAgendamentos.get(0);
-		    Date dataHoraFimUltimoEvento = ultimoEvento.getDataHoraFim();
+			// Ordena a lista de eventos pela dataHoraFim em ordem decrescente
+			Collections.sort(listaAgendamentos, Comparator.comparing(EventoVO::getDataHoraFim).reversed());
 
-		    //HORAFIM+31
-		    Calendar cal = Calendar.getInstance();
-		    cal.setTime(dataHoraFimUltimoEvento);
-		    cal.add(Calendar.MINUTE, 31);
-		    Date novaDataHoraInicio = cal.getTime();
-		    novaDataHoraInicioStr = sdf.format(novaDataHoraInicio);
-		    
-		    //HORAFIM+31
-		    cal.setTime(novaDataHoraInicio);
-		    cal.add(Calendar.MINUTE, 31);
-		    Date novaDataHoraFim = cal.getTime();
-		    novaDataHoraFimStr = sdf.format(novaDataHoraFim);
-		    
-		    if (!listaAgendamentos.isEmpty()) {
-			    // Ordena a lista de eventos pela dataHoraFim em ordem decrescente
-			    Collections.sort(listaAgendamentos, Comparator.comparing(EventoVO::getDataHoraFim).reversed());
+			EventoVO ultimoEvento = listaAgendamentos.get(0);
+			Date dataHoraFimUltimoEvento = ultimoEvento.getDataHoraFim();
 
-			    EventoVO ultimoEvento1 = listaAgendamentos.get(0);
-			    Date dataHoraFimUltimoEvento1 = ultimoEvento1.getDataHoraFim();
+			// HORAFIM+31
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(dataHoraFimUltimoEvento);
+			cal.add(Calendar.MINUTE, 31);
+			Date novaDataHoraInicio = cal.getTime();
+			novaDataHoraInicioStr = sdf.format(novaDataHoraInicio);
 
-			    //HORAFIM+31
-			    Calendar cal1 = Calendar.getInstance();
-			    cal1.setTime(dataHoraFimUltimoEvento1);
-			    cal1.add(Calendar.MINUTE, 31);
-			    Date novaDataHoraInicio1 = cal1.getTime();
-			    novaDataHoraInicioStr = sdf.format(novaDataHoraInicio1);
-			    
-			    //HORAFIM+31
-			    cal1.setTime(novaDataHoraInicio1);
-			    cal1.add(Calendar.MINUTE, 31);
-			    Date novaDataHoraFim1 = cal1.getTime();
-			    novaDataHoraFimStr = sdf.format(novaDataHoraFim1);
+			// HORAFIM+31
+			cal.setTime(novaDataHoraInicio);
+			cal.add(Calendar.MINUTE, 31);
+			Date novaDataHoraFim = cal.getTime();
+			novaDataHoraFimStr = sdf.format(novaDataHoraFim);
+
+			if (!listaAgendamentos.isEmpty()) {
+				// Ordena a lista de eventos pela dataHoraFim em ordem decrescente
+				Collections.sort(listaAgendamentos, Comparator.comparing(EventoVO::getDataHoraFim).reversed());
+
+				EventoVO ultimoEvento1 = listaAgendamentos.get(0);
+				Date dataHoraFimUltimoEvento1 = ultimoEvento1.getDataHoraFim();
+
+				// HORAFIM+31
+				Calendar cal1 = Calendar.getInstance();
+				cal1.setTime(dataHoraFimUltimoEvento1);
+				cal1.add(Calendar.MINUTE, 31);
+				Date novaDataHoraInicio1 = cal1.getTime();
+				novaDataHoraInicioStr = sdf.format(novaDataHoraInicio1);
+
+				// HORAFIM+31
+				cal1.setTime(novaDataHoraInicio1);
+				cal1.add(Calendar.MINUTE, 31);
+				Date novaDataHoraFim1 = cal1.getTime();
+				novaDataHoraFimStr = sdf.format(novaDataHoraFim1);
 
 			}
-			
-		    
-  
-		    ftfHoraFim = new JFormattedTextField(mask);
+
+			ftfHoraFim = new JFormattedTextField(mask);
 			ftfHoraFim.setBounds(120, 105, 150, 20);
 			contentPane.add(ftfHoraFim);
 			ftfHoraFim.setText(novaDataHoraFimStr);
-			
+
 			ftfHoraInicio = new JFormattedTextField(mask);
 			ftfHoraInicio.setBounds(120, 74, 150, 20);
 			contentPane.add(ftfHoraInicio);
 			ftfHoraInicio.setColumns(10);
 			ftfHoraInicio.setText(novaDataHoraInicioStr);
-			
 
 		}
-		
-		
+
 	}
-
-
-
 
 	protected void pesquisarPorNomeEmail() {
 
@@ -459,14 +488,23 @@ public class TelaAgendar extends JFrame {
 			List<ContelVO> listaContat = query.getResultList();
 			System.out.println(listaContat);
 
-			String email2 = null;
+			// edição
+			DefaultListModel<String> model = new DefaultListModel<>();
 			for (ContelVO contelVO : listaContat) {
-
-				email2 = contelVO.getEmails();
-
+				model.addElement(contelVO.getEmails());
 			}
+			emailList.setModel(model);
+			emailList.setVisible(true);
 
-			ftfEmail.setText(email2);
+			/*
+			 * String email2 = null; for (ContelVO contelVO : listaContat) {
+			 * 
+			 * email2 = contelVO.getEmails();
+			 * 
+			 * }
+			 * 
+			 * ftfEmail.setText(email2);
+			 */
 
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(this, e.getMessage(), "Erro de sistema", JOptionPane.ERROR_MESSAGE);
@@ -505,14 +543,23 @@ public class TelaAgendar extends JFrame {
 			List<ContatoVO> listaContat = query.getResultList();
 			System.out.println(listaContat);
 
-			String nome2 = null;
+			// edição
+			DefaultListModel<String> model = new DefaultListModel<>();
 			for (ContatoVO contatoVO : listaContat) {
-
-				nome2 = contatoVO.getNome();
-
+				model.addElement(contatoVO.getNome());
 			}
+			nomeList.setModel(model);
+			nomeList.setVisible(true);
 
-			ftfNome.setText(nome2);
+			/*
+			 * String nome2 = null; for (ContatoVO contatoVO : listaContat) {
+			 * 
+			 * nome2 = contatoVO.getNome();
+			 * 
+			 * }
+			 * 
+			 * ftfNome.setText(nome2);
+			 */
 
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(this, e.getMessage(), "Erro de sistema", JOptionPane.ERROR_MESSAGE);
@@ -521,14 +568,12 @@ public class TelaAgendar extends JFrame {
 	}
 
 	protected void agendar() {
-		
+
 		try {
-		
-			
+
 			Service service = new Service();
 			EventoVO eventoVO = new EventoVO();
-		
-					
+
 			String codigo = ftfCodigo.getText().trim();
 			String nome = ftfNome.getText().trim();
 			String email = ftfEmail.getText().trim();
@@ -536,90 +581,83 @@ public class TelaAgendar extends JFrame {
 			String local = ftfLocal.getText().trim();
 			String dataHoraInicio = ftfHoraInicio.getText().trim();
 			String dataHoraFim = ftfHoraFim.getText().trim();
-			
-			
-			
-			/////////
-			  List<EventoVO> eventosAgendados = buscarEventosPorPeriodo(eventoVO.getDataHoraInicio(), eventoVO.getDataHoraFim());
 
-			  // Verifica se o intervalo de tempo está disponível
-		        if (!intervaloDisponivel(dataHoraInicio, dataHoraFim)) {
-		            JOptionPane.showMessageDialog(this, "Ops:x \nO horário especificado já está ocupado! "
-		            		+ "\nConsulte o módulo Disponibilidade de horários!"
-		            		+ "\nOu atualize o horário.  ", "Aviso",
-		                    JOptionPane.WARNING_MESSAGE);
-		            return;
-		        }
-			
-			
-			
+			/////////
+			List<EventoVO> eventosAgendados = buscarEventosPorPeriodo(eventoVO.getDataHoraInicio(),
+					eventoVO.getDataHoraFim());
+
+			// Verifica se o intervalo de tempo está disponível
+			if (!intervaloDisponivel(dataHoraInicio, dataHoraFim)) {
+				JOptionPane.showMessageDialog(this,
+						"Ops:x \nO horário especificado já está ocupado! "
+								+ "\nConsulte o módulo Disponibilidade de horários!" + "\nOu atualize o horário.  ",
+						"Aviso", JOptionPane.WARNING_MESSAGE);
+				return;
+			}
+
 			if (codigo != null && codigo.length() > 0) {
 				eventoVO.setId(new BigInteger(codigo));
 				eventoVO = service.buscarContatosPorId(eventoVO);
 			}
-				
+
 			String statusTipoServico = null;
-			StatusServico statusServico = (StatusServico)comboBoxStatusServico.getSelectedItem();
+			StatusServico statusServico = (StatusServico) comboBoxStatusServico.getSelectedItem();
 			if (statusServico != null) {
 				statusTipoServico = statusServico.name();
 			}
-			
+
 			String status = null;
-			StatusEnum statusEnum = (StatusEnum)comboBoxStatus.getSelectedItem();
+			StatusEnum statusEnum = (StatusEnum) comboBoxStatus.getSelectedItem();
 			if (statusEnum != null) {
 				status = statusEnum.name();
 			}
-			
 
 			String pattern = "dd/MM/yyyy HH:mm:ss";
 			DateFormat dateFormat = new SimpleDateFormat(pattern);
-			
+
 			try {
-			    if (!dataHoraInicio.isEmpty()) {
-			        Date date = dateFormat.parse(dataHoraInicio + " 00:00:00");
-			        eventoVO.setDataHoraInicio(date);
-			    } else {
-			        JOptionPane.showMessageDialog(this, "Data de nascimento vazia!", "Erro",
-			                JOptionPane.ERROR_MESSAGE);
-			        return;
-			    }
-			    if (!dataHoraFim.isEmpty()) {
-			        Date date2 = dateFormat.parse(dataHoraFim + " 00:00:00");
-			        eventoVO.setDataHoraFim(date2);
-			    } else {
-			        JOptionPane.showMessageDialog(this, "Data de nascimento vazia!", "Erro",
-			                JOptionPane.ERROR_MESSAGE);
-			        return;
-			    }
-  
+				if (!dataHoraInicio.isEmpty()) {
+					Date date = dateFormat.parse(dataHoraInicio + " 00:00:00");
+					eventoVO.setDataHoraInicio(date);
+				} else {
+					JOptionPane.showMessageDialog(this, "Data de nascimento vazia!", "Erro", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				if (!dataHoraFim.isEmpty()) {
+					Date date2 = dateFormat.parse(dataHoraFim + " 00:00:00");
+					eventoVO.setDataHoraFim(date2);
+				} else {
+					JOptionPane.showMessageDialog(this, "Data de nascimento vazia!", "Erro", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+
 			} catch (ParseException e) {
-			    // Trata a exceção de formato de data inválido
-			    e.printStackTrace();
-			    JOptionPane.showMessageDialog(this, "Formato de data inválido! Formato correto dd/MM/yyyy HH:mm:ss", "Erro",
-			            JOptionPane.ERROR_MESSAGE);
-			    return;
+				// Trata a exceção de formato de data inválido
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(this, "Formato de data inválido! Formato correto dd/MM/yyyy HH:mm:ss",
+						"Erro", JOptionPane.ERROR_MESSAGE);
+				return;
 			}
 
 			if (status != null) {
 				eventoVO.setStatus(status);
 			}
-			
+
 			if (statusTipoServico != null) {
 				eventoVO.setTipoServico(statusTipoServico);
 			}
-			
+
 			eventoVO.setNomeCliente(nome);
 			eventoVO.setEmail(email);
 			BigInteger participantes = new BigInteger(qntParticipantes);
 			eventoVO.setParticipantes(participantes);
 			eventoVO.setLocal(local);
-			
-			//CRIAR salvarEventoVO
+
+			// CRIAR salvarEventoVO
 			service.salvar(eventoVO);
 
 			JOptionPane.showMessageDialog(null, "Cadastro salvo com sucesso!");
 			setVisible(true);
-			
 
 		} catch (BOValidationException b) {
 			b.printStackTrace();
@@ -632,8 +670,7 @@ public class TelaAgendar extends JFrame {
 		} finally {
 			System.out.println("Finally");
 		}
-		 
-		 
+
 	}
 
 	protected void cancelarVoltar() {
@@ -644,67 +681,56 @@ public class TelaAgendar extends JFrame {
 		dispose();
 
 	}
-	
+
 	private List<EventoVO> buscarEventosPorPeriodo(Date dataHoraInicio, Date dataHoraFim) {
-	    try {
-	        EntityManager em = HibernateUtil.getEntityManager();
+		try {
+			EntityManager em = HibernateUtil.getEntityManager();
 
-	        CriteriaBuilder cb = em.getCriteriaBuilder();
-	        CriteriaQuery<EventoVO> criteria = cb.createQuery(EventoVO.class);
+			CriteriaBuilder cb = em.getCriteriaBuilder();
+			CriteriaQuery<EventoVO> criteria = cb.createQuery(EventoVO.class);
 
-	        Root<EventoVO> eventosFrom = criteria.from(EventoVO.class);
-	        criteria.select(eventosFrom);
+			Root<EventoVO> eventosFrom = criteria.from(EventoVO.class);
+			criteria.select(eventosFrom);
 
-	        // Adicione as condições para verificar se existe algum evento no período
-	       /* criteria.where(
-	            cb.or(
-	                cb.between(eventosFrom.get("dataHoraInicio"), dataHoraInicio, dataHoraFim),
-	                cb.between(eventosFrom.get("dataHoraFim"), dataHoraInicio, dataHoraFim)
-	            )
-	        ); */
-	        // Adicione as condições para verificar se existe algum evento no período
-	        criteria.where(
-	            cb.or(
-	                cb.and(
-	                    cb.lessThanOrEqualTo(eventosFrom.get("dataHoraInicio"), dataHoraInicio),
-	                    cb.greaterThanOrEqualTo(eventosFrom.get("dataHoraFim"), dataHoraInicio)
-	                ),
-	                cb.and(
-	                    cb.lessThanOrEqualTo(eventosFrom.get("dataHoraInicio"), dataHoraFim),
-	                    cb.greaterThanOrEqualTo(eventosFrom.get("dataHoraFim"), dataHoraFim)
-	                )
-	            )
-	        );
-	        
-	        TypedQuery<EventoVO> query = em.createQuery(criteria);
-	        return query.getResultList();
-	    } catch (Exception e) {
-	        e.printStackTrace(); // Tratamento adequado para o erro no seu ambiente
-	        System.out.println("Lista vazia horas");
-	        return Collections.emptyList(); // Retorna uma lista vazia em caso de erro
-	    }
+			// Adicione as condições para verificar se existe algum evento no período
+			/*
+			 * criteria.where( cb.or( cb.between(eventosFrom.get("dataHoraInicio"),
+			 * dataHoraInicio, dataHoraFim), cb.between(eventosFrom.get("dataHoraFim"),
+			 * dataHoraInicio, dataHoraFim) ) );
+			 */
+			// Adicione as condições para verificar se existe algum evento no período
+			criteria.where(cb.or(
+					cb.and(cb.lessThanOrEqualTo(eventosFrom.get("dataHoraInicio"), dataHoraInicio),
+							cb.greaterThanOrEqualTo(eventosFrom.get("dataHoraFim"), dataHoraInicio)),
+					cb.and(cb.lessThanOrEqualTo(eventosFrom.get("dataHoraInicio"), dataHoraFim),
+							cb.greaterThanOrEqualTo(eventosFrom.get("dataHoraFim"), dataHoraFim))));
+
+			TypedQuery<EventoVO> query = em.createQuery(criteria);
+			return query.getResultList();
+		} catch (Exception e) {
+			e.printStackTrace(); // Tratamento adequado para o erro no seu ambiente
+			System.out.println("Lista vazia horas");
+			return Collections.emptyList(); // Retorna uma lista vazia em caso de erro
+		}
 	}
-	
-	
+
 	private boolean intervaloDisponivel(String dataHoraInicioStr, String dataHoraFimStr) {
-	    try {
-	        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		try {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
-	        // Convertendo as strings para objetos Date
-	        Date dataHoraInicio = dateFormat.parse(dataHoraInicioStr + " 00:00:00");
-	        Date dataHoraFim = dateFormat.parse(dataHoraFimStr + " 00:00:00");
+			// Convertendo as strings para objetos Date
+			Date dataHoraInicio = dateFormat.parse(dataHoraInicioStr + " 00:00:00");
+			Date dataHoraFim = dateFormat.parse(dataHoraFimStr + " 00:00:00");
 
-	        // Obtendo a lista de eventos já agendados para o período especificado
-	        List<EventoVO> eventosAgendados = buscarEventosPorPeriodo(dataHoraInicio, dataHoraFim);
+			// Obtendo a lista de eventos já agendados para o período especificado
+			List<EventoVO> eventosAgendados = buscarEventosPorPeriodo(dataHoraInicio, dataHoraFim);
 
-	        // Verificar se já existem eventos agendados para o período
-	        return eventosAgendados.isEmpty();
-	    } catch (ParseException e) {
-	        e.printStackTrace(); // Tratamento adequado para o erro no seu ambiente
-	        return false;
-	    }
+			// Verificar se já existem eventos agendados para o período
+			return eventosAgendados.isEmpty();
+		} catch (ParseException e) {
+			e.printStackTrace(); // Tratamento adequado para o erro no seu ambiente
+			return false;
+		}
 	}
-	
-	
-	
+
 }
