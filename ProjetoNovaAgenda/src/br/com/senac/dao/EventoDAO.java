@@ -88,6 +88,25 @@ public class EventoDAO implements IEventoDAO {
 	@Override
 	public void excluir(EventoVO eventoVO) throws BOValidationException, BOException {
 		
+		EntityManager em = HibernateUtil.getEntityManager();
+
+		try {
+			em.getTransaction().begin();
+			EventoVO agendamento = em.find(EventoVO.class, eventoVO.getId());
+			em.remove(agendamento); // merge edicao
+			em.getTransaction().commit();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			em.getTransaction().rollback();
+			throw new BOException(e);
+
+		} finally {
+			em.close();
+		}
+		
+		
+		
 	}
 
 }
