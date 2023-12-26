@@ -122,7 +122,7 @@ public class TelaAcessosView extends JFrame {
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
-		JButton btnCadastroPessoas = new JButton("Cadastro");
+		JButton btnCadastroPessoas = new JButton("Cadastrar");
 		btnCadastroPessoas.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				cadastrar();
