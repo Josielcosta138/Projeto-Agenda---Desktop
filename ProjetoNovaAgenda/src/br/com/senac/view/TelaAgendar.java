@@ -102,15 +102,15 @@ public class TelaAgendar extends JFrame {
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
-		// Lista de nomes na busca de campos
+		// Lista de Nomes na busca de campos
 		nomeList = new JList<>();
-		nomeList.setBounds(340, 133, 150, 100);
+		nomeList.setBounds(140, 140, 130, 100);
 		contentPane.add(nomeList);
 		nomeList.setVisible(false);
 
 		// Lista de e-mail na busca de campos
 		emailList = new JList<>();
-		emailList.setBounds(340, 133, 150, 100);
+		emailList.setBounds(140, 140, 130, 100);
 		contentPane.add(emailList);
 		emailList.setVisible(false);
 
@@ -219,7 +219,6 @@ public class TelaAgendar extends JFrame {
 		comboBoxStatus = new JComboBox();
 		comboBoxStatus.setBounds(120, 195, 183, 20);
 
-		// testeStatus
 		DefaultComboBoxModel defaultComboBoxModel = new DefaultComboBoxModel<>(StatusEnum.values());
 		comboBoxStatus.setModel(defaultComboBoxModel);
 		defaultComboBoxModel.insertElementAt(null, 0);
@@ -310,22 +309,19 @@ public class TelaAgendar extends JFrame {
 				}
 			}
 		});
-		
+
 		// edição campo email
 		emailList.addListSelectionListener(new ListSelectionListener() {
-		    public void valueChanged(ListSelectionEvent e) {
-		        if (!e.getValueIsAdjusting()) {
-		            String selectedEmail = emailList.getSelectedValue();
-		            if (selectedEmail != null) {
-		                ftfEmail.setText(selectedEmail);
-		                emailList.setVisible(false);
-		            }
-		        }
-		    }
+			public void valueChanged(ListSelectionEvent e) {
+				if (!e.getValueIsAdjusting()) {
+					String selectedEmail = emailList.getSelectedValue();
+					if (selectedEmail != null) {
+						ftfEmail.setText(selectedEmail);
+						emailList.setVisible(false);
+					}
+				}
+			}
 		});
-		
-		
-		
 
 		btnPesquisarNome.setIcon(new ImageIcon(TelaAgendar.class.getResource("/br/com/senac/view/img/pesquisar.png")));
 		btnPesquisarNome.setBounds(310, 133, 24, 17);
@@ -382,7 +378,7 @@ public class TelaAgendar extends JFrame {
 
 	public void atualizarHorarios() throws ParseException {
 
-		// Listar age
+		// Listar agendamento
 		EntityManager em = HibernateUtil.getEntityManager();
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<EventoVO> criteria = cb.createQuery(EventoVO.class);
@@ -488,23 +484,20 @@ public class TelaAgendar extends JFrame {
 			List<ContelVO> listaContat = query.getResultList();
 			System.out.println(listaContat);
 
-			// edição
+			// edição lista e-mail
 			DefaultListModel<String> model = new DefaultListModel<>();
 			for (ContelVO contelVO : listaContat) {
 				model.addElement(contelVO.getEmails());
 			}
+			
 			emailList.setModel(model);
-			emailList.setVisible(true);
-
-			/*
-			 * String email2 = null; for (ContelVO contelVO : listaContat) {
-			 * 
-			 * email2 = contelVO.getEmails();
-			 * 
-			 * }
-			 * 
-			 * ftfEmail.setText(email2);
-			 */
+			if (emailList.getModel().getSize() == 0) {
+				emailList.setVisible(false);
+			} else {
+				emailList.setVisible(true);
+			}
+			
+		
 
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(this, e.getMessage(), "Erro de sistema", JOptionPane.ERROR_MESSAGE);
@@ -543,23 +536,18 @@ public class TelaAgendar extends JFrame {
 			List<ContatoVO> listaContat = query.getResultList();
 			System.out.println(listaContat);
 
-			// edição
+			// edição lista nome
 			DefaultListModel<String> model = new DefaultListModel<>();
 			for (ContatoVO contatoVO : listaContat) {
 				model.addElement(contatoVO.getNome());
 			}
-			nomeList.setModel(model);
-			nomeList.setVisible(true);
 
-			/*
-			 * String nome2 = null; for (ContatoVO contatoVO : listaContat) {
-			 * 
-			 * nome2 = contatoVO.getNome();
-			 * 
-			 * }
-			 * 
-			 * ftfNome.setText(nome2);
-			 */
+			nomeList.setModel(model);
+			if (nomeList.getModel().getSize() == 0) {
+				nomeList.setVisible(false);
+			} else {
+				nomeList.setVisible(true);
+			}
 
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(this, e.getMessage(), "Erro de sistema", JOptionPane.ERROR_MESSAGE);
