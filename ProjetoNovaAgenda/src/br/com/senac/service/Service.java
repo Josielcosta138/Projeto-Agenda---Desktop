@@ -101,8 +101,8 @@ public class Service implements IService {
 	@Override
 	public void excluir(EventoVO eventoVO) throws BOValidationException, BOException {
 		
-		IEventoBO eventoBO = new EventoBO();
-		eventoBO.excluir(eventoVO);
+		IEventoBO evento = new EventoBO();
+		evento.excluir(eventoVO);
 		
 	}
 

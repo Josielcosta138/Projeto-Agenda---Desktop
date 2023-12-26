@@ -12,6 +12,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
 import br.com.senac.dao.HibernateUtil;
+import br.com.senac.exception.BOException;
 import br.com.senac.exception.BOValidationException;
 import br.com.senac.service.IService;
 import br.com.senac.service.Service;
@@ -44,8 +45,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
 import java.awt.Color;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class TelaAgendamentos extends JFrame {
 
@@ -93,14 +92,6 @@ public class TelaAgendamentos extends JFrame {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				
-				
-				
-			}
-		});
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane.setBounds(23, 65, 942, 242);
 		contentPane.add(scrollPane);
@@ -205,7 +196,38 @@ public class TelaAgendamentos extends JFrame {
 	}
 
 	protected void excluir() {
-		
+		if (table.getSelectedRow() < 0) {
+			JOptionPane.showMessageDialog(this, "É necessário selecionar um registro! ", "Mensagem de aviso",
+					JOptionPane.WARNING_MESSAGE);
+		} else {
+			Object[] options = { "Sim!", "Não" };
+			int n = JOptionPane.showOptionDialog(this, // não deixa clicar na tela de baixo
+					"Deseja realmente exluir o registro? ", "Confirmação", JOptionPane.YES_NO_OPTION,
+					JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+
+			if (n == 0) {
+				EventoVO evento = (EventoVO) tableModel.getRows().get(table.getSelectedRow()).getElement();
+				Service service = new Service();
+
+				try {
+					service.excluir(evento);
+
+					JOptionPane.showMessageDialog(this, "Registro excluído com sucesso!", "Mensagem de aviso",
+							JOptionPane.INFORMATION_MESSAGE);
+					listarAgendamentos();
+
+				} catch (BOValidationException e) {
+					e.printStackTrace();
+					JOptionPane.showMessageDialog(this, e.getMessage(), "Mensagem de aviso",
+							JOptionPane.WARNING_MESSAGE);
+
+				} catch (BOException e) {
+					e.printStackTrace();
+					JOptionPane.showMessageDialog(this, "Ocorreu um erro ao realizar a operação!", "Mensagem de erro",
+							JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		}
 		
 		
 	}
