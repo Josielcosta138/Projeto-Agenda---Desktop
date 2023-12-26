@@ -97,7 +97,7 @@ public class EditarPessoa extends JFrame {
 		ftfObservacao.setBounds(102, 145, 252, 38);
 		contentPane.add(ftfObservacao);
 
-		JButton btnSalvar = new JButton("Save");
+		JButton btnSalvar = new JButton("Salvar");
 		btnSalvar.setIcon(new ImageIcon(EditarPessoa.class.getResource("/br/com/senac/view/img/salvar.png")));
 		btnSalvar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -105,10 +105,10 @@ public class EditarPessoa extends JFrame {
 			}
 		});
 		btnSalvar.setMnemonic('C');
-		btnSalvar.setBounds(128, 210, 89, 23);
+		btnSalvar.setBounds(102, 210, 101, 23);
 		contentPane.add(btnSalvar);
 
-		JButton btnCancelar = new JButton("Canc");
+		JButton btnCancelar = new JButton("Cancelar");
 		btnCancelar.setIcon(new ImageIcon(EditarPessoa.class.getResource("/br/com/senac/view/img/cancel.png")));
 		btnCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -117,7 +117,7 @@ public class EditarPessoa extends JFrame {
 			}
 		});
 		btnCancelar.setMnemonic('C');
-		btnCancelar.setBounds(265, 210, 89, 23);
+		btnCancelar.setBounds(213, 210, 115, 23);
 		contentPane.add(btnCancelar);
 
 		JPanel panel = new JPanel();

@@ -87,7 +87,7 @@ public class Disponibilidade extends JFrame {
 		//table = new JTable();
 		//scrollPane.setViewportView(table);
 		
-		JLabel lblNewLabel = new JLabel("Disponibilidade de horarios");
+		JLabel lblNewLabel = new JLabel("Disponibilidade de horários");
 		lblNewLabel.setIcon(new ImageIcon(Disponibilidade.class.getResource("/br/com/senac/view/img/DisPonibilidade (2).png")));
 		lblNewLabel.setForeground(new Color(107, 107, 107));
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 11));
@@ -107,7 +107,7 @@ public class Disponibilidade extends JFrame {
 		contentPane.add(ftfHoraAtual);
 		ftfHoraAtual.setText(sdf.format(new Date()));
 		
-		JButton btnNewButton = new JButton("Pesq");
+		JButton btnNewButton = new JButton("Pesquisar");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -115,10 +115,10 @@ public class Disponibilidade extends JFrame {
 			}
 		});
 		btnNewButton.setIcon(new ImageIcon(Disponibilidade.class.getResource("/br/com/senac/view/img/pesquisar.png")));
-		btnNewButton.setBounds(10, 301, 105, 22);
+		btnNewButton.setBounds(10, 301, 125, 22);
 		contentPane.add(btnNewButton);
 		
-		JButton btnNewButton_1 = new JButton("Volt");
+		JButton btnNewButton_1 = new JButton("Voltar");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -126,7 +126,7 @@ public class Disponibilidade extends JFrame {
 			}
 		});
 		btnNewButton_1.setIcon(new ImageIcon(Disponibilidade.class.getResource("/br/com/senac/view/img/2303132_arrow_back_direction_left_navigation_icon.png")));
-		btnNewButton_1.setBounds(670, 301, 89, 23);
+		btnNewButton_1.setBounds(654, 301, 105, 23);
 		contentPane.add(btnNewButton_1);
 		
 		JLabel lblNewLabel_2 = new JLabel("");

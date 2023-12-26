@@ -44,6 +44,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
 import java.awt.Color;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class TelaAgendamentos extends JFrame {
 
@@ -91,6 +93,14 @@ public class TelaAgendamentos extends JFrame {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
 		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				
+				
+			}
+		});
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane.setBounds(23, 65, 942, 242);
 		contentPane.add(scrollPane);
@@ -138,7 +148,7 @@ public class TelaAgendamentos extends JFrame {
 		contentPane.add(ftfDataAtual);
 		ftfDataAtual.setText(sdf.format(new Date()));
 
-		JButton btnPesquisar = new JButton("Pesq");
+		JButton btnPesquisar = new JButton("Pesquisar");
 		btnPesquisar.setIcon(new ImageIcon(TelaAgendamentos.class.getResource("/br/com/senac/view/img/pesquisar.png")));
 		btnPesquisar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -146,7 +156,7 @@ public class TelaAgendamentos extends JFrame {
 
 			}
 		}); 
-		btnPesquisar.setBounds(23, 318, 113, 23);
+		btnPesquisar.setBounds(23, 318, 127, 23);
 		contentPane.add(btnPesquisar);
 		
 		JButton btnNewButton = new JButton("");
@@ -154,7 +164,7 @@ public class TelaAgendamentos extends JFrame {
 		btnNewButton.setBounds(1062, 31, 26, 23);
 		contentPane.add(btnNewButton);
 		
-		JButton btnVoltar = new JButton("Volt");
+		JButton btnVoltar = new JButton("Voltar");
 		btnVoltar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -167,7 +177,7 @@ public class TelaAgendamentos extends JFrame {
 				
 		});
 		btnVoltar.setIcon(new ImageIcon(TelaAgendamentos.class.getResource("/br/com/senac/view/img/2303132_arrow_back_direction_left_navigation_icon.png")));
-		btnVoltar.setBounds(1106, 323, 94, 23);
+		btnVoltar.setBounds(1100, 323, 100, 23);
 		contentPane.add(btnVoltar);
 		
 		JLabel lbliconePessoasAgend = new JLabel("");
@@ -180,7 +190,24 @@ public class TelaAgendamentos extends JFrame {
 		lblAgendaAberta.setIcon(new ImageIcon(TelaAgendamentos.class.getResource("/br/com/senac/view/img/AgendaAberta.png")));
 		lblAgendaAberta.setBounds(994, 70, 206, 235);
 		contentPane.add(lblAgendaAberta);
+		
+		JButton btnNewButton_1 = new JButton("Excluir");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				excluir();
+				
+			}
+		});
+		btnNewButton_1.setIcon(new ImageIcon(TelaAgendamentos.class.getResource("/br/com/senac/view/img/remove.png")));
+		btnNewButton_1.setBounds(160, 318, 113, 23);
+		contentPane.add(btnNewButton_1);
 
+	}
+
+	protected void excluir() {
+		
+		
+		
 	}
 
 	protected void listarAgendamentos() {

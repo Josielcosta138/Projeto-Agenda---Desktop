@@ -97,7 +97,7 @@ public class TelaAgendar extends JFrame {
 				.getImage(TelaAgendar.class.getResource("/br/com/senac/view/img/LogoSTYLEMANAGER black.png")));
 		setTitle("AGENDAMENTO");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 664, 361);
+		setBounds(100, 100, 686, 425);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		
@@ -176,13 +176,13 @@ public class TelaAgendar extends JFrame {
 				agendar();
 			} 
 		});
-		btnAgendar.setBounds(404, 279, 114, 28);
+		btnAgendar.setBounds(24, 336, 114, 28);
 		contentPane.add(btnAgendar);
 
 
 		tftHoraAtual = new JTextField();
 		tftHoraAtual.setEditable(false);
-		tftHoraAtual.setBounds(494, 11, 130, 20);
+		tftHoraAtual.setBounds(508, 11, 130, 20);
 		contentPane.add(tftHoraAtual);
 		tftHoraAtual.setColumns(10);
 		tftHoraAtual.setText(sdf.format(new Date()));
@@ -219,14 +219,14 @@ public class TelaAgendar extends JFrame {
 
 		contentPane.add(comboBoxStatus);
 
-		JButton btnCancelar = new JButton("Canc");
+		JButton btnCancelar = new JButton("Cancelar");
 		btnCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				cancelarVoltar();
 			}
 		});
 		btnCancelar.setIcon(new ImageIcon(TelaAgendar.class.getResource("/br/com/senac/view/img/cancel.png")));
-		btnCancelar.setBounds(535, 279, 98, 28);
+		btnCancelar.setBounds(526, 336, 127, 28);
 		contentPane.add(btnCancelar);
 
 		ftfQntParticipantes = new JFormattedTextField();
@@ -322,7 +322,7 @@ public class TelaAgendar extends JFrame {
 		
 		JLabel lblNewLabel_3 = new JLabel("");
 		lblNewLabel_3.setIcon(new ImageIcon(TelaAgendar.class.getResource("/br/com/senac/view/img/AgendarFoto - Copia (2).png")));
-		lblNewLabel_3.setBounds(404, 44, 229, 222);
+		lblNewLabel_3.setBounds(429, 62, 224, 222);
 		contentPane.add(lblNewLabel_3);
 		
 		JButton btnAtualizarHorarios = new JButton("");
