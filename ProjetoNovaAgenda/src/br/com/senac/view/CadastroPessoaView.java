@@ -350,7 +350,12 @@ public class CadastroPessoaView extends JFrame {
 		mntmAgendamentos.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/tipo.png")));
 		mntmAgendamentos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				listarAgendamentos();
+				try {
+					listarAgendamentos();
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				
 			}
 		});
@@ -398,7 +403,7 @@ public class CadastroPessoaView extends JFrame {
 		
 	}
 
-	protected void listarAgendamentos() {
+	protected void listarAgendamentos() throws ParseException {
 		if (telaAgendamentos == null) {
 			telaAgendamentos = new TelaAgendamentos();
 		}

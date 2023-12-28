@@ -394,7 +394,7 @@ public class TelaAgendar extends JFrame {
 
 		if (!listaAgendamentos.isEmpty()) {
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-			MaskFormatter mask = new MaskFormatter("##/##/#### ##:##:##");
+			MaskFormatter maskaraData = new MaskFormatter("##/##/#### ##:##:##");
 
 			// Ordena a lista de eventos pela dataHoraFim em ordem decrescente
 			Collections.sort(listaAgendamentos, Comparator.comparing(EventoVO::getDataHoraFim).reversed());
@@ -437,12 +437,12 @@ public class TelaAgendar extends JFrame {
 
 			}
 
-			ftfHoraFim = new JFormattedTextField(mask);
+			ftfHoraFim = new JFormattedTextField(maskaraData);
 			ftfHoraFim.setBounds(120, 105, 150, 20);
 			contentPane.add(ftfHoraFim);
 			ftfHoraFim.setText(novaDataHoraFimStr);
 
-			ftfHoraInicio = new JFormattedTextField(mask);
+			ftfHoraInicio = new JFormattedTextField(maskaraData);
 			ftfHoraInicio.setBounds(120, 74, 150, 20);
 			contentPane.add(ftfHoraInicio);
 			ftfHoraInicio.setColumns(10);
