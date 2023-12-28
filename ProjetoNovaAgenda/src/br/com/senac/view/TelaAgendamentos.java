@@ -12,6 +12,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+import javax.swing.text.MaskFormatter;
 
 import br.com.senac.dao.HibernateUtil;
 import br.com.senac.exception.BOException;
@@ -26,8 +27,16 @@ import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.math.BigInteger;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -42,6 +51,7 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Order;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -61,6 +71,9 @@ public class TelaAgendamentos extends JFrame {
 	private CadastroPessoaView cadastroPessoaView;
 	private JList<String> clienteList;
 	private JFormattedTextField ftfCliente;
+	private List<EventoVO> listaAgendamentos;
+	private JFormattedTextField ftfSFiltroStatus;
+	
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -68,14 +81,18 @@ public class TelaAgendamentos extends JFrame {
 				try {
 					TelaAgendamentos frame = new TelaAgendamentos();
 					frame.setVisible(true);
+					
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
 	}
+	
 
-	public TelaAgendamentos() {
+
+	public TelaAgendamentos() throws ParseException {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -84,6 +101,8 @@ public class TelaAgendamentos extends JFrame {
 				setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			}
 		});
+		
+		
 
 		setIconImage(Toolkit.getDefaultToolkit()
 				.getImage(TelaAgendamentos.class.getResource("/br/com/senac/view/img/LogoSTYLEMANAGER black.png")));
@@ -92,6 +111,7 @@ public class TelaAgendamentos extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1244, 400);
 		contentPane = new JPanel();
+		contentPane.setForeground(new Color(128, 128, 128));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -123,6 +143,7 @@ public class TelaAgendamentos extends JFrame {
 		tableModel.addColumn("N°-Pessoas");
 
 		table = new JTable(tableModel);
+	    table.setDefaultRenderer(Object.class, new MonthColorRenderer());
 		table.setAutoscrolls(true);
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
@@ -225,20 +246,66 @@ public class TelaAgendamentos extends JFrame {
 						}
 					}
 				});
-
-		JLabel lblData = new JLabel("Data:");
-		lblData.setForeground(new Color(128, 128, 128));
-		lblData.setBounds(562, 35, 46, 14);
-		contentPane.add(lblData);
-
-		JFormattedTextField ftfData = new JFormattedTextField();
-		ftfData.setBounds(597, 32, 158, 18);
-		contentPane.add(ftfData);
+		
+		MaskFormatter maskaraData = new MaskFormatter("##/##/#### ##:##:##");
 
 		ftfCliente = new JFormattedTextField();
 		ftfCliente.setBounds(325, 32, 142, 18);
 		contentPane.add(ftfCliente);
+		
+		JButton btnOrdenar = new JButton("Ordenar data");
+		btnOrdenar.setIcon(new ImageIcon(TelaAgendamentos.class.getResource("/br/com/senac/view/img/ordenar.png")));
+		btnOrdenar.setFont(new Font("Tahoma", Font.BOLD, 11));
+		btnOrdenar.setForeground(new Color(138, 138, 138));
+		btnOrdenar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ordenarData();
+			}
+		});
+		btnOrdenar.setBounds(754, 31, 142, 18);
+		contentPane.add(btnOrdenar);
+		
+		JLabel lblNewLabel = new JLabel("Status:");
+		lblNewLabel.setForeground(new Color(138, 138, 138));
+		lblNewLabel.setBounds(504, 35, 46, 14);
+		contentPane.add(lblNewLabel);
+		
+		ftfSFiltroStatus = new JFormattedTextField();
+		ftfSFiltroStatus.setBounds(550, 33, 155, 18);
+		contentPane.add(ftfSFiltroStatus);
 
+	}
+
+	protected void ordenarData() {
+		listarAgendamentos();
+		Collections.sort(listaAgendamentos, Comparator.comparing(EventoVO::getDataHoraInicio));
+		tableModel.clearTable(); 
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		
+		for (EventoVO eventoVO : listaAgendamentos) {
+
+			if (eventoVO.getId() != null) {
+				System.out.println("Lista agendamentos --> " + listaAgendamentos);
+				RowData rowData = new RowData();
+				rowData.getValues().put(0, eventoVO.getId().toString());
+				rowData.getValues().put(1, eventoVO.getLocal());
+				rowData.getValues().put(2, sdf.format(eventoVO.getDataHoraInicio()));
+		        rowData.getValues().put(3, sdf.format(eventoVO.getDataHoraFim()));
+				rowData.getValues().put(4, eventoVO.getStatus());
+				rowData.getValues().put(5, eventoVO.getTipoServico());
+				rowData.getValues().put(6, eventoVO.getNomeCliente());
+				rowData.getValues().put(7, eventoVO.getEmail());
+				rowData.getValues().put(8, eventoVO.getParticipantes());
+
+				rowData.setElement(eventoVO);
+				tableModel.addRow(rowData);
+			} else {
+				JOptionPane.showMessageDialog(null, "Sem Agendamentos no momento!", null,
+						JOptionPane.WARNING_MESSAGE);
+			}
+
+		}
+		
 	}
 
 	protected void excluir() {
@@ -275,8 +342,9 @@ public class TelaAgendamentos extends JFrame {
 			}
 		}
 
+	
 	}
-
+	@SuppressWarnings("unused")
 	protected void listarAgendamentos() {
 		if (tableModel != null) {
 			tableModel.clearTable();
@@ -289,6 +357,7 @@ public class TelaAgendamentos extends JFrame {
  		BigInteger participantes = null;
 		// List<BigInteger> participantes = null;
 		String status = null;
+		String filtroStatus = null;
 		String tipoServico = null;
 		String nomeCliente = null;
 
@@ -300,6 +369,12 @@ public class TelaAgendamentos extends JFrame {
 				if (this.ftfCliente.getText() != null && ftfCliente.getText().trim().length() > 0) {
 					nomeCliente = ftfCliente.getText().trim();
 				}
+				
+				
+				if (this.ftfSFiltroStatus.getText() != null && ftfSFiltroStatus.getText().trim().length() > 0) {
+					filtroStatus = ftfSFiltroStatus.getText().trim();
+				}
+				
 
 				if (this.ftfCliente.getText() != null && ftfCliente.getText().trim().length() > 0) {
 					nomeCliente = ftfCliente.getText().trim();
@@ -321,24 +396,31 @@ public class TelaAgendamentos extends JFrame {
 					String searchTerm = "%" + nomeCliente.toLowerCase() + "%";
 					criteria.where(cb.like(cb.lower(agendamentosFrom.get("nomeCliente")), searchTerm));
 				} 
+				
+				//filtroStatus
+				if (filtroStatus != null) {
+					String searchTerm = "%" + filtroStatus.toLowerCase() + "%";
+					criteria.where(cb.like(cb.lower(agendamentosFrom.get("status")), searchTerm));
+				}
 
 				
 				TypedQuery<EventoVO> query = em.createQuery(criteria);
-				List<EventoVO> listaAgendamentos = query.getResultList();
+				listaAgendamentos = query.getResultList();
 
 				System.out.println("Lista agendamentos --> " + listaAgendamentos);
 				
-				Collections.sort(listaAgendamentos, (cliente1, cliente2) -> cliente1.getNomeCliente().compareTo(cliente2.getNomeCliente()));
 
 				for (EventoVO eventoVO : listaAgendamentos) {
 
 					if (eventoVO.getId() != null) {
 						System.out.println("Lista agendamentos --> " + listaAgendamentos);
 						RowData rowData = new RowData();
+						SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+					
 						rowData.getValues().put(0, eventoVO.getId().toString());
 						rowData.getValues().put(1, eventoVO.getLocal());
-						rowData.getValues().put(2, eventoVO.getDataHoraInicio());
-						rowData.getValues().put(3, eventoVO.getDataHoraFim());
+						rowData.getValues().put(2, dateFormat.format(eventoVO.getDataHoraInicio()));
+				        rowData.getValues().put(3, dateFormat.format(eventoVO.getDataHoraFim()));
 						rowData.getValues().put(4, eventoVO.getStatus());
 						rowData.getValues().put(5, eventoVO.getTipoServico());
 						rowData.getValues().put(6, eventoVO.getNomeCliente());
@@ -367,3 +449,7 @@ public class TelaAgendamentos extends JFrame {
 
 	}
 }
+
+ 
+	
+

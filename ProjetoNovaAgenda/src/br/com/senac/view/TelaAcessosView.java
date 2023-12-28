@@ -162,7 +162,11 @@ public class TelaAcessosView extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				
 				if (telaAgendamentos == null) {
-					telaAgendamentos = new TelaAgendamentos();
+					try {
+						telaAgendamentos = new TelaAgendamentos();
+					} catch (ParseException e1) {
+						e1.printStackTrace();
+					}
 				}
 				telaAgendamentos.setVisible(true);
 				dispose();
