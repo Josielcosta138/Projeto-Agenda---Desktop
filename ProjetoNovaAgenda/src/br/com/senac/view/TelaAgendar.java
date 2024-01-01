@@ -16,6 +16,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
@@ -29,7 +30,7 @@ import br.com.senac.service.Service;
 import br.com.senac.vo.ContatoVO;
 import br.com.senac.vo.ContelVO;
 import br.com.senac.vo.EventoVO;
-import br.com.senac.vo.StatusEnum;
+import br.com.senac.vo.StatusAgendamento;
 import br.com.senac.vo.StatusServico;
 
 import java.awt.Toolkit;
@@ -71,6 +72,10 @@ public class TelaAgendar extends JFrame {
 	private String novaDataHoraFimStr;
 	private JList<String> nomeList;
 	private JList<String> emailList;
+	private TableModel tableModel;
+	private JTable table;
+	private EventoVO agendamentoAtual;
+	private List<EventoVO> listaAgendamentos;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -98,7 +103,7 @@ public class TelaAgendar extends JFrame {
 				.getImage(TelaAgendar.class.getResource("/br/com/senac/view/img/LogoSTYLEMANAGER black.png")));
 		setTitle("AGENDAMENTO");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 686, 425);
+		setBounds(100, 100, 686, 507);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -118,7 +123,7 @@ public class TelaAgendar extends JFrame {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		MaskFormatter mask = new MaskFormatter("##/##/#### ##:##:##");
 
-		// Listar age
+		// Listar agendamentos
 		EntityManager em = HibernateUtil.getEntityManager();
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<EventoVO> criteria = cb.createQuery(EventoVO.class);
@@ -143,13 +148,13 @@ public class TelaAgendar extends JFrame {
 			// HORAFIM+31
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(dataHoraFimUltimoEvento);
-			cal.add(Calendar.MINUTE, 31);
+			cal.add(Calendar.MINUTE, 30);
 			Date novaDataHoraInicio = cal.getTime();
 			novaDataHoraInicioStr = sdf.format(novaDataHoraInicio);
 
 			// HORAFIM+31
 			cal.setTime(novaDataHoraInicio);
-			cal.add(Calendar.MINUTE, 31);
+			cal.add(Calendar.MINUTE, 30);
 			Date novaDataHoraFim = cal.getTime();
 			novaDataHoraFimStr = sdf.format(novaDataHoraFim);
 
@@ -186,7 +191,7 @@ public class TelaAgendar extends JFrame {
 				agendar();
 			}
 		});
-		btnAgendar.setBounds(24, 336, 114, 28);
+		btnAgendar.setBounds(24, 405, 114, 28);
 		contentPane.add(btnAgendar);
 
 		tftHoraAtual = new JTextField();
@@ -208,20 +213,19 @@ public class TelaAgendar extends JFrame {
 
 		JLabel lblParticipantes = new JLabel("N° Participantes:");
 		lblParticipantes.setForeground(new Color(103, 103, 103));
-		lblParticipantes.setBounds(10, 263, 100, 14);
+		lblParticipantes.setBounds(10, 332, 100, 14);
 		contentPane.add(lblParticipantes);
 
 		JLabel lblStatus = new JLabel("Status:");
 		lblStatus.setForeground(new Color(103, 103, 103));
-		lblStatus.setBounds(10, 198, 46, 14);
+		lblStatus.setBounds(10, 267, 46, 14);
 		contentPane.add(lblStatus);
 
 		comboBoxStatus = new JComboBox();
-		comboBoxStatus.setBounds(120, 195, 183, 20);
+		comboBoxStatus.setBounds(120, 264, 183, 20);
 
-		DefaultComboBoxModel defaultComboBoxModel = new DefaultComboBoxModel<>(StatusEnum.values());
+		DefaultComboBoxModel defaultComboBoxModel = new DefaultComboBoxModel<>(StatusAgendamento.values());
 		comboBoxStatus.setModel(defaultComboBoxModel);
-		defaultComboBoxModel.insertElementAt(null, 0);
 		comboBoxStatus.setSelectedIndex(1);
 
 		contentPane.add(comboBoxStatus);
@@ -233,11 +237,11 @@ public class TelaAgendar extends JFrame {
 			}
 		});
 		btnCancelar.setIcon(new ImageIcon(TelaAgendar.class.getResource("/br/com/senac/view/img/cancel.png")));
-		btnCancelar.setBounds(526, 336, 127, 28);
+		btnCancelar.setBounds(533, 405, 127, 28);
 		contentPane.add(btnCancelar);
 
 		ftfQntParticipantes = new JFormattedTextField();
-		ftfQntParticipantes.setBounds(120, 260, 83, 20);
+		ftfQntParticipantes.setBounds(120, 329, 83, 20);
 		contentPane.add(ftfQntParticipantes);
 
 		JLabel lblPessoa = new JLabel("Nome:");
@@ -245,8 +249,7 @@ public class TelaAgendar extends JFrame {
 		lblPessoa.setBounds(10, 136, 86, 14);
 		contentPane.add(lblPessoa);
 
-		DefaultComboBoxModel defaultComboBoxModelNome = new DefaultComboBoxModel<>(StatusEnum.values());
-		defaultComboBoxModel.insertElementAt(null, 0);
+	
 
 		JLabel lblNewLabel = new JLabel("Agendamento de horários");
 		lblNewLabel.setForeground(new Color(103, 103, 103));
@@ -266,18 +269,17 @@ public class TelaAgendar extends JFrame {
 
 		JLabel lblNewLabel_2 = new JLabel("Local:");
 		lblNewLabel_2.setForeground(new Color(103, 103, 103));
-		lblNewLabel_2.setBounds(10, 232, 46, 14);
+		lblNewLabel_2.setBounds(10, 301, 46, 14);
 		contentPane.add(lblNewLabel_2);
 
 		ftfLocal = new JFormattedTextField();
-		ftfLocal.setBounds(120, 229, 183, 20);
+		ftfLocal.setBounds(120, 298, 183, 20);
 		contentPane.add(ftfLocal);
 
 		comboBoxStatusServico = new JComboBox();
 		comboBoxStatusServico.setBounds(120, 43, 150, 21);
 		DefaultComboBoxModel defaultComboBoxModel2 = new DefaultComboBoxModel<>(StatusServico.values());
 		comboBoxStatusServico.setModel(defaultComboBoxModel2);
-		defaultComboBoxModel2.insertElementAt(null, 0);
 		comboBoxStatusServico.setSelectedIndex(1);
 
 		contentPane.add(comboBoxStatusServico);
@@ -344,13 +346,13 @@ public class TelaAgendar extends JFrame {
 
 		JLabel lblCodigo = new JLabel("Cód:");
 		lblCodigo.setEnabled(false);
-		lblCodigo.setBounds(10, 290, 46, 14);
+		lblCodigo.setBounds(10, 359, 46, 14);
 		contentPane.add(lblCodigo);
 
 		ftfCodigo = new JFormattedTextField();
 		ftfCodigo.setEditable(false);
 		ftfCodigo.setEnabled(false);
-		ftfCodigo.setBounds(120, 287, 83, 20);
+		ftfCodigo.setBounds(120, 356, 83, 20);
 		contentPane.add(ftfCodigo);
 
 		JLabel lblNewLabel_3 = new JLabel("");
@@ -374,10 +376,29 @@ public class TelaAgendar extends JFrame {
 				.setIcon(new ImageIcon(TelaAgendar.class.getResource("/br/com/senac/view/img/AttHoras.png")));
 		btnAtualizarHorarios.setBounds(280, 74, 24, 20);
 		contentPane.add(btnAtualizarHorarios);
+		
+		JLabel lblDD = new JLabel("DD:");
+		lblDD.setForeground(new Color(120, 120, 120));
+		lblDD.setBounds(10, 202, 46, 14);
+		contentPane.add(lblDD);
+		
+		JFormattedTextField ftfDD = new JFormattedTextField();
+		ftfDD.setBounds(120, 202, 38, 20);
+		contentPane.add(ftfDD);
+		
+		JLabel lblTelefone = new JLabel("Telefone");
+		lblTelefone.setForeground(new Color(106, 106, 106));
+		lblTelefone.setBounds(10, 237, 46, 14);
+		contentPane.add(lblTelefone);
+		
+		JFormattedTextField ftfTelefone = new JFormattedTextField();
+		ftfTelefone.setBounds(120, 233, 183, 20);
+		contentPane.add(ftfTelefone);
 
 	}
 
-	 private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+	private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+	 
 	public void atualizarHorarios() throws ParseException {
 	    // Listar agendamento
 	    EntityManager em = HibernateUtil.getEntityManager();
@@ -386,7 +407,7 @@ public class TelaAgendar extends JFrame {
 	    Root<EventoVO> agendamentosFrom = criteria.from(EventoVO.class);
 	    criteria.select(agendamentosFrom);
 	    TypedQuery<EventoVO> query = em.createQuery(criteria);
-	    List<EventoVO> listaAgendamentos = query.getResultList();
+	    listaAgendamentos = query.getResultList();
 
 	    if (!listaAgendamentos.isEmpty()) {
 	        // Ordena a lista de eventos pela dataHoraFim em ordem decrescente
@@ -555,7 +576,7 @@ public class TelaAgendar extends JFrame {
 			}
 
 			String status = null;
-			StatusEnum statusEnum = (StatusEnum) comboBoxStatus.getSelectedItem();
+			StatusAgendamento statusEnum = (StatusAgendamento) comboBoxStatus.getSelectedItem();
 			if (statusEnum != null) {
 				status = statusEnum.name();
 			}
@@ -618,8 +639,105 @@ public class TelaAgendar extends JFrame {
 		} finally {
 			System.out.println("Finally");
 		}
+		
+		
+		
 
 	}
+	
+	
+	public EventoVO getAgendamentoSelecionado() {
+		if (table.getSelectedRow() >= 0) {
+			return (EventoVO) tableModel.getRows().get(table.getSelectedRow()).getElement();
+		}
+		return null;
+	}
+	
+	
+	public void editar(EventoVO agendamento) throws ParseException {
+		
+		
+			// Exibe a data e hora atuais no campo "Data e Hora"
+				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+				MaskFormatter mask = new MaskFormatter("##/##/#### ##:##:##");
+
+				// Listar agendamentos
+				EntityManager em = HibernateUtil.getEntityManager();
+				CriteriaBuilder cb = em.getCriteriaBuilder();
+				CriteriaQuery<EventoVO> criteria = cb.createQuery(EventoVO.class);
+				Root<EventoVO> agendamentosFrom = criteria.from(EventoVO.class);
+				criteria.select(agendamentosFrom);
+				TypedQuery<EventoVO> query = em.createQuery(criteria);
+				List<EventoVO> listaAgendamentos = query.getResultList();
+
+				System.out.println("Lista agendamentos ULTIMO --> " + listaAgendamentos);
+				for (EventoVO eventoVO : listaAgendamentos) {
+					//System.out.println("HORARIOS PARA EDITAR: HORA INICIO " + eventoVO.getDataHoraInicio());
+					//System.out.println("HORARIOS PARA EDITAR: HORA FIM " + eventoVO.getDataHoraFim());
+					System.out.println("Status agendamento : " + eventoVO.getStatus());
+				}
+		
+
+		this.ftfCodigo.setText(agendamento.getId().toString());
+		this.ftfNome.setText(agendamento.getNomeCliente().toString());
+		this.ftfEmail.setText(agendamento.getEmail().toString());		
+		
+		BigInteger participantes = agendamento.getParticipantes();
+		String participantesString = participantes.toString();
+		JTextField ftfQntParticipantes = new JTextField();
+		this.ftfQntParticipantes.setText(participantesString);
+		
+		this.ftfLocal.setText(agendamento.getLocal().toString());
+		this.ftfHoraInicio.setText(sdf.format(agendamento.getDataHoraInicio()).toString());
+		this.ftfHoraFim.setText(sdf.format(agendamento.getDataHoraFim()).toString());
+		
+		
+		DefaultComboBoxModel defaultComboBoxModel = new DefaultComboBoxModel<>(StatusAgendamento.values());
+		comboBoxStatus.setModel(defaultComboBoxModel);
+		
+		if (agendamento.getStatus() != null) {
+			
+			String statusString = agendamento.getStatus();
+			
+			if ("AGENDADO".equalsIgnoreCase(statusString)) {
+				comboBoxStatus.setSelectedItem(StatusAgendamento.AGENDADO);
+				
+				StatusAgendamento statusEnum = (StatusAgendamento) comboBoxStatus.getSelectedItem();
+				if (statusEnum != null) {
+					 agendamento.setStatus(statusEnum.name());
+				
+				} 
+				
+			} else if ("AGUARDANDO_CONFIRMACAO".equalsIgnoreCase(statusString)) {
+				comboBoxStatus.setSelectedItem(StatusAgendamento.AGUARDANDO_CONFIRMACAO);
+				
+				StatusAgendamento statusEnum = (StatusAgendamento) comboBoxStatus.getSelectedItem();
+				if (statusEnum != null) {
+					 agendamento.setStatus(statusEnum.name());
+				}
+				
+			} else {
+				comboBoxStatus.setSelectedItem(StatusAgendamento.CANCELADO);
+				
+				StatusAgendamento statusEnum = (StatusAgendamento) comboBoxStatus.getSelectedItem();
+				if (statusEnum != null) {
+					 agendamento.setStatus(statusEnum.name());
+				}
+				
+			}
+	
+		}
+
+		
+		TelaAgendamentos agendamentos = new TelaAgendamentos();
+		agendamentos.setVisible(false);
+		dispose();
+		
+	
+		
+	}
+
+	
 
 	protected void cancelarVoltar() {
 		if (cadastroPessoaView == null) {
@@ -674,5 +792,4 @@ public class TelaAgendar extends JFrame {
 			return false;
 		}
 	}
-
 }

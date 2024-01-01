@@ -33,7 +33,7 @@ import java.awt.event.ActionEvent;
 import java.awt.Toolkit;
 import javax.swing.ImageIcon;
 
-public class EditarContato extends JFrame {
+public class editarContato extends JFrame {
 
 	private JPanel contentPane;
 	private JFormattedTextField ftfCodigo;
@@ -52,7 +52,7 @@ public class EditarContato extends JFrame {
 			public void run() {
 				try {
 					ContatoVO contatoSelecionado = new ContatoVO();
-					EditarContato frame = new EditarContato(contatoSelecionado);
+					editarContato frame = new editarContato(contatoSelecionado);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -61,8 +61,8 @@ public class EditarContato extends JFrame {
 		});
 	}
 
-	public EditarContato(ContatoVO contato) throws ParseException {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(EditarContato.class.getResource("/br/com/senac/view/img/LogoSTYLEMANAGER black.png")));
+	public editarContato(ContatoVO contato) throws ParseException {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(editarContato.class.getResource("/br/com/senac/view/img/LogoSTYLEMANAGER black.png")));
 		contatoAtual = new ContelVO();
 		
 		this.contato = contato;
@@ -117,7 +117,7 @@ public class EditarContato extends JFrame {
 		
 
 		JButton btnSalvar = new JButton("Salvar");
-		btnSalvar.setIcon(new ImageIcon(EditarContato.class.getResource("/br/com/senac/view/img/salvar.png")));
+		btnSalvar.setIcon(new ImageIcon(editarContato.class.getResource("/br/com/senac/view/img/salvar.png")));
 		btnSalvar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				salvar();
@@ -129,7 +129,7 @@ public class EditarContato extends JFrame {
 		contentPane.add(btnSalvar);
 
 		JButton btnCancelar = new JButton("Cancelar");
-		btnCancelar.setIcon(new ImageIcon(EditarContato.class.getResource("/br/com/senac/view/img/cancel.png")));
+		btnCancelar.setIcon(new ImageIcon(editarContato.class.getResource("/br/com/senac/view/img/cancel.png")));
 		btnCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
@@ -144,6 +144,11 @@ public class EditarContato extends JFrame {
 		panel.setBorder(new LineBorder(new Color(192, 192, 192), 2));
 		panel.setBounds(24, 194, 389, 5);
 		contentPane.add(panel);
+		
+		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.setIcon(new ImageIcon(editarContato.class.getResource("/br/com/senac/view/img/contTel.png")));
+		lblNewLabel.setBounds(308, 36, 62, 51);
+		contentPane.add(lblNewLabel);
 	}
 	
 
@@ -209,8 +214,4 @@ public class EditarContato extends JFrame {
 		this.ftfNumero.setText(cont.getNumero().toString());
 		this.ftfEmail.setText(cont.getEmails().toString());
 	}
-	
-	
-	
-
 }

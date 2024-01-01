@@ -150,12 +150,12 @@ public class TelaAgendamentos extends JFrame {
 		TableColumnModel tcm = table.getColumnModel();
 		tcm.getColumn(0).setPreferredWidth(40);
 		tcm.getColumn(1).setPreferredWidth(80);
-		tcm.getColumn(2).setPreferredWidth(140);
-		tcm.getColumn(3).setPreferredWidth(140);
-		tcm.getColumn(4).setPreferredWidth(110);
+		tcm.getColumn(2).setPreferredWidth(120);
+		tcm.getColumn(3).setPreferredWidth(120);
+		tcm.getColumn(4).setPreferredWidth(190);
 		tcm.getColumn(5).setPreferredWidth(120);
 		tcm.getColumn(6).setPreferredWidth(110);
-		tcm.getColumn(7).setPreferredWidth(160);
+		tcm.getColumn(7).setPreferredWidth(140);
 		tcm.getColumn(8).setPreferredWidth(60);
 
 		scrollPane.setViewportView(table);
@@ -273,8 +273,50 @@ public class TelaAgendamentos extends JFrame {
 		ftfSFiltroStatus = new JFormattedTextField();
 		ftfSFiltroStatus.setBounds(550, 33, 155, 18);
 		contentPane.add(ftfSFiltroStatus);
+		
+		JButton btnEditarAgendamento = new JButton("Editar");
+		btnEditarAgendamento.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				editarAgendamento();
+			}
+		});
+		btnEditarAgendamento.setIcon(new ImageIcon(TelaAgendamentos.class.getResource("/br/com/senac/view/img/editar.png")));
+		btnEditarAgendamento.setBounds(283, 318, 113, 23);
+		contentPane.add(btnEditarAgendamento);
 
 	}
+
+
+	protected void editarAgendamento() {
+		if (table.getSelectedRow() < 0) {
+			JOptionPane.showMessageDialog(this, "É necessário selecionar ao menos um agendamento para Editar!",
+					"Mensagem de aviso.", JOptionPane.WARNING_MESSAGE);
+		} else {
+			System.out.println("Método de edição do Agendamento.");
+			
+			
+			try {
+				TelaAgendar edtAgd = new TelaAgendar();
+				EventoVO aux = (EventoVO) tableModel.getRows().get(table.getSelectedRow()).getElement();
+
+				edtAgd.editar(aux);
+				edtAgd.setVisible(true);
+
+			} catch (Exception e1) {
+				e1.printStackTrace();
+				JOptionPane.showMessageDialog(null, "Ocorreu um erro", "Erro.", JOptionPane.WARNING_MESSAGE);
+			}
+			
+			
+		}
+		
+		
+		
+	}
+	
+	
+
+
 
 	protected void ordenarData() {
 		listarAgendamentos();
