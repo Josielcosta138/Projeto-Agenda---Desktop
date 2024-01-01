@@ -186,7 +186,7 @@ public class CadastroPessoaView extends JFrame {
 		tableModel = new TableModel();
 		tableModel.addColumn("Código");
 		tableModel.addColumn("Descrição");
-		tableModel.addColumn("Data");
+		tableModel.addColumn("Data nasc");
 		tableModel.addColumn("Observação");
 
 		table = new JTable(tableModel);
@@ -466,7 +466,7 @@ public class CadastroPessoaView extends JFrame {
 					JOptionPane.WARNING_MESSAGE);
 		} else {
 			try {
-				EditarContato edt = new EditarContato(getContatoSelecionado());
+				editarContato edt = new editarContato(getContatoSelecionado());
 				ContelVO aux = (ContelVO) tableModel1.getRows().get(table_1.getSelectedRow()).getElement();
 
 				edt.editar(aux);
@@ -483,7 +483,7 @@ public class CadastroPessoaView extends JFrame {
 	protected void adicionarContatoTelefonico() {
 		try {
 			ContatoVO contatoSelecionado = getContatoSelecionado();
-			EditarContato editarContato = new EditarContato(contatoSelecionado);
+			editarContato editarContato = new editarContato(contatoSelecionado);
 			editarContato.setVisible(true);
 		} catch (Exception e) {
 			e.printStackTrace();

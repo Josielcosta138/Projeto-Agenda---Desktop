@@ -1,6 +1,6 @@
 package br.com.senac.vo;
 
-public enum StatusEnum {
+public enum StatusAgendamento {
 
 	CANCELADO("Cancelado"),
 	AGENDADO("Agendado"),
@@ -8,7 +8,7 @@ public enum StatusEnum {
 
 	private String status;
 
-	private StatusEnum(String descricao) {
+	private StatusAgendamento(String descricao) {
 		this.status = descricao;
 	}
 
@@ -18,3 +18,4 @@ public enum StatusEnum {
 	}
 
 }
+

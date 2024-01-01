@@ -124,6 +124,11 @@ public class EditarPessoa extends JFrame {
 		panel.setBorder(new LineBorder(new Color(192, 192, 192), 2));
 		panel.setBounds(24, 194, 389, 5);
 		contentPane.add(panel);
+		
+		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.setIcon(new ImageIcon(EditarPessoa.class.getResource("/br/com/senac/view/img/cliente.png")));
+		lblNewLabel.setBounds(348, 11, 65, 39);
+		contentPane.add(lblNewLabel);
 	}
 
 	protected void cancelar() {
@@ -174,7 +179,7 @@ public class EditarPessoa extends JFrame {
 
 			JOptionPane.showMessageDialog(null, "Cadastro salvo com sucesso!");
 			setVisible(false);
-			dispose();
+			
 
 		} catch (BOValidationException b) {
 			b.printStackTrace();
@@ -197,7 +202,8 @@ public class EditarPessoa extends JFrame {
 		this.ftfNome.setText(cont.getNome().toString());
 		this.ftfDataNasc.setText(cont.getDatnas().toString());
 		this.ftfObservacao.setText(cont.getObserv().toString());
-
+		
+	
 	}
 
 }
