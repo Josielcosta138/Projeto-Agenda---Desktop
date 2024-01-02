@@ -10,7 +10,6 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.text.MaskFormatter;
 
@@ -109,7 +108,7 @@ public class TelaAgendamentos extends JFrame {
 		setTitle("EVENTOS - AGENDA");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1244, 400);
+		setBounds(100, 100, 1322, 400);
 		contentPane = new JPanel();
 		contentPane.setForeground(new Color(128, 128, 128));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -128,7 +127,7 @@ public class TelaAgendamentos extends JFrame {
 
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollPane.setBounds(23, 60, 942, 242);
+		scrollPane.setBounds(23, 60, 1013, 242);
 		contentPane.add(scrollPane);
 
 		tableModel = new TableModel();
@@ -139,8 +138,11 @@ public class TelaAgendamentos extends JFrame {
 		tableModel.addColumn("Status");
 		tableModel.addColumn("Tipo serviço");
 		tableModel.addColumn("Cliente");
+		tableModel.addColumn("DD");
+		tableModel.addColumn("Número");
 		tableModel.addColumn("E-mail");
-		tableModel.addColumn("N°-Pessoas");
+		
+		
 
 		table = new JTable(tableModel);
 	    table.setDefaultRenderer(Object.class, new MonthColorRenderer());
@@ -155,8 +157,9 @@ public class TelaAgendamentos extends JFrame {
 		tcm.getColumn(4).setPreferredWidth(190);
 		tcm.getColumn(5).setPreferredWidth(120);
 		tcm.getColumn(6).setPreferredWidth(110);
-		tcm.getColumn(7).setPreferredWidth(140);
-		tcm.getColumn(8).setPreferredWidth(60);
+		tcm.getColumn(7).setPreferredWidth(30);
+		tcm.getColumn(8).setPreferredWidth(80);
+		tcm.getColumn(9).setPreferredWidth(110);
 
 		scrollPane.setViewportView(table);
 
@@ -168,7 +171,7 @@ public class TelaAgendamentos extends JFrame {
 
 		JFormattedTextField ftfDataAtual = new JFormattedTextField();
 		ftfDataAtual.setEditable(false);
-		ftfDataAtual.setBounds(1087, 34, 113, 20);
+		ftfDataAtual.setBounds(1171, 34, 113, 20);
 		contentPane.add(ftfDataAtual);
 		ftfDataAtual.setText(sdf.format(new Date()));
 
@@ -185,7 +188,7 @@ public class TelaAgendamentos extends JFrame {
 
 		JButton btnNewButton = new JButton("");
 		btnNewButton.setIcon(new ImageIcon(TelaAgendamentos.class.getResource("/br/com/senac/view/img/dateTime.png")));
-		btnNewButton.setBounds(1062, 31, 26, 23);
+		btnNewButton.setBounds(1146, 31, 26, 23);
 		contentPane.add(btnNewButton);
 
 		JButton btnVoltar = new JButton("Voltar");
@@ -202,7 +205,7 @@ public class TelaAgendamentos extends JFrame {
 		});
 		btnVoltar.setIcon(new ImageIcon(TelaAgendamentos.class
 				.getResource("/br/com/senac/view/img/2303132_arrow_back_direction_left_navigation_icon.png")));
-		btnVoltar.setBounds(1100, 323, 100, 23);
+		btnVoltar.setBounds(1184, 323, 100, 23);
 		contentPane.add(btnVoltar);
 
 		JLabel lbliconePessoasAgend = new JLabel("");
@@ -215,7 +218,7 @@ public class TelaAgendamentos extends JFrame {
 		JLabel lblAgendaAberta = new JLabel("");
 		lblAgendaAberta
 				.setIcon(new ImageIcon(TelaAgendamentos.class.getResource("/br/com/senac/view/img/AgendaAberta.png")));
-		lblAgendaAberta.setBounds(994, 70, 206, 235);
+		lblAgendaAberta.setBounds(1078, 70, 206, 235);
 		contentPane.add(lblAgendaAberta);
 
 		JButton btnNewButton_1 = new JButton("Excluir");
@@ -314,10 +317,6 @@ public class TelaAgendamentos extends JFrame {
 		
 	}
 	
-	
-
-
-
 	protected void ordenarData() {
 		listarAgendamentos();
 		Collections.sort(listaAgendamentos, Comparator.comparing(EventoVO::getDataHoraInicio));
@@ -336,8 +335,9 @@ public class TelaAgendamentos extends JFrame {
 				rowData.getValues().put(4, eventoVO.getStatus());
 				rowData.getValues().put(5, eventoVO.getTipoServico());
 				rowData.getValues().put(6, eventoVO.getNomeCliente());
-				rowData.getValues().put(7, eventoVO.getEmail());
-				rowData.getValues().put(8, eventoVO.getParticipantes());
+				rowData.getValues().put(7, eventoVO.getDd());
+				rowData.getValues().put(8, eventoVO.getNumero());
+				rowData.getValues().put(9, eventoVO.getEmail());
 
 				rowData.setElement(eventoVO);
 				tableModel.addRow(rowData);
@@ -466,8 +466,9 @@ public class TelaAgendamentos extends JFrame {
 						rowData.getValues().put(4, eventoVO.getStatus());
 						rowData.getValues().put(5, eventoVO.getTipoServico());
 						rowData.getValues().put(6, eventoVO.getNomeCliente());
-						rowData.getValues().put(7, eventoVO.getEmail());
-						rowData.getValues().put(8, eventoVO.getParticipantes());
+						rowData.getValues().put(7, eventoVO.getDd());
+						rowData.getValues().put(8, eventoVO.getNumero());
+						rowData.getValues().put(9, eventoVO.getEmail());
 
 						rowData.setElement(eventoVO);
 						tableModel.addRow(rowData);

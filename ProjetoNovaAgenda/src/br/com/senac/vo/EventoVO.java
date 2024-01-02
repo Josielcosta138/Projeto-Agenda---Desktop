@@ -54,12 +54,15 @@ public class EventoVO implements Serializable{
 	@Basic
     @Column(name = "local", length = 255)
     private String local;
+	
+	
+	@Basic(optional = true) // Not Null esta "desmarcado" no banco
+	@Column(name = "numero", length = 10)
+	private String numero;
 
-	/*
-    @ElementCollection
-    @CollectionTable(name = "evento", joinColumns = @JoinColumn(name = "contat_id"))
-    @Column(name = "participantes")
-    private List<BigInteger> participantes; */
+	@Basic(optional = true) // Not Null esta desmarcado no banco
+	@Column(name = "dd", length = 4)
+	private String dd;
 	
 	
 	@Basic
@@ -85,7 +88,7 @@ public class EventoVO implements Serializable{
 	}
 
 	public EventoVO(BigInteger id, Date  dataHoraInicio, Date  dataHoraFim, String local, BigInteger participantes, String status,
-			String ocupadoVago, String tipoServico) {
+			String ocupadoVago, String tipoServico, String numero, String dd) {
 		super();
 		this.id = id;
 		this.dataHoraInicio = dataHoraInicio;
@@ -94,6 +97,8 @@ public class EventoVO implements Serializable{
 		this.participantes = participantes;
 		this.status = status;
 		this.tipoServico = tipoServico;
+		this.numero = numero;
+		this.dd = dd;
 		
 	}
 
@@ -170,11 +175,28 @@ public class EventoVO implements Serializable{
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	
+	public String getNumero() {
+		return numero;
+	}
+
+	public void setNumero(String numero) {
+		this.numero = numero;
+	}
+	
+	
+	public String getDd() {
+		return dd;
+	}
+
+	public void setDd(String dd) {
+		this.dd = dd;
+	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(dataHoraFim, dataHoraInicio, email, id, local, nomeCliente, participantes, status,
-				tipoServico);
+		return Objects.hash(dataHoraFim, dataHoraInicio, dd, email, id, local, nomeCliente, numero, participantes,
+				status, tipoServico);
 	}
 
 	@Override
@@ -187,29 +209,20 @@ public class EventoVO implements Serializable{
 			return false;
 		EventoVO other = (EventoVO) obj;
 		return Objects.equals(dataHoraFim, other.dataHoraFim) && Objects.equals(dataHoraInicio, other.dataHoraInicio)
-				&& Objects.equals(email, other.email) && Objects.equals(id, other.id)
+				&& Objects.equals(dd, other.dd) && Objects.equals(email, other.email) && Objects.equals(id, other.id)
 				&& Objects.equals(local, other.local) && Objects.equals(nomeCliente, other.nomeCliente)
-				&& Objects.equals(participantes, other.participantes) && Objects.equals(status, other.status)
-				&& Objects.equals(tipoServico, other.tipoServico);
+				&& Objects.equals(numero, other.numero) && Objects.equals(participantes, other.participantes)
+				&& Objects.equals(status, other.status) && Objects.equals(tipoServico, other.tipoServico);
 	}
 
 	@Override
 	public String toString() {
 		return "EventoVO [id=" + id + ", dataHoraInicio=" + dataHoraInicio + ", dataHoraFim=" + dataHoraFim + ", local="
-				+ local + ", participantes=" + participantes + ", status=" + status + ", tipoServico=" + tipoServico
-				+ ", nomeCliente=" + nomeCliente + ", email=" + email + "]";
+				+ local + ", numero=" + numero + ", dd=" + dd + ", participantes=" + participantes + ", status="
+				+ status + ", tipoServico=" + tipoServico + ", nomeCliente=" + nomeCliente + ", email=" + email + "]";
 	}
 
-	
-	
-
-	
 
 
-	
-	
-
-	
-	
 
 } 

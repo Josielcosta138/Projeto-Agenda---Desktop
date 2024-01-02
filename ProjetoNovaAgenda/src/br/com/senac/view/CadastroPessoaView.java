@@ -60,6 +60,7 @@ public class CadastroPessoaView extends JFrame {
 	private TelaAcessosView telaAcessos;
 	private JTable table_1;
 	private TelaAgendar telaAgendar;
+	private TelaServicos telaServicos;
 	private TelaCalendario telaCalendario;
 	private Disponibilidade disponibilidade;
 	private TelaAgendamentos telaAgendamentos;
@@ -392,8 +393,26 @@ public class CadastroPessoaView extends JFrame {
 		mnManutencao.setMnemonic('M');
 		menuBar.add(mnManutencao);
 
-		JMenuItem mntmNewMenuItem = new JMenuItem("New menu item");
+		JMenuItem mntmNewMenuItem = new JMenuItem("Serviços");
+		mntmNewMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (telaServicos == null) {
+					telaServicos = new TelaServicos();
+				}
+				telaServicos.setVisible(true);
+				dispose();
+				System.out.println("Clicou em Serviços");
+			}
+		});
+			
+		
+		mntmNewMenuItem.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/manutencao.png")));
+		mntmNewMenuItem.setForeground(new Color(107, 107, 107));
+		mntmNewMenuItem.setFont(new Font("Segoe UI", Font.BOLD, 12));
 		mnManutencao.add(mntmNewMenuItem);
+		
+		JMenuItem mntmNewMenuItem_2 = new JMenuItem("New menu item");
+		mnManutencao.add(mntmNewMenuItem_2);
 
 		JMenu mnAjuda = new JMenu("Ajuda");
 		mnAjuda.setForeground(new Color(92, 92, 92));
@@ -402,6 +421,9 @@ public class CadastroPessoaView extends JFrame {
 		
 		
 	}
+
+	
+
 
 	protected void listarAgendamentos() throws ParseException {
 		if (telaAgendamentos == null) {
