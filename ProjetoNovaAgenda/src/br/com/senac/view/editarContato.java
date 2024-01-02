@@ -100,7 +100,6 @@ public class editarContato extends JFrame {
 
 		MaskFormatter maskDD = new MaskFormatter("(##)");
 		ftfDDD = new JFormattedTextField(maskDD);
-		//ftfDDD = new JFormattedTextField();
 		ftfDDD.setBounds(102, 67, 62, 20);
 		contentPane.add(ftfDDD);
 

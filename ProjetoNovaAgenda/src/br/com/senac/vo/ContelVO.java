@@ -42,6 +42,8 @@ public class ContelVO implements Serializable {
 	@Basic(optional = true)
 	@Column(name = "emails", length = 250)
 	private String emails;
+	
+	
 
 	// CHAVE ESTRANGEIRA
 	@NotNull
