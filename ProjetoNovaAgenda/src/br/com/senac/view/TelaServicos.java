@@ -8,18 +8,45 @@ import javax.swing.border.EmptyBorder;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.text.DateFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.util.Date;
+import java.util.List;
+
 import javax.swing.JLabel;
 import java.awt.Color;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JButton;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.table.TableColumnModel;
+import javax.swing.text.MaskFormatter;
+
+import br.com.senac.dao.HibernateUtil;
+import br.com.senac.exception.BOValidationException;
+import br.com.senac.service.Service;
+import br.com.senac.vo.EventoVO;
+import br.com.senac.vo.StatusAgendamento;
+import br.com.senac.vo.StatusServico;
+import br.com.senac.vo.TipoServicoVO;
+
 import javax.swing.border.BevelBorder;
 import java.awt.Font;
 import javax.swing.JScrollPane;
@@ -33,6 +60,12 @@ public class TelaServicos extends JFrame {
 	private JPanel contentPane;
 	private JTable table;
 	private TableModel tableModel;
+	private JFormattedTextField ftfValor;
+	private JFormattedTextField ftfTempo;
+	private JFormattedTextField ftfCodigo;
+	private JComboBox comboBoxNomeServico;
+	private JComboBox comboBoxListaServico;
+	private List<TipoServicoVO> listagemDeTiposDeServicos;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -47,7 +80,7 @@ public class TelaServicos extends JFrame {
 		});
 	}
 
-	public TelaServicos() {
+	public TelaServicos() throws ParseException {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -60,7 +93,7 @@ public class TelaServicos extends JFrame {
 				.getImage(TelaServicos.class.getResource("/br/com/senac/view/img/LogoSTYLEMANAGER black.png")));
 		setTitle("SERVIÇOS");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 741, 443);
+		setBounds(100, 100, 741, 530);
 		contentPane = new JPanel();
 		contentPane.setForeground(new Color(192, 192, 192));
 		contentPane.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, new Color(127, 127, 127),
@@ -71,7 +104,7 @@ public class TelaServicos extends JFrame {
 
 		JPanel panel = new JPanel();
 		panel.setBorder(new LineBorder(new Color(192, 192, 192), 1, true));
-		panel.setBounds(10, 40, 705, 128);
+		panel.setBounds(10, 40, 705, 137);
 		contentPane.add(panel);
 		panel.setLayout(null);
 
@@ -81,41 +114,65 @@ public class TelaServicos extends JFrame {
 		lblNomeServico.setForeground(new Color(100, 100, 100));
 
 		JButton btnSalvar = new JButton("Salvar");
-		btnSalvar.setBounds(10, 74, 107, 23);
+		btnSalvar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				salvarServico();
+
+			}
+		});
+		btnSalvar.setBounds(10, 98, 107, 23);
 		panel.add(btnSalvar);
 		btnSalvar.setIcon(new ImageIcon(TelaServicos.class.getResource("/br/com/senac/view/img/salvar.png")));
-
-		JComboBox comboBoxNomeServico = new JComboBox();
-		comboBoxNomeServico.setBounds(48, 20, 199, 20);
-		panel.add(comboBoxNomeServico);
+		DefaultComboBoxModel defaultComboBoxModel = new DefaultComboBoxModel<>(StatusServico.values());
 
 		JButton btnExcluir = new JButton("Excluir");
-		btnExcluir.setBounds(140, 74, 107, 23);
+		btnExcluir.setBounds(272, 98, 107, 23);
 		panel.add(btnExcluir);
 		btnExcluir.setIcon(new ImageIcon(TelaServicos.class.getResource("/br/com/senac/view/img/remove.png")));
 
-		JLabel lblValor = new JLabel("Valor:");
-		lblValor.setBounds(272, 23, 46, 14);
+		JLabel lblValor = new JLabel("Valor R$:");
+		lblValor.setBounds(286, 22, 61, 14);
 		panel.add(lblValor);
 		lblValor.setForeground(new Color(100, 100, 100));
 
 		JButton btnEditar = new JButton("Editar");
-		btnEditar.setBounds(272, 74, 107, 23);
+		btnEditar.setBounds(142, 98, 107, 23);
 		panel.add(btnEditar);
 		btnEditar.setIcon(new ImageIcon(TelaServicos.class.getResource("/br/com/senac/view/img/editar.png")));
 
 		JLabel lblTempo = new JLabel("Duração:");
-		lblTempo.setBounds(513, 23, 53, 14);
+		lblTempo.setBounds(552, 22, 53, 14);
 		panel.add(lblTempo);
 		lblTempo.setForeground(new Color(100, 100, 100));
 
-		JFormattedTextField ftfTempo = new JFormattedTextField();
-		ftfTempo.setBounds(576, 20, 80, 18);
+		MaskFormatter maskTempo = new MaskFormatter("##:## min");
+		ftfTempo = new JFormattedTextField(maskTempo);
+		ftfTempo.setBounds(615, 19, 80, 18);
 		panel.add(ftfTempo);
 
-		JFormattedTextField ftfValor = new JFormattedTextField();
-		ftfValor.setBounds(315, 20, 172, 18);
+		MaskFormatter mask = new MaskFormatter("##.##");
+		mask.setValidCharacters("0123456789");
+		ftfValor = new JFormattedTextField(mask);
+		ftfValor.setBounds(342, 21, 172, 18);
+		ftfValor.setFocusLostBehavior(JFormattedTextField.PERSIST);
 		panel.add(ftfValor);
+
+		comboBoxNomeServico = new JComboBox();
+		comboBoxNomeServico.setBounds(48, 20, 199, 20);
+		panel.add(comboBoxNomeServico);
+		comboBoxNomeServico.setModel(defaultComboBoxModel);
+		comboBoxNomeServico.setSelectedIndex(1);
+
+		JLabel lblCodigo = new JLabel("Cód:");
+		lblCodigo.setForeground(new Color(116, 116, 116));
+		lblCodigo.setBounds(10, 56, 33, 14);
+		panel.add(lblCodigo);
+
+		ftfCodigo = new JFormattedTextField();
+		ftfCodigo.setEditable(false);
+		ftfCodigo.setEnabled(false);
+		ftfCodigo.setBounds(48, 50, 47, 20);
+		panel.add(ftfCodigo);
 
 		JLabel lblNewLabel = new JLabel("Cadastro de serviços");
 		lblNewLabel.setForeground(new Color(96, 96, 96));
@@ -125,44 +182,43 @@ public class TelaServicos extends JFrame {
 
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollPane.setBounds(10, 236, 705, 145);
+		scrollPane.setBounds(10, 308, 705, 145);
 		contentPane.add(scrollPane);
-				
+
 		tableModel = new TableModel();
 		tableModel.addColumn("Código");
 		tableModel.addColumn("Nome");
-		tableModel.addColumn("Profissional");
 		tableModel.addColumn("Valor");
 		tableModel.addColumn("Duração");
-		
+
 		table = new JTable(tableModel);
 		table.setDefaultRenderer(Object.class, new MonthColorRenderer());
 		table.setAutoscrolls(true);
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
 		TableColumnModel tcm = table.getColumnModel();
-		tcm.getColumn(0).setPreferredWidth(60);
+		tcm.getColumn(0).setPreferredWidth(100);
 		tcm.getColumn(1).setPreferredWidth(200);
-		tcm.getColumn(2).setPreferredWidth(160);
-		tcm.getColumn(3).setPreferredWidth(140);
-		tcm.getColumn(4).setPreferredWidth(140);
-		
+		tcm.getColumn(2).setPreferredWidth(200);
+		tcm.getColumn(3).setPreferredWidth(200);
+
 		scrollPane.setViewportView(table);
-		
+
 		JLabel lblNomePesq = new JLabel("Nome:");
 		lblNomePesq.setForeground(new Color(96, 96, 96));
-		lblNomePesq.setBounds(20, 206, 46, 14);
+		lblNomePesq.setBounds(20, 278, 46, 14);
 		contentPane.add(lblNomePesq);
-		
-		JComboBox comboBoxNomeServico_1 = new JComboBox();
-		comboBoxNomeServico_1.setBounds(63, 203, 222, 20);
-		contentPane.add(comboBoxNomeServico_1);
-		
+
 		JButton btnPesquisar = new JButton("Pesquisar");
+		btnPesquisar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				listarTiposDeServicos();
+			}
+		});
 		btnPesquisar.setIcon(new ImageIcon(TelaServicos.class.getResource("/br/com/senac/view/img/pesquisar.png")));
-		btnPesquisar.setBounds(290, 202, 124, 23);
+		btnPesquisar.setBounds(290, 274, 124, 23);
 		contentPane.add(btnPesquisar);
-		
+
 		JButton btnNewButton = new JButton("Voltar");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -170,11 +226,217 @@ public class TelaServicos extends JFrame {
 				cadastroPessoaView.setVisible(true);
 				setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				dispose();
-				
+
 			}
 		});
-		btnNewButton.setIcon(new ImageIcon(TelaServicos.class.getResource("/br/com/senac/view/img/2303132_arrow_back_direction_left_navigation_icon.png")));
-		btnNewButton.setBounds(600, 202, 101, 23);
+		btnNewButton.setIcon(new ImageIcon(TelaServicos.class
+				.getResource("/br/com/senac/view/img/2303132_arrow_back_direction_left_navigation_icon.png")));
+		btnNewButton.setBounds(600, 274, 101, 23);
 		contentPane.add(btnNewButton);
+
+		JLabel lblNewLabel_1 = new JLabel("");
+		lblNewLabel_1
+				.setIcon(new ImageIcon(TelaServicos.class.getResource("/br/com/senac/view/img/dinheiroServico.png")));
+		lblNewLabel_1.setBounds(130, 11, 33, 24);
+		contentPane.add(lblNewLabel_1);
+
+		DefaultComboBoxModel defaultComboBoxModel3 = new DefaultComboBoxModel<>(StatusServico.values());
+		comboBoxListaServico = new JComboBox();
+		comboBoxListaServico.setBounds(63, 276, 202, 19);
+		// panel.add(comboBoxListaServico);
+		comboBoxListaServico.setModel(defaultComboBoxModel3);
+		comboBoxListaServico.setSelectedIndex(1);
+		contentPane.add(comboBoxListaServico);
+
+		JPanel panel_1 = new JPanel();
+		panel_1.setForeground(new Color(215, 215, 215));
+		panel_1.setBorder(new LineBorder(new Color(110, 110, 110), 1, true));
+		panel_1.setBounds(10, 249, 705, 1);
+		contentPane.add(panel_1);
+
+		JLabel lblNewLabel_2 = new JLabel("Serviços e valores");
+		lblNewLabel_2.setForeground(new Color(116, 116, 116));
+		lblNewLabel_2.setFont(new Font("Tahoma", Font.BOLD, 11));
+		lblNewLabel_2.setBounds(10, 224, 124, 14);
+		contentPane.add(lblNewLabel_2);
+
+	}
+
+	protected void listarTiposDeServicos() {
+
+		if (tableModel != null) {
+			tableModel.clearTable();
+		}
+
+		MaskFormatter maskTempo = null;
+		JFormattedTextField ftfTempo = new JFormattedTextField(maskTempo);
+		TipoServicoVO tipoServicoVO = new TipoServicoVO();
+		String descricaoStatus = null;
+
+		Integer codigo = null;
+		String valor = (ftfValor.getText() != null && ftfValor.getText().trim().length() > 0)
+				? ftfValor.getText().trim()
+				: null;
+
+		String tempoDuracao = (ftfTempo.getText() != null && ftfTempo.getText().trim().length() > 0)
+				? ftfTempo.getText().trim()
+				: null;
+
+
+		try {
+
+			System.out.println("******* Iniciando consulta de agendamentos *******");
+			EntityManager em = HibernateUtil.getEntityManager();
+
+			CriteriaBuilder cb = em.getCriteriaBuilder();
+			CriteriaQuery<TipoServicoVO> criteria = cb.createQuery(TipoServicoVO.class);
+
+			// Clausula from
+			Root<TipoServicoVO> tiposServicosFrom = criteria.from(TipoServicoVO.class);
+			criteria.select(tiposServicosFrom);
+
+			String statusNomeTipoServico = null;
+			StatusServico statusServico = (StatusServico) comboBoxListaServico.getSelectedItem();
+
+			if (statusServico != null) {
+				statusNomeTipoServico = statusServico.name();
+				criteria.where(cb.equal(tiposServicosFrom.get("nome"), statusNomeTipoServico));
+			}
+
+			TypedQuery<TipoServicoVO> query = em.createQuery(criteria);
+			listagemDeTiposDeServicos = query.getResultList();
+
+			try {
+
+				descricaoStatus = statusServico.getDescricao();
+				
+				if (statusServico != null) {
+					descricaoStatus = statusServico.getDescricao();
+				    statusNomeTipoServico = statusServico.name();
+  
+				}
+
+				// filtroStatus
+				if (statusNomeTipoServico != null) {
+					criteria.where(cb.equal(tiposServicosFrom.get("nome"), statusNomeTipoServico));
+				}
+				
+			
+
+				for (TipoServicoVO tServicoVO : listagemDeTiposDeServicos) {
+
+					if (tServicoVO.getId() != null) {
+						
+						int duracaoInt = tServicoVO.getDuracao();
+						String duracaoString = String.format("%04d", duracaoInt);
+						// Obter os dois primeiros dígitos (horas) e os dois últimos dígitos (minutos)
+						String horas = duracaoString.substring(0, 2);
+						String minutos = duracaoString.substring(2, 4);
+						String duracaoFormatada = horas + ":" + minutos + " min";
+						
+
+						RowData rowData = new RowData();
+						rowData.getValues().put(0, tServicoVO.getId().toString());
+						rowData.getValues().put(1, descricaoStatus);
+						rowData.getValues().put(2, tServicoVO.getValor().toString() + " R$");
+						rowData.getValues().put(3, duracaoFormatada);
+					
+
+						rowData.setElement(tServicoVO);
+						tableModel.addRow(rowData);
+					} else {
+						JOptionPane.showMessageDialog(null, "Sem Agendamentos no momento!", null,
+								JOptionPane.WARNING_MESSAGE);
+					}
+
+				}
+
+			} catch (Exception e) {
+				throw new BOValidationException("Código: erro de validação" + " valor inválido");
+			}
+
+		} catch (BOValidationException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(this, e.getMessage(), "Erro de validação", JOptionPane.WARNING_MESSAGE);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, e.getMessage(), "Erro de sistema", JOptionPane.ERROR_MESSAGE);
+		}
+
+	}
+
+	public String formatarDuracao(int minutos) {
+		int horas = minutos / 1; // Divida por 60 para obter as horas
+		int minutosRestantes = minutos % 1;
+
+		// Formatar para o estilo HH:mm
+		return String.format("%02d:%02d min", horas, minutosRestantes);
+	}
+
+	protected void salvarServico() {
+		System.out.println("*****************Iniciando Salvar*****************");
+
+		try {
+
+			Service service = new Service();
+			TipoServicoVO tipoServicoVO = new TipoServicoVO();
+
+			String codigo = ftfCodigo.getText().trim();
+			String valor = ftfValor.getText().trim();
+			String tempoDuracao = ftfTempo.getText().trim();
+
+			if (codigo != null && codigo.length() > 0) {
+				tipoServicoVO.setId(new BigInteger(codigo));
+				tipoServicoVO = service.buscarTipoServicoPorId(tipoServicoVO);
+			}
+
+			String statusNomeTipoServico = null;
+			StatusServico statusServico = (StatusServico) comboBoxNomeServico.getSelectedItem();
+			if (statusServico != null) {
+				statusNomeTipoServico = statusServico.name();
+			}
+
+			String pattern = "dd/MM/yyyy HH:mm:ss";
+			DateFormat dateFormat = new SimpleDateFormat(pattern);
+
+			if (!tempoDuracao.isEmpty()) {
+
+				String tempoSemMascara = tempoDuracao.replaceAll("[^0-9]", "");
+				Integer tempoDuracaoConv = Integer.parseInt(tempoSemMascara);
+				tipoServicoVO.setDuracao(tempoDuracaoConv);
+			} else {
+				JOptionPane.showMessageDialog(this, "Tempo de duração de corte. Vazio!", "Erro",
+						JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+
+			if (!valor.isEmpty()) {
+				try {
+					BigDecimal valorConv = new BigDecimal(valor);
+					tipoServicoVO.setValor(valorConv);
+				} catch (NumberFormatException | ArithmeticException e) {
+					System.err.println("Erro ao converter String para BigDecimal: " + e.getMessage());
+				}
+			}
+
+			if (statusNomeTipoServico != null) {
+				tipoServicoVO.setNome(statusNomeTipoServico);
+			}
+
+			service.salvar(tipoServicoVO);
+
+			JOptionPane.showMessageDialog(null, "Cadastro salvo com sucesso!");
+			setVisible(true);
+
+		} catch (BOValidationException b) {
+			b.printStackTrace();
+			JOptionPane.showMessageDialog(this, b.getMessage(), "Mensagem de aviso", JOptionPane.WARNING_MESSAGE);
+
+		} catch (Exception b) {
+			b.printStackTrace();
+			JOptionPane.showMessageDialog(this, "Ocorreu um erro ao realizar a operação!", "Erro",
+					JOptionPane.ERROR_MESSAGE);
+		} finally {
+			System.out.println("Finally");
+		}
 	}
 }

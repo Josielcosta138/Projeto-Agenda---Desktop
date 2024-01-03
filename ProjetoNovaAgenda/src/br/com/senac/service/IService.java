@@ -12,9 +12,12 @@ import br.com.senac.exception.BOValidationException;
 import br.com.senac.vo.ContatoVO;
 import br.com.senac.vo.ContelVO;
 import br.com.senac.vo.EventoVO;
+import br.com.senac.vo.TipoServicoVO;
 
 public interface IService {
 
+	
+	// USUÁRIO - CLIENTE
 	public abstract ContatoVO buscarContatosPorId(ContatoVO contatVO) throws BOException;
 
 	public abstract List<ContatoVO> listarContato(ContatoVO contatVO, BigInteger id, String descri, Date datnas,
@@ -46,4 +49,17 @@ public interface IService {
 	public abstract void salvar(EventoVO eventoVO) throws BOValidationException, BOException;
 
 	public abstract void excluir(EventoVO eventoVO) throws BOValidationException, BOException;	
+	
+	
+// TIPOS DE SERVIÇOS
+	
+	public abstract TipoServicoVO buscarTipoServicoPorId(TipoServicoVO tipoServicoVO) throws BOException;
+
+	public abstract List<TipoServicoVO> listarServicos(TipoServicoVO tipoServicoVO) throws BOException;
+
+	public abstract void salvar(TipoServicoVO tipoServicoVO) throws BOValidationException, BOException;
+
+	public abstract void excluir(TipoServicoVO tipoServicoVO) throws BOValidationException, BOException;
+	
+	
 }

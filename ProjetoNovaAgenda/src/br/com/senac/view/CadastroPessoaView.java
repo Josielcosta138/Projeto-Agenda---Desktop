@@ -397,7 +397,12 @@ public class CadastroPessoaView extends JFrame {
 		mntmNewMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (telaServicos == null) {
-					telaServicos = new TelaServicos();
+					try {
+						telaServicos = new TelaServicos();
+					} catch (ParseException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 				telaServicos.setVisible(true);
 				dispose();

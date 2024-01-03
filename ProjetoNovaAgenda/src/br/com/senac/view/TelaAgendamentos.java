@@ -21,6 +21,7 @@ import br.com.senac.service.Service;
 import br.com.senac.vo.ContatoVO;
 import br.com.senac.vo.ContelVO;
 import br.com.senac.vo.EventoVO;
+import br.com.senac.vo.StatusServico;
 
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
@@ -72,7 +73,7 @@ public class TelaAgendamentos extends JFrame {
 	private JFormattedTextField ftfCliente;
 	private List<EventoVO> listaAgendamentos;
 	private JFormattedTextField ftfSFiltroStatus;
-	
+	private StatusServico statusServico;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -310,10 +311,7 @@ public class TelaAgendamentos extends JFrame {
 				JOptionPane.showMessageDialog(null, "Ocorreu um erro", "Erro.", JOptionPane.WARNING_MESSAGE);
 			}
 			
-			
 		}
-		
-		
 		
 	}
 	
@@ -392,6 +390,7 @@ public class TelaAgendamentos extends JFrame {
 			tableModel.clearTable();
 		}
 
+		
 		BigInteger id = null;
 		Date dataHoraInicio = null;
 		Date dataHoraFim = null;
@@ -402,6 +401,7 @@ public class TelaAgendamentos extends JFrame {
 		String filtroStatus = null;
 		String tipoServico = null;
 		String nomeCliente = null;
+		String descricaoStatus = null;
 
 		try {
 
@@ -413,11 +413,15 @@ public class TelaAgendamentos extends JFrame {
 				}
 				
 				
+				
 				if (this.ftfSFiltroStatus.getText() != null && ftfSFiltroStatus.getText().trim().length() > 0) {
 					filtroStatus = ftfSFiltroStatus.getText().trim();
 				}
 				
-
+			
+				
+				
+				
 				if (this.ftfCliente.getText() != null && ftfCliente.getText().trim().length() > 0) {
 					nomeCliente = ftfCliente.getText().trim();
 				}

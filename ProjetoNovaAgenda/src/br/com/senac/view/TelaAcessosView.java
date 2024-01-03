@@ -208,7 +208,11 @@ public class TelaAcessosView extends JFrame {
 		btnServicos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (telaServicos == null) {
-					telaServicos = new TelaServicos();
+					try {
+						telaServicos = new TelaServicos();
+					} catch (ParseException e1) {
+						e1.printStackTrace();
+					}
 				}
 				telaServicos.setVisible(true);
 				dispose();

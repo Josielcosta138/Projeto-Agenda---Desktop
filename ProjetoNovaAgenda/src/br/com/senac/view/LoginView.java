@@ -134,7 +134,7 @@ public class LoginView extends JFrame {
 		String usuario= tFUser.getText();
 		String senha= passwordField.getText();
 		
-		if (usuario.equals("admin@teste.com") && senha.equals("admin")) {
+		if (usuario.equals("admin@teste.com") && senha.equals("a")) {
 			TelaAcessosView telaAcessos= new TelaAcessosView();
 			telaAcessos.setVisible(true);			
 			dispose();
