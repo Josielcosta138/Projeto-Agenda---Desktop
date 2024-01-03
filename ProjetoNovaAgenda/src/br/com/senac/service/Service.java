@@ -10,11 +10,14 @@ import br.com.senac.bo.EventoBO;
 import br.com.senac.bo.IContatoBO;
 import br.com.senac.bo.IContelBO;
 import br.com.senac.bo.IEventoBO;
+import br.com.senac.bo.ITipoServicoBO;
+import br.com.senac.bo.TipoServicoBO;
 import br.com.senac.exception.BOException;
 import br.com.senac.exception.BOValidationException;
 import br.com.senac.vo.ContatoVO;
 import br.com.senac.vo.ContelVO;
 import br.com.senac.vo.EventoVO;
+import br.com.senac.vo.TipoServicoVO;
 
 public class Service implements IService {
 
@@ -103,6 +106,39 @@ public class Service implements IService {
 		
 		IEventoBO evento = new EventoBO();
 		evento.excluir(eventoVO);
+		
+	}
+	
+	
+	
+	
+	// SERVIÇOS
+
+	@Override
+	public TipoServicoVO buscarTipoServicoPorId(TipoServicoVO tipoServicoVO) throws BOException {
+		ITipoServicoBO tipoServico = new TipoServicoBO();
+		return tipoServico.buscarTipoServicoPorId(tipoServicoVO);
+	
+	}
+
+	@Override
+	public List<TipoServicoVO> listarServicos(TipoServicoVO tipoServicoVO) throws BOException {
+		ITipoServicoBO tipoServico = new TipoServicoBO();
+		return tipoServico.listarServicos(tipoServicoVO);
+		
+	}
+
+	@Override
+	public void salvar(TipoServicoVO tipoServicoVO) throws BOValidationException, BOException {
+		ITipoServicoBO tipoServico = new TipoServicoBO();
+		tipoServico.salvar(tipoServicoVO);
+				
+	}
+
+	@Override
+	public void excluir(TipoServicoVO tipoServicoVO) throws BOValidationException, BOException {
+		ITipoServicoBO tipoServico = new TipoServicoBO();
+		tipoServico.excluir(tipoServicoVO);
 		
 	}
 

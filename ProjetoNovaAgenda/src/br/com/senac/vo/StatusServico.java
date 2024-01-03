@@ -4,7 +4,9 @@ public enum StatusServico {
 
 	CABELO("Cabelo"),
 	CABELO_BARBA("Cabelo e Barba"),
-	BARBA("Barba");
+	BARBA("Barba"),
+	HIDRATACAO_CAPILAR("Hidratação Capilar"),
+	LIMPEZA_SOMBRANCELHA("Limpeza de sombrancelha");
 
 	private String status;
 
@@ -15,6 +17,12 @@ public enum StatusServico {
 
 	@Override
 	public String toString() {
+		return status;
+	}
+
+
+	public String getDescricao() {
+	
 		return status;
 	}
 
