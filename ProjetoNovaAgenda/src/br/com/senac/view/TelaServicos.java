@@ -101,6 +101,7 @@ public class TelaServicos extends JFrame {
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		setLocationRelativeTo(null);
 
 		JPanel panel = new JPanel();
 		panel.setBorder(new LineBorder(new Color(192, 192, 192), 1, true));
@@ -187,7 +188,7 @@ public class TelaServicos extends JFrame {
 
 		tableModel = new TableModel();
 		tableModel.addColumn("Código");
-		tableModel.addColumn("Nome");
+		tableModel.addColumn("Serviço");
 		tableModel.addColumn("Valor");
 		tableModel.addColumn("Duração");
 
@@ -241,11 +242,11 @@ public class TelaServicos extends JFrame {
 		contentPane.add(lblNewLabel_1);
 
 		DefaultComboBoxModel defaultComboBoxModel3 = new DefaultComboBoxModel<>(StatusServico.values());
+		defaultComboBoxModel3.addElement(null);
 		comboBoxListaServico = new JComboBox();
 		comboBoxListaServico.setBounds(63, 276, 202, 19);
-		// panel.add(comboBoxListaServico);
 		comboBoxListaServico.setModel(defaultComboBoxModel3);
-		comboBoxListaServico.setSelectedIndex(1);
+		comboBoxListaServico.setSelectedItem(null); 
 		contentPane.add(comboBoxListaServico);
 
 		JPanel panel_1 = new JPanel();
@@ -260,87 +261,65 @@ public class TelaServicos extends JFrame {
 		lblNewLabel_2.setBounds(10, 224, 124, 14);
 		contentPane.add(lblNewLabel_2);
 
+		JLabel lblNewLabel_3 = new JLabel("");
+		lblNewLabel_3.setIcon(new ImageIcon(TelaServicos.class.getResource("/br/com/senac/view/img/relogioMoney.png")));
+		lblNewLabel_3.setBounds(116, 210, 33, 32);
+		contentPane.add(lblNewLabel_3);
+
 	}
 
+	@SuppressWarnings("null")
 	protected void listarTiposDeServicos() {
-
-		if (tableModel != null) {
-			tableModel.clearTable();
-		}
-
-		MaskFormatter maskTempo = null;
-		JFormattedTextField ftfTempo = new JFormattedTextField(maskTempo);
-		TipoServicoVO tipoServicoVO = new TipoServicoVO();
-		String descricaoStatus = null;
-
-		Integer codigo = null;
-		String valor = (ftfValor.getText() != null && ftfValor.getText().trim().length() > 0)
-				? ftfValor.getText().trim()
-				: null;
-
-		String tempoDuracao = (ftfTempo.getText() != null && ftfTempo.getText().trim().length() > 0)
-				? ftfTempo.getText().trim()
-				: null;
-
-
 		try {
-
-			System.out.println("******* Iniciando consulta de agendamentos *******");
-			EntityManager em = HibernateUtil.getEntityManager();
-
-			CriteriaBuilder cb = em.getCriteriaBuilder();
-			CriteriaQuery<TipoServicoVO> criteria = cb.createQuery(TipoServicoVO.class);
-
-			// Clausula from
-			Root<TipoServicoVO> tiposServicosFrom = criteria.from(TipoServicoVO.class);
-			criteria.select(tiposServicosFrom);
-
-			String statusNomeTipoServico = null;
-			StatusServico statusServico = (StatusServico) comboBoxListaServico.getSelectedItem();
-
-			if (statusServico != null) {
-				statusNomeTipoServico = statusServico.name();
-				criteria.where(cb.equal(tiposServicosFrom.get("nome"), statusNomeTipoServico));
-			}
-
-			TypedQuery<TipoServicoVO> query = em.createQuery(criteria);
-			listagemDeTiposDeServicos = query.getResultList();
-
 			try {
+				System.out.println("******* Iniciando consulta de serviços *******");
+				EntityManager em = HibernateUtil.getEntityManager();
 
-				descricaoStatus = statusServico.getDescricao();
+				CriteriaBuilder cb = em.getCriteriaBuilder();
+				CriteriaQuery<TipoServicoVO> criteria = cb.createQuery(TipoServicoVO.class);
+
+				// Clausula from
+				Root<TipoServicoVO> tiposServicosFrom = criteria.from(TipoServicoVO.class);
+				criteria.select(tiposServicosFrom);
+
+				String statusNomeTipoServico = null;
+				StatusServico statusServico = (StatusServico) comboBoxListaServico.getSelectedItem();
 				
+				String descricaoStatus = null;
+				// Verifica se comboBoxListaServico é nulo
 				if (statusServico != null) {
-					descricaoStatus = statusServico.getDescricao();
-				    statusNomeTipoServico = statusServico.name();
-  
-				}
-
-				// filtroStatus
-				if (statusNomeTipoServico != null) {
+					statusNomeTipoServico = statusServico.name();
 					criteria.where(cb.equal(tiposServicosFrom.get("nome"), statusNomeTipoServico));
 				}
 				
-			
+				/*
+				if (statusServico == null) {
+					//descricaoStatus = statusServico.getDescricao();
+					descricaoStatus = statusServico.name();
+					//criteria.where(cb.equal(tiposServicosFrom.get("nome"), statusNomeTipoServico));
+				} */
+				
+				
+				TypedQuery<TipoServicoVO> query = em.createQuery(criteria);
+				listagemDeTiposDeServicos = query.getResultList();
+
+				tableModel.clearTable(); 
 
 				for (TipoServicoVO tServicoVO : listagemDeTiposDeServicos) {
-
 					if (tServicoVO.getId() != null) {
-						
 						int duracaoInt = tServicoVO.getDuracao();
 						String duracaoString = String.format("%04d", duracaoInt);
 						// Obter os dois primeiros dígitos (horas) e os dois últimos dígitos (minutos)
 						String horas = duracaoString.substring(0, 2);
 						String minutos = duracaoString.substring(2, 4);
 						String duracaoFormatada = horas + ":" + minutos + " min";
-						
-
 						RowData rowData = new RowData();
+						
 						rowData.getValues().put(0, tServicoVO.getId().toString());
-						rowData.getValues().put(1, descricaoStatus);
+						//rowData.getValues().put(1, descricaoStatus);
+						rowData.getValues().put(1, tServicoVO.getNome());
 						rowData.getValues().put(2, tServicoVO.getValor().toString() + " R$");
 						rowData.getValues().put(3, duracaoFormatada);
-					
 
 						rowData.setElement(tServicoVO);
 						tableModel.addRow(rowData);
@@ -348,7 +327,6 @@ public class TelaServicos extends JFrame {
 						JOptionPane.showMessageDialog(null, "Sem Agendamentos no momento!", null,
 								JOptionPane.WARNING_MESSAGE);
 					}
-
 				}
 
 			} catch (Exception e) {
@@ -361,7 +339,6 @@ public class TelaServicos extends JFrame {
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(this, e.getMessage(), "Erro de sistema", JOptionPane.ERROR_MESSAGE);
 		}
-
 	}
 
 	public String formatarDuracao(int minutos) {
