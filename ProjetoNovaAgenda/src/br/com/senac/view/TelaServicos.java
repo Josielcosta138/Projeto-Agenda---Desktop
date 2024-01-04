@@ -40,6 +40,7 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.text.MaskFormatter;
 
 import br.com.senac.dao.HibernateUtil;
+import br.com.senac.exception.BOException;
 import br.com.senac.exception.BOValidationException;
 import br.com.senac.service.Service;
 import br.com.senac.vo.EventoVO;
@@ -51,6 +52,7 @@ import javax.swing.border.BevelBorder;
 import java.awt.Font;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -93,7 +95,7 @@ public class TelaServicos extends JFrame {
 				.getImage(TelaServicos.class.getResource("/br/com/senac/view/img/LogoSTYLEMANAGER black.png")));
 		setTitle("SERVIÇOS");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 741, 530);
+		setBounds(100, 100, 741, 511);
 		contentPane = new JPanel();
 		contentPane.setForeground(new Color(192, 192, 192));
 		contentPane.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, new Color(127, 127, 127),
@@ -127,6 +129,11 @@ public class TelaServicos extends JFrame {
 		DefaultComboBoxModel defaultComboBoxModel = new DefaultComboBoxModel<>(StatusServico.values());
 
 		JButton btnExcluir = new JButton("Excluir");
+		btnExcluir.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				excluir();
+			}
+		});
 		btnExcluir.setBounds(272, 98, 107, 23);
 		panel.add(btnExcluir);
 		btnExcluir.setIcon(new ImageIcon(TelaServicos.class.getResource("/br/com/senac/view/img/remove.png")));
@@ -137,6 +144,16 @@ public class TelaServicos extends JFrame {
 		lblValor.setForeground(new Color(100, 100, 100));
 
 		JButton btnEditar = new JButton("Editar");
+		btnEditar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					editarServico();
+				} catch (ParseException e1) {
+					e1.printStackTrace();
+				}
+				
+			}
+		});
 		btnEditar.setBounds(142, 98, 107, 23);
 		panel.add(btnEditar);
 		btnEditar.setIcon(new ImageIcon(TelaServicos.class.getResource("/br/com/senac/view/img/editar.png")));
@@ -268,6 +285,100 @@ public class TelaServicos extends JFrame {
 
 	}
 
+	protected void editarServico() throws ParseException {
+		if (table.getSelectedRow() < 0) {
+			JOptionPane.showMessageDialog(this, "É necessário selecionar ao menos um agendamento para Editar!",
+					"Mensagem de aviso.", JOptionPane.WARNING_MESSAGE);
+		} else {
+			System.out.println("Método de edição do Agendamento.");
+			
+			
+			try {
+				TelaServicos edtAgd = new TelaServicos();
+				TipoServicoVO aux = (TipoServicoVO) tableModel.getRows().get(table.getSelectedRow()).getElement();
+
+				//edicao(aux);
+				edtAgd.edicao(aux);
+				edtAgd.setVisible(true);
+				tableModel.fireTableDataChanged();
+
+			} catch (Exception e1) {
+				e1.printStackTrace();
+				JOptionPane.showMessageDialog(null, "Ocorreu um erro", "Erro.", JOptionPane.WARNING_MESSAGE);
+			}
+			
+			
+			TelaServicos telaServico = new TelaServicos();
+			telaServico.setVisible(false);
+			dispose();
+		}
+		
+	}
+	
+	
+	public void edicao(TipoServicoVO servico) throws ParseException {
+		// Exibe a data e hora atuais no campo "Data e Hora"
+				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+				MaskFormatter mask = new MaskFormatter("##/##/#### ##:##:##");
+
+				// Listar agendamentos
+				EntityManager em = HibernateUtil.getEntityManager();
+				CriteriaBuilder cb = em.getCriteriaBuilder();
+				CriteriaQuery<TipoServicoVO> criteria = cb.createQuery(TipoServicoVO.class);
+				Root<TipoServicoVO> tipoServicoFrom = criteria.from(TipoServicoVO.class);
+				criteria.select(tipoServicoFrom);
+				TypedQuery<TipoServicoVO> query = em.createQuery(criteria);
+				List<TipoServicoVO> listaDeServicos = query.getResultList();
+
+				System.out.println("Lista Serviçoes ULTIMO --> " + listaDeServicos);
+				for (TipoServicoVO servicoVO : listaDeServicos) {
+					System.out.println("Status agendamento : " + servicoVO.getNome());
+				}
+
+				this.ftfCodigo.setText(servico.getId().toString());
+				this.ftfValor.setText(servico.getValor().toString());
+				this.ftfTempo.setText(servico.getDuracao().toString());
+				
+				
+
+	}
+
+	protected void excluir() {
+		if (table.getSelectedRow() < 0) {
+			JOptionPane.showMessageDialog(this, "É necessário selecionar um registro! ", "Mensagem de aviso",
+					JOptionPane.WARNING_MESSAGE);
+		} else {
+			Object[] options = { "Sim!", "Não" };
+			int n = JOptionPane.showOptionDialog(this, // não deixa clicar na tela de baixo
+					"Deseja realmente exluir o registro? ", "Confirmação", JOptionPane.YES_NO_OPTION,
+					JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+
+			if (n == 0) {
+				TipoServicoVO servico = (TipoServicoVO) tableModel.getRows().get(table.getSelectedRow()).getElement();
+				Service service = new Service();
+
+				try {
+					service.excluir(servico);
+
+					JOptionPane.showMessageDialog(this, "Registro excluído com sucesso!", "Mensagem de aviso",
+							JOptionPane.INFORMATION_MESSAGE);
+					listarTiposDeServicos();
+
+				} catch (BOValidationException e) {
+					e.printStackTrace();
+					JOptionPane.showMessageDialog(this, e.getMessage(), "Mensagem de aviso",
+							JOptionPane.WARNING_MESSAGE);
+
+				} catch (BOException e) {
+					e.printStackTrace();
+					JOptionPane.showMessageDialog(this, "Ocorreu um erro ao realizar a operação!", "Mensagem de erro",
+							JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		}
+		
+	}
+
 	@SuppressWarnings("null")
 	protected void listarTiposDeServicos() {
 		try {
@@ -291,13 +402,6 @@ public class TelaServicos extends JFrame {
 					statusNomeTipoServico = statusServico.name();
 					criteria.where(cb.equal(tiposServicosFrom.get("nome"), statusNomeTipoServico));
 				}
-				
-				/*
-				if (statusServico == null) {
-					//descricaoStatus = statusServico.getDescricao();
-					descricaoStatus = statusServico.name();
-					//criteria.where(cb.equal(tiposServicosFrom.get("nome"), statusNomeTipoServico));
-				} */
 				
 				
 				TypedQuery<TipoServicoVO> query = em.createQuery(criteria);

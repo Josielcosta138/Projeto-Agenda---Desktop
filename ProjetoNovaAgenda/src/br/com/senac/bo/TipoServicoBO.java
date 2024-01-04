@@ -61,7 +61,7 @@ public class TipoServicoBO implements ITipoServicoBO {
 	@Override
 	public void excluir(TipoServicoVO tipoServicoVO) throws BOValidationException, BOException {
 		if (tipoServicoVO == null || tipoServicoVO.getId() == null) {
-			throw new BOException("Produto nulo ou inválido." + "Impossivel de excluir.");
+			throw new BOException("Serviço nulo ou inválido." + "Impossivel de excluir.");
 		}
 		
 		tipoServicoDAO.excluir(tipoServicoVO);
