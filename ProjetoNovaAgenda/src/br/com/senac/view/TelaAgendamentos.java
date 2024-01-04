@@ -310,7 +310,6 @@ public class TelaAgendamentos extends JFrame {
 				e1.printStackTrace();
 				JOptionPane.showMessageDialog(null, "Ocorreu um erro", "Erro.", JOptionPane.WARNING_MESSAGE);
 			}
-			
 		}
 		
 	}
