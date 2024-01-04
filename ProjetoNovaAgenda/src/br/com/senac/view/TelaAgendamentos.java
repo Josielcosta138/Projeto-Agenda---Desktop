@@ -412,16 +412,12 @@ public class TelaAgendamentos extends JFrame {
 					nomeCliente = ftfCliente.getText().trim();
 				}
 				
-				
-				
+
 				if (this.ftfSFiltroStatus.getText() != null && ftfSFiltroStatus.getText().trim().length() > 0) {
 					filtroStatus = ftfSFiltroStatus.getText().trim();
 				}
 				
-			
-				
-				
-				
+		
 				if (this.ftfCliente.getText() != null && ftfCliente.getText().trim().length() > 0) {
 					nomeCliente = ftfCliente.getText().trim();
 				}
@@ -452,8 +448,6 @@ public class TelaAgendamentos extends JFrame {
 				
 				TypedQuery<EventoVO> query = em.createQuery(criteria);
 				listaAgendamentos = query.getResultList();
-
-				System.out.println("Lista agendamentos --> " + listaAgendamentos);
 				
 
 				for (EventoVO eventoVO : listaAgendamentos) {
