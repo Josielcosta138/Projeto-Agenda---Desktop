@@ -32,10 +32,12 @@ import br.com.senac.vo.ContelVO;
 import br.com.senac.vo.EventoVO;
 import br.com.senac.vo.StatusAgendamento;
 import br.com.senac.vo.StatusServico;
+import br.com.senac.vo.TipoServicoVO;
 
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import javax.swing.JFormattedTextField;
@@ -56,6 +58,8 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.border.LineBorder;
+import javax.swing.JScrollPane;
 
 public class TelaAgendar extends JFrame {
 
@@ -83,7 +87,8 @@ public class TelaAgendar extends JFrame {
 	private List<EventoVO> listaAgendamentos;
 	private JFormattedTextField ftfDD;
 	private JFormattedTextField ftfTelefone;
-	
+	private JFormattedTextField ftfValor;
+	private List<TipoServicoVO> listagemDeTiposDeServicos;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -111,27 +116,9 @@ public class TelaAgendar extends JFrame {
 				.getImage(TelaAgendar.class.getResource("/br/com/senac/view/img/LogoSTYLEMANAGER black.png")));
 		setTitle("AGENDAMENTO");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 966, 507);
+		setBounds(100, 100, 810, 703);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-
-		// Lista de Nomes na busca de campos
-		nomeList = new JList<>();
-		nomeList.setBounds(102, 67, 130, 100);
-		contentPane.add(nomeList);
-		nomeList.setVisible(false);
-
-		// Lista de e-mail na busca de campos
-		emailList = new JList<>();
-		emailList.setBounds(102, 108, 130, 100);
-		contentPane.add(emailList);
-		emailList.setVisible(false);
-
-		// Lista de telefones
-		listaTelefone = new JList();
-		listaTelefone.setBounds(102, 178, 130, 100);
-		contentPane.add(listaTelefone);
-		listaTelefone.setVisible(false);
 
 		// Exibe a data e hora atuais no campo "Data e Hora"
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
@@ -178,22 +165,6 @@ public class TelaAgendar extends JFrame {
 		contentPane.setLayout(null);
 		setLocationRelativeTo(null);
 
-		JLabel lblTipoServico = new JLabel("Tipo de serviço:");
-		lblTipoServico.setForeground(new Color(103, 103, 103));
-		lblTipoServico.setBounds(369, 60, 100, 20);
-		contentPane.add(lblTipoServico);
-
-		JLabel lblDataHoraInicio = new JLabel("Data e Hora Inicio:");
-		lblDataHoraInicio.setForeground(new Color(103, 103, 103));
-		lblDataHoraInicio.setBounds(369, 90, 112, 20);
-		contentPane.add(lblDataHoraInicio);
-
-		ftfHoraInicio = new JFormattedTextField(mask);
-		ftfHoraInicio.setBounds(479, 90, 150, 20);
-		contentPane.add(ftfHoraInicio);
-		ftfHoraInicio.setColumns(10);
-		ftfHoraInicio.setText(novaDataHoraInicioStr);
-
 		JButton btnAgendar = new JButton("Agendar");
 		btnAgendar.setIcon(new ImageIcon(TelaAgendar.class.getResource("/br/com/senac/view/img/edit.png")));
 		btnAgendar.addActionListener(new ActionListener() {
@@ -205,63 +176,28 @@ public class TelaAgendar extends JFrame {
 				agendar();
 			}
 		});
-		btnAgendar.setBounds(24, 405, 114, 28);
+		btnAgendar.setBounds(10, 420, 114, 28);
 		contentPane.add(btnAgendar);
 
 		tftHoraAtual = new JTextField();
 		tftHoraAtual.setEditable(false);
-		tftHoraAtual.setBounds(763, 11, 130, 20);
+		tftHoraAtual.setBounds(656, 11, 130, 20);
 		contentPane.add(tftHoraAtual);
 		tftHoraAtual.setColumns(10);
 		tftHoraAtual.setText(sdf.format(new Date()));
 
-		JLabel lblDataHoraFim = new JLabel("Data e Hora Fim:");
-		lblDataHoraFim.setForeground(new Color(103, 103, 103));
-		lblDataHoraFim.setBounds(369, 124, 100, 14);
-		contentPane.add(lblDataHoraFim);
-
-		ftfHoraFim = new JFormattedTextField(mask);
-		ftfHoraFim.setBounds(479, 121, 150, 20);
-		contentPane.add(ftfHoraFim);
-		ftfHoraFim.setText(novaDataHoraFimStr);
-
-		JLabel lblParticipantes = new JLabel("N° Participantes:");
-		lblParticipantes.setForeground(new Color(103, 103, 103));
-		lblParticipantes.setBounds(369, 152, 100, 14);
-		contentPane.add(lblParticipantes);
-
-		JLabel lblStatus = new JLabel("Status:");
-		lblStatus.setForeground(new Color(103, 103, 103));
-		lblStatus.setBounds(10, 194, 46, 14);
-		contentPane.add(lblStatus);
-
-		comboBoxStatus = new JComboBox();
-		comboBoxStatus.setBounds(82, 191, 183, 20);
-
 		DefaultComboBoxModel defaultComboBoxModel = new DefaultComboBoxModel<>(StatusAgendamento.values());
-		comboBoxStatus.setModel(defaultComboBoxModel);
-		comboBoxStatus.setSelectedIndex(1);
 
-		contentPane.add(comboBoxStatus);
-
-		JButton btnCancelar = new JButton("Cancelar");
-		btnCancelar.addActionListener(new ActionListener() {
+		JButton btnVoltar = new JButton("Voltar");
+		btnVoltar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				cancelarVoltar();
 			}
 		});
-		btnCancelar.setIcon(new ImageIcon(TelaAgendar.class.getResource("/br/com/senac/view/img/cancel.png")));
-		btnCancelar.setBounds(788, 405, 127, 28);
-		contentPane.add(btnCancelar);
-
-		ftfQntParticipantes = new JFormattedTextField();
-		ftfQntParticipantes.setBounds(479, 149, 83, 20);
-		contentPane.add(ftfQntParticipantes);
-
-		JLabel lblPessoa = new JLabel("Nome:");
-		lblPessoa.setForeground(new Color(103, 103, 103));
-		lblPessoa.setBounds(10, 63, 86, 14);
-		contentPane.add(lblPessoa);
+		btnVoltar.setIcon(new ImageIcon(TelaAgendar.class
+				.getResource("/br/com/senac/view/img/2303132_arrow_back_direction_left_navigation_icon.png")));
+		btnVoltar.setBounds(672, 420, 114, 28);
+		contentPane.add(btnVoltar);
 
 		JLabel lblNewLabel = new JLabel("Agendamento de horários");
 		lblNewLabel.setForeground(new Color(103, 103, 103));
@@ -273,34 +209,106 @@ public class TelaAgendar extends JFrame {
 		lblNewLabel_1.setIcon(new ImageIcon(TelaAgendar.class.getResource("/br/com/senac/view/img/availability.png")));
 		lblNewLabel_1.setBounds(179, 11, 24, 22);
 		contentPane.add(lblNewLabel_1);
+		DefaultComboBoxModel defaultComboBoxModel2 = new DefaultComboBoxModel<>(StatusServico.values());
+
+		MaskFormatter maskDD = new MaskFormatter("(##)");
+
+		MaskFormatter maskTel = new MaskFormatter("#####-####");
+
+		JPanel panel = new JPanel();
+		panel.setForeground(new Color(192, 192, 192));
+		panel.setBorder(new LineBorder(new Color(192, 192, 192)));
+		panel.setBounds(10, 72, 349, 332);
+		contentPane.add(panel);
+		panel.setLayout(null);
+
+		JLabel lblPessoa = new JLabel("Nome:");
+		lblPessoa.setBounds(10, 51, 86, 14);
+		panel.add(lblPessoa);
+		lblPessoa.setForeground(new Color(103, 103, 103));
 
 		JLabel lblEmailVincPessoa = new JLabel("E-mail:");
+		lblEmailVincPessoa.setBounds(10, 83, 86, 14);
+		panel.add(lblEmailVincPessoa);
 		lblEmailVincPessoa.setForeground(new Color(103, 103, 103));
-		lblEmailVincPessoa.setBounds(10, 95, 86, 14);
-		contentPane.add(lblEmailVincPessoa);
+
+		JLabel lblDD = new JLabel("DD:");
+		lblDD.setBounds(10, 117, 46, 14);
+		panel.add(lblDD);
+		lblDD.setForeground(new Color(120, 120, 120));
+
+		JLabel lblTelefone = new JLabel("Telefone");
+		lblTelefone.setBounds(10, 152, 62, 14);
+		panel.add(lblTelefone);
+		lblTelefone.setForeground(new Color(106, 106, 106));
+
+		JLabel lblStatus = new JLabel("Status:");
+		lblStatus.setBounds(10, 182, 46, 14);
+		panel.add(lblStatus);
+		lblStatus.setForeground(new Color(103, 103, 103));
 
 		JLabel lblNewLabel_2 = new JLabel("Local:");
+		lblNewLabel_2.setBounds(10, 216, 46, 14);
+		panel.add(lblNewLabel_2);
 		lblNewLabel_2.setForeground(new Color(103, 103, 103));
-		lblNewLabel_2.setBounds(10, 228, 46, 14);
-		contentPane.add(lblNewLabel_2);
+
+		JLabel lblCodigo = new JLabel("Cód:");
+		lblCodigo.setBounds(10, 14, 46, 14);
+		panel.add(lblCodigo);
+		lblCodigo.setEnabled(false);
+
+		ftfCodigo = new JFormattedTextField();
+		ftfCodigo.setBounds(82, 11, 83, 20);
+		panel.add(ftfCodigo);
+		ftfCodigo.setEditable(false);
+		ftfCodigo.setEnabled(false);
 
 		ftfLocal = new JFormattedTextField();
-		ftfLocal.setBounds(82, 225, 183, 20);
-		contentPane.add(ftfLocal);
+		ftfLocal.setBounds(82, 213, 183, 20);
+		panel.add(ftfLocal);
 
-		comboBoxStatusServico = new JComboBox();
-		comboBoxStatusServico.setBounds(479, 59, 150, 21);
-		DefaultComboBoxModel defaultComboBoxModel2 = new DefaultComboBoxModel<>(StatusServico.values());
-		comboBoxStatusServico.setModel(defaultComboBoxModel2);
-		comboBoxStatusServico.setSelectedIndex(1);
+		// Lista de telefones
+		listaTelefone = new JList();
+		listaTelefone.setBounds(102, 166, 130, 100);
+		panel.add(listaTelefone);
 
-		contentPane.add(comboBoxStatusServico);
+		comboBoxStatus = new JComboBox();
+		comboBoxStatus.setBounds(82, 179, 183, 20);
+		panel.add(comboBoxStatus);
+		comboBoxStatus.setModel(defaultComboBoxModel);
+		comboBoxStatus.setSelectedIndex(1);
+		ftfTelefone = new JFormattedTextField(maskTel);
+		ftfTelefone.setBounds(82, 148, 183, 20);
+		panel.add(ftfTelefone);
 
-		ftfNome = new JFormattedTextField();
-		ftfNome.setBounds(82, 60, 183, 20);
-		contentPane.add(ftfNome);
+		// Lista de e-mail na busca de campos
+		emailList = new JList<>();
+		emailList.setBounds(102, 96, 130, 100);
+		panel.add(emailList);
+
+		// Lista de Nomes na busca de campos
+		nomeList = new JList<>();
+		nomeList.setBounds(102, 66, 130, 100);
+		panel.add(nomeList);
+
+		ftfEmail = new JFormattedTextField();
+		ftfEmail.setBounds(82, 80, 184, 20);
+		panel.add(ftfEmail);
+
+		JButton btnNewButton = new JButton("");
+		btnNewButton.setBounds(272, 83, 24, 17);
+		panel.add(btnNewButton);
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				pesquisarPorNomeEmail();
+
+			}
+		});
+		btnNewButton.setIcon(new ImageIcon(TelaAgendar.class.getResource("/br/com/senac/view/img/pesquisar.png")));
 
 		JButton btnPesquisarNome = new JButton("");
+		btnPesquisarNome.setBounds(272, 48, 24, 17);
+		panel.add(btnPesquisarNome);
 		btnPesquisarNome.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -310,6 +318,142 @@ public class TelaAgendar extends JFrame {
 				}
 			}
 		});
+
+		btnPesquisarNome.setIcon(new ImageIcon(TelaAgendar.class.getResource("/br/com/senac/view/img/pesquisar.png")));
+
+		ftfNome = new JFormattedTextField();
+		ftfNome.setBounds(82, 48, 183, 20);
+		panel.add(ftfNome);
+		ftfDD = new JFormattedTextField(maskDD);
+		ftfDD.setBounds(82, 117, 38, 20);
+		panel.add(ftfDD);
+
+		JButton btnTelefones = new JButton("");
+		btnTelefones.setBounds(272, 149, 24, 17);
+		panel.add(btnTelefones);
+		btnTelefones.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				pesquisarPorTelefone();
+
+			}
+		});
+		btnTelefones.setIcon(new ImageIcon(TelaAgendar.class.getResource("/br/com/senac/view/img/pesquisar.png")));
+
+		JPanel panel_1 = new JPanel();
+		panel_1.setBorder(new LineBorder(new Color(192, 192, 192)));
+		panel_1.setBounds(434, 72, 349, 332);
+		contentPane.add(panel_1);
+		panel_1.setLayout(null);
+
+		JLabel lblTipoServico = new JLabel("Tipo de serviço:");
+		lblTipoServico.setBounds(10, 26, 100, 20);
+		panel_1.add(lblTipoServico);
+		lblTipoServico.setForeground(new Color(103, 103, 103));
+
+		JLabel lblDataHoraInicio = new JLabel("Data e Hora Inicio:");
+		lblDataHoraInicio.setBounds(10, 56, 112, 20);
+		panel_1.add(lblDataHoraInicio);
+		lblDataHoraInicio.setForeground(new Color(103, 103, 103));
+
+		JLabel lblDataHoraFim = new JLabel("Data e Hora Fim:");
+		lblDataHoraFim.setBounds(10, 90, 100, 14);
+		panel_1.add(lblDataHoraFim);
+		lblDataHoraFim.setForeground(new Color(103, 103, 103));
+
+		JLabel lblParticipantes = new JLabel("N° Participantes:");
+		lblParticipantes.setBounds(10, 118, 100, 14);
+		panel_1.add(lblParticipantes);
+		lblParticipantes.setForeground(new Color(103, 103, 103));
+
+		JLabel lblValor = new JLabel("Valor:");
+		lblValor.setBounds(10, 145, 46, 14);
+		panel_1.add(lblValor);
+		lblValor.setForeground(new Color(95, 95, 95));
+
+		
+		ftfValor = new JFormattedTextField();
+		ftfValor.setBounds(120, 142, 83, 20);
+		panel_1.add(ftfValor);
+		
+
+		ftfQntParticipantes = new JFormattedTextField();
+		ftfQntParticipantes.setBounds(120, 115, 83, 20);
+		panel_1.add(ftfQntParticipantes);
+
+		ftfHoraFim = new JFormattedTextField(mask);
+		ftfHoraFim.setBounds(120, 87, 150, 20);
+		panel_1.add(ftfHoraFim);
+		ftfHoraFim.setText(novaDataHoraFimStr);
+
+		comboBoxStatusServico = new JComboBox();
+		comboBoxStatusServico.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					pesquisarValorPorServico();
+				} catch (ParseException e1) {
+					
+					e1.printStackTrace();
+				}
+			}
+		});
+		comboBoxStatusServico.setBounds(120, 25, 150, 21);
+		panel_1.add(comboBoxStatusServico);
+		comboBoxStatusServico.setModel(defaultComboBoxModel2);
+		comboBoxStatusServico.setSelectedIndex(1);
+		pesquisarValorPorServico();
+
+		ftfHoraInicio = new JFormattedTextField(mask);
+		ftfHoraInicio.setBounds(120, 56, 150, 20);
+		panel_1.add(ftfHoraInicio);
+		ftfHoraInicio.setColumns(10);
+		ftfHoraInicio.setText(novaDataHoraInicioStr);
+
+		JButton btnAtualizarHorarios = new JButton("");
+		btnAtualizarHorarios.setBounds(280, 56, 24, 20);
+		panel_1.add(btnAtualizarHorarios);
+		btnAtualizarHorarios.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					atualizarHorarios();
+
+				} catch (ParseException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		btnAtualizarHorarios
+				.setIcon(new ImageIcon(TelaAgendar.class.getResource("/br/com/senac/view/img/AttHoras.png")));
+
+		JLabel lblNewLabel_4 = new JLabel("Cliente");
+		lblNewLabel_4.setForeground(new Color(100, 100, 100));
+		lblNewLabel_4.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblNewLabel_4.setBounds(10, 52, 46, 14);
+		contentPane.add(lblNewLabel_4);
+
+		JLabel lblNewLabel_5 = new JLabel("Serviço");
+		lblNewLabel_5.setForeground(new Color(100, 100, 100));
+		lblNewLabel_5.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblNewLabel_5.setBounds(434, 53, 46, 14);
+		contentPane.add(lblNewLabel_5);
+
+		JPanel panel_2 = new JPanel();
+		panel_2.setBorder(new LineBorder(new Color(192, 192, 192)));
+		panel_2.setBounds(10, 514, 774, 1);
+		contentPane.add(panel_2);
+
+		JLabel lblNewLabel_6 = new JLabel("Serviço agendado");
+		lblNewLabel_6.setForeground(new Color(100, 100, 100));
+		lblNewLabel_6.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblNewLabel_6.setBounds(10, 493, 151, 14);
+		contentPane.add(lblNewLabel_6);
+
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 543, 774, 97);
+		contentPane.add(scrollPane);
+
+		table_1 = new JTable();
+		scrollPane.setViewportView(table_1);
+		nomeList.setVisible(false);
 
 		// edição campo nome
 		nomeList.addListSelectionListener((ListSelectionListener) new ListSelectionListener() {
@@ -323,6 +467,7 @@ public class TelaAgendar extends JFrame {
 				}
 			}
 		});
+		emailList.setVisible(false);
 
 		// edição campo email
 		emailList.addListSelectionListener(new ListSelectionListener() {
@@ -336,9 +481,10 @@ public class TelaAgendar extends JFrame {
 				}
 			}
 		});
+		listaTelefone.setVisible(false);
 
 		// edição campo telefone
-		
+
 		listaTelefone.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				if (!e.getValueIsAdjusting()) {
@@ -349,98 +495,12 @@ public class TelaAgendar extends JFrame {
 					}
 				}
 			}
-		});   
-		
-		 
-	
-		
-		btnPesquisarNome.setIcon(new ImageIcon(TelaAgendar.class.getResource("/br/com/senac/view/img/pesquisar.png")));
-		btnPesquisarNome.setBounds(272, 60, 24, 17);
-		contentPane.add(btnPesquisarNome);
-
-		ftfEmail = new JFormattedTextField();
-		ftfEmail.setBounds(82, 92, 184, 20);
-		contentPane.add(ftfEmail);
-
-		JButton btnNewButton = new JButton("");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				pesquisarPorNomeEmail();
-
-			}
 		});
-		btnNewButton.setIcon(new ImageIcon(TelaAgendar.class.getResource("/br/com/senac/view/img/pesquisar.png")));
-		btnNewButton.setBounds(272, 95, 24, 17);
-		contentPane.add(btnNewButton);
-
-		JLabel lblCodigo = new JLabel("Cód:");
-		lblCodigo.setEnabled(false);
-		lblCodigo.setBounds(10, 286, 46, 14);
-		contentPane.add(lblCodigo);
-
-		ftfCodigo = new JFormattedTextField();
-		ftfCodigo.setEditable(false);
-		ftfCodigo.setEnabled(false);
-		ftfCodigo.setBounds(82, 283, 83, 20);
-		contentPane.add(ftfCodigo);
-
-		JLabel lblNewLabel_3 = new JLabel("");
-		lblNewLabel_3.setIcon(
-				new ImageIcon(TelaAgendar.class.getResource("/br/com/senac/view/img/AgendarFoto - Copia (2).png")));
-		lblNewLabel_3.setBounds(684, 62, 224, 222);
-		contentPane.add(lblNewLabel_3);
-
-		JButton btnAtualizarHorarios = new JButton("");
-		btnAtualizarHorarios.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					atualizarHorarios();
-
-				} catch (ParseException e1) {
-					e1.printStackTrace();
-				}
-			}
-		});
-		btnAtualizarHorarios
-				.setIcon(new ImageIcon(TelaAgendar.class.getResource("/br/com/senac/view/img/AttHoras.png")));
-		btnAtualizarHorarios.setBounds(639, 90, 24, 20);
-		contentPane.add(btnAtualizarHorarios);
-
-		JLabel lblDD = new JLabel("DD:");
-		lblDD.setForeground(new Color(120, 120, 120));
-		lblDD.setBounds(10, 129, 46, 14);
-		contentPane.add(lblDD);
-
-		MaskFormatter maskDD = new MaskFormatter("(##)");
-		ftfDD = new JFormattedTextField(maskDD);
-		ftfDD.setBounds(82, 129, 38, 20);
-		contentPane.add(ftfDD);
-
-		JLabel lblTelefone = new JLabel("Telefone");
-		lblTelefone.setForeground(new Color(106, 106, 106));
-		lblTelefone.setBounds(10, 164, 62, 14);
-		contentPane.add(lblTelefone);
-
-		MaskFormatter maskTel = new MaskFormatter("#####-####");
-		ftfTelefone = new JFormattedTextField(maskTel);
-		ftfTelefone.setBounds(82, 160, 183, 20);
-		contentPane.add(ftfTelefone);
-
-
-		JButton btnTelefones = new JButton("");
-		btnTelefones.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				pesquisarPorTelefone();
-				
-			}
-		});
-		btnTelefones.setIcon(new ImageIcon(TelaAgendar.class.getResource("/br/com/senac/view/img/pesquisar.png")));
-		btnTelefones.setBounds(272, 160, 24, 17);
-		contentPane.add(btnTelefones);
 
 	}
 
 	private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+	private JTable table_1;
 
 	public void atualizarHorarios() throws ParseException {
 		// Listar agendamento
@@ -521,14 +581,14 @@ public class TelaAgendar extends JFrame {
 
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(this, e.getMessage(), "Erro de sistema", JOptionPane.ERROR_MESSAGE);
-		}finally {
+		} finally {
 			System.out.println("Finally");
 		}
 
 	}
 
 	protected void pesquisarPorTelefone() {
-		
+
 		CadastroPessoaView cadastroPessoaView = new CadastroPessoaView();
 		cadastroPessoaView.pesquisar();
 
@@ -574,11 +634,9 @@ public class TelaAgendar extends JFrame {
 
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(this, e.getMessage(), "Erro de sistema", JOptionPane.ERROR_MESSAGE);
-		}finally {
+		} finally {
 			System.out.println("Finally");
 		}
-		
-		
 
 	}
 
@@ -628,7 +686,7 @@ public class TelaAgendar extends JFrame {
 
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(this, e.getMessage(), "Erro de sistema", JOptionPane.ERROR_MESSAGE);
-		}finally {
+		} finally {
 			System.out.println("Finally");
 		}
 
@@ -651,6 +709,7 @@ public class TelaAgendar extends JFrame {
 			String dd = ftfDD.getText().trim();
 			String numero = ftfTelefone.getText().trim();
 			String telefone = ftfTelefone.getText().trim();
+			String valor = ftfValor.getText().trim();
 
 			/////////
 			List<EventoVO> eventosAgendados = buscarEventosPorPeriodo(eventoVO.getDataHoraInicio(),
@@ -681,6 +740,8 @@ public class TelaAgendar extends JFrame {
 			if (statusEnum != null) {
 				status = statusEnum.name();
 			}
+			
+			
 
 			String pattern = "dd/MM/yyyy HH:mm:ss";
 			DateFormat dateFormat = new SimpleDateFormat(pattern);
@@ -715,6 +776,15 @@ public class TelaAgendar extends JFrame {
 
 			if (statusTipoServico != null) {
 				eventoVO.setTipoServico(statusTipoServico);
+			}
+
+			 
+
+			if (valor != null) {
+				valor = valor.replace(",", ".");
+				//double valor = Double.parseDouble(valor);
+				
+				eventoVO.setValor(new BigDecimal(valor));
 			}
 
 			eventoVO.setNomeCliente(nome);
@@ -886,9 +956,59 @@ public class TelaAgendar extends JFrame {
 			e.printStackTrace(); // Tratamento adequado para o erro no seu ambiente
 			System.out.println("Lista vazia horas");
 			return Collections.emptyList(); // Retorna uma lista vazia em caso de erro
-		}finally {
+		} finally {
 			System.out.println("Finally");
 		}
+	}
+
+	public void pesquisarValorPorServico() throws ParseException {
+		 try {
+		        // Obter o item selecionado no comboBoxStatusServico
+		        StatusServico statusServico = (StatusServico) comboBoxStatusServico.getSelectedItem();
+
+		        if (statusServico != null) {
+		        	
+		        	
+		        	EntityManager em = HibernateUtil.getEntityManager();
+
+					CriteriaBuilder cb = em.getCriteriaBuilder();
+					CriteriaQuery<TipoServicoVO> criteria = cb.createQuery(TipoServicoVO.class);
+
+					// Clausula from
+					Root<TipoServicoVO> tiposServicosFrom = criteria.from(TipoServicoVO.class);
+					criteria.select(tiposServicosFrom);
+		        	TypedQuery<TipoServicoVO> query = em.createQuery(criteria);
+					listagemDeTiposDeServicos = query.getResultList();
+		        	
+		            // Encontrar o TipoServicoVO correspondente ao statusServico selecionado
+		            TipoServicoVO tipoServico = null;
+		            for (TipoServicoVO tServicoVO : listagemDeTiposDeServicos) {
+		                if (tServicoVO.getNome().equals(statusServico.name())) {
+		                    tipoServico = tServicoVO;
+		                    break;
+		                }
+		            }
+
+		            // Atualizar o campo ftfValor com o  valor encontrado
+		            if (tipoServico != null) {
+		            	
+		            	BigDecimal valorBigDecimal = tipoServico.getValor();
+		            	double valor = valorBigDecimal.doubleValue();
+		            	 
+		                String valorFormatado = String.format("%.2f", valor);
+		               // ftfValor.setValue(Double.parseDouble(valorFormatado));
+		                ftfValor.setValue(valorFormatado);
+		                
+		            } else {
+		                // Limpar o campo se o tipo de serviço não for encontrado
+		                ftfValor.setValue(null);
+		            }
+		        }
+
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		        JOptionPane.showMessageDialog(this, "Erro ao pesquisar valor por serviço", "Erro", JOptionPane.ERROR_MESSAGE);
+		    }
 	}
 
 	private boolean intervaloDisponivel(String dataHoraInicioStr, String dataHoraFimStr) {
@@ -907,8 +1027,7 @@ public class TelaAgendar extends JFrame {
 		} catch (ParseException e) {
 			e.printStackTrace(); // Tratamento adequado para o erro no seu ambiente
 			return false;
-		}
-		finally {
+		} finally {
 			System.out.println("Finally");
 		}
 	}

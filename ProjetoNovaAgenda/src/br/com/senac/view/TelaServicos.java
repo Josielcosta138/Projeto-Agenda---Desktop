@@ -420,7 +420,6 @@ public class TelaServicos extends JFrame {
 						RowData rowData = new RowData();
 						
 						rowData.getValues().put(0, tServicoVO.getId().toString());
-						//rowData.getValues().put(1, descricaoStatus);
 						rowData.getValues().put(1, tServicoVO.getNome());
 						rowData.getValues().put(2, tServicoVO.getValor().toString() + " R$");
 						rowData.getValues().put(3, duracaoFormatada);
