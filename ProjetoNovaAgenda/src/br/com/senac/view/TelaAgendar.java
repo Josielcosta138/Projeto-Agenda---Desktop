@@ -778,7 +778,7 @@ public class TelaAgendar extends JFrame {
 				eventoVO.setTipoServico(statusTipoServico);
 			}
 
-			
+			 
 
 			if (valor != null) {
 				valor = valor.replace(",", ".");
