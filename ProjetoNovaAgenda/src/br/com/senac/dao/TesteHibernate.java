@@ -15,16 +15,7 @@ public class TesteHibernate {
 	}
 }
 	
-	
-	
-	
 
-	
-	
-	
-	
-	
-	 
 	
 	
 	

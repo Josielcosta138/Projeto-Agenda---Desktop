@@ -116,6 +116,8 @@ public class TelaAgendamentos extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		setLocationRelativeTo(null);
+		
+		
 
 		// Lista de Clientes na busca de campos
 		clienteList = new JList<>();
@@ -175,6 +177,8 @@ public class TelaAgendamentos extends JFrame {
 		ftfDataAtual.setBounds(1171, 34, 113, 20);
 		contentPane.add(ftfDataAtual);
 		ftfDataAtual.setText(sdf.format(new Date()));
+		
+	
 
 		JButton btnPesquisar = new JButton("Pesquisar");
 		btnPesquisar.setIcon(new ImageIcon(TelaAgendamentos.class.getResource("/br/com/senac/view/img/pesquisar.png")));

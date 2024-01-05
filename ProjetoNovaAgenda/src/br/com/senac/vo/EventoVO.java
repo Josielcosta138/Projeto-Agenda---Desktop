@@ -1,6 +1,7 @@
 package br.com.senac.vo;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import java.sql.Timestamp;
@@ -81,6 +82,8 @@ public class EventoVO implements Serializable{
     @Column(name = "email", length = 100)
     private String email;
 
+    @Column(name = "valor", precision = 10, scale = 2, nullable = false)
+	private BigDecimal valor;
     
     
 	public EventoVO() {
@@ -88,7 +91,7 @@ public class EventoVO implements Serializable{
 	}
 
 	public EventoVO(BigInteger id, Date  dataHoraInicio, Date  dataHoraFim, String local, BigInteger participantes, String status,
-			String ocupadoVago, String tipoServico, String numero, String dd) {
+			String ocupadoVago, String tipoServico, String numero, String dd, BigDecimal valor) {
 		super();
 		this.id = id;
 		this.dataHoraInicio = dataHoraInicio;
@@ -99,6 +102,7 @@ public class EventoVO implements Serializable{
 		this.tipoServico = tipoServico;
 		this.numero = numero;
 		this.dd = dd;
+		this.valor = valor;
 		
 	}
 
@@ -192,11 +196,21 @@ public class EventoVO implements Serializable{
 	public void setDd(String dd) {
 		this.dd = dd;
 	}
+	
+	public BigDecimal getValor() {
+		return valor;
+	}
+
+	public void setValor(BigDecimal valor) {
+		this.valor = valor;
+	}
+	
+	
 
 	@Override
 	public int hashCode() {
 		return Objects.hash(dataHoraFim, dataHoraInicio, dd, email, id, local, nomeCliente, numero, participantes,
-				status, tipoServico);
+				status, tipoServico, valor);
 	}
 
 	@Override
@@ -212,15 +226,22 @@ public class EventoVO implements Serializable{
 				&& Objects.equals(dd, other.dd) && Objects.equals(email, other.email) && Objects.equals(id, other.id)
 				&& Objects.equals(local, other.local) && Objects.equals(nomeCliente, other.nomeCliente)
 				&& Objects.equals(numero, other.numero) && Objects.equals(participantes, other.participantes)
-				&& Objects.equals(status, other.status) && Objects.equals(tipoServico, other.tipoServico);
+				&& Objects.equals(status, other.status) && Objects.equals(tipoServico, other.tipoServico)
+				&& Objects.equals(valor, other.valor);
 	}
 
 	@Override
 	public String toString() {
 		return "EventoVO [id=" + id + ", dataHoraInicio=" + dataHoraInicio + ", dataHoraFim=" + dataHoraFim + ", local="
 				+ local + ", numero=" + numero + ", dd=" + dd + ", participantes=" + participantes + ", status="
-				+ status + ", tipoServico=" + tipoServico + ", nomeCliente=" + nomeCliente + ", email=" + email + "]";
+				+ status + ", tipoServico=" + tipoServico + ", nomeCliente=" + nomeCliente + ", email=" + email
+				+ ", valor=" + valor + "]";
 	}
+	
+	
+	
+
+	
 
 
 
