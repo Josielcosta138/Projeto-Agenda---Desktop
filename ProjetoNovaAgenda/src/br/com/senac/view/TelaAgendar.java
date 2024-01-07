@@ -239,7 +239,7 @@ public class TelaAgendar extends JFrame {
 		JLabel lblDD = new JLabel("DD:");
 		lblDD.setBounds(10, 117, 46, 14);
 		panel.add(lblDD);
-		lblDD.setForeground(new Color(120, 120, 120));
+		lblDD.setForeground(new Color(120, 120, 120)); 
 
 		JLabel lblTelefone = new JLabel("Telefone");
 		lblTelefone.setBounds(10, 152, 62, 14);
@@ -273,7 +273,7 @@ public class TelaAgendar extends JFrame {
 
 		// Lista de telefones
 		listaTelefone = new JList();
-		listaTelefone.setBounds(102, 166, 130, 100);
+		listaTelefone.setBounds(103, 163, 130, 100);
 		panel.add(listaTelefone);
 
 		comboBoxStatus = new JComboBox();
@@ -287,12 +287,12 @@ public class TelaAgendar extends JFrame {
 
 		// Lista de e-mail na busca de campos
 		emailList = new JList<>();
-		emailList.setBounds(102, 96, 130, 100);
+		emailList.setBounds(103, 96, 130, 100);
 		panel.add(emailList);
 
 		// Lista de Nomes na busca de campos
 		nomeList = new JList<>();
-		nomeList.setBounds(102, 66, 130, 100);
+		nomeList.setBounds(102, 49, 130, 77);
 		panel.add(nomeList);
 
 		ftfEmail = new JFormattedTextField();
@@ -447,10 +447,10 @@ public class TelaAgendar extends JFrame {
 		panel_2.setBounds(10, 507, 988, 2);
 		contentPane.add(panel_2);
 
-		JLabel lblNewLabel_6 = new JLabel("Serviço agendado");
+		JLabel lblNewLabel_6 = new JLabel("Último agendamento");
 		lblNewLabel_6.setForeground(new Color(100, 100, 100));
 		lblNewLabel_6.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblNewLabel_6.setBounds(10, 482, 151, 14);
+		lblNewLabel_6.setBounds(10, 482, 177, 14);
 		contentPane.add(lblNewLabel_6);
 
 		JScrollPane scrollPane = new JScrollPane();
@@ -484,8 +484,8 @@ public class TelaAgendar extends JFrame {
 		tcm.getColumn(1).setPreferredWidth(80);
 		tcm.getColumn(2).setPreferredWidth(120);
 		tcm.getColumn(3).setPreferredWidth(120);
-		tcm.getColumn(4).setPreferredWidth(190);
-		tcm.getColumn(5).setPreferredWidth(120);
+		tcm.getColumn(4).setPreferredWidth(180);
+		tcm.getColumn(5).setPreferredWidth(180);
 		tcm.getColumn(6).setPreferredWidth(100);
 		tcm.getColumn(7).setPreferredWidth(110);
 		tcm.getColumn(8).setPreferredWidth(60);
@@ -494,6 +494,7 @@ public class TelaAgendar extends JFrame {
 		
 		
 		scrollPane.setViewportView(table_1);
+		listarAgendamentos();
 		
 		JLabel lblNewLabel_3 = new JLabel("");
 		lblNewLabel_3.setIcon(new ImageIcon(TelaAgendar.class.getResource("/br/com/senac/view/img/foto2Agenda.png")));
@@ -574,13 +575,13 @@ public class TelaAgendar extends JFrame {
 			// HORAFIM+31
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(dataHoraFimUltimoEvento);
-			cal.add(Calendar.MINUTE, 31);
+			cal.add(Calendar.MINUTE, 30);
 
 			// Atualiza o texto dos componentes existentes em vez de criar novos
 			Date novaDataHoraInicio = cal.getTime();
 			ftfHoraInicio.setText(sdf.format(novaDataHoraInicio));
 
-			cal.add(Calendar.MINUTE, 31);
+			cal.add(Calendar.MINUTE, 30);
 			Date novaDataHoraFim = cal.getTime();
 			ftfHoraFim.setText(sdf.format(novaDataHoraFim));
 		}
@@ -913,7 +914,7 @@ public class TelaAgendar extends JFrame {
 				        rowData.getValues().put(3, dateFormat.format(eventoVO.getDataHoraFim()));
 						rowData.getValues().put(4, eventoVO.getStatus());
 						rowData.getValues().put(5, eventoVO.getTipoServico());
-						rowData.getValues().put(6, eventoVO.getValor());
+						rowData.getValues().put(6, eventoVO.getValor() + " R$");
 						rowData.getValues().put(7, eventoVO.getNomeCliente());
 						rowData.getValues().put(8, eventoVO.getDd());
 						rowData.getValues().put(9, eventoVO.getNumero());
