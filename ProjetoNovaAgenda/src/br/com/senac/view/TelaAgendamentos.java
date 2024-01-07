@@ -14,6 +14,7 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.text.MaskFormatter;
 
 import br.com.senac.dao.HibernateUtil;
+import br.com.senac.dao.MetodosDAO;
 import br.com.senac.exception.BOException;
 import br.com.senac.exception.BOValidationException;
 import br.com.senac.service.IService;
@@ -73,15 +74,16 @@ public class TelaAgendamentos extends JFrame {
 	private JFormattedTextField ftfCliente;
 	private List<EventoVO> listaAgendamentos;
 	private JFormattedTextField ftfSFiltroStatus;
-	private StatusServico statusServico;
+	//private StatusServico statusServico;
+	private static TelaAgendamentos frame;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					TelaAgendamentos frame = new TelaAgendamentos();
-					frame.setVisible(true);
-					
+					 frame = new TelaAgendamentos();
+	                 frame.setVisible(true);
+					 
 					
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -90,6 +92,10 @@ public class TelaAgendamentos extends JFrame {
 		});
 	}
 	
+	public static TelaAgendamentos getFrame() {
+        return frame;
+    }
+
 
 
 	public TelaAgendamentos() throws ParseException {
@@ -139,7 +145,8 @@ public class TelaAgendamentos extends JFrame {
 		tableModel.addColumn("Data hora inicio");
 		tableModel.addColumn("Data hora fim");
 		tableModel.addColumn("Status");
-		tableModel.addColumn("Tipo serviço");
+		tableModel.addColumn("Tipo serviço");//5
+		tableModel.addColumn("Valor");
 		tableModel.addColumn("Cliente");
 		tableModel.addColumn("DD");
 		tableModel.addColumn("Número");
@@ -157,13 +164,13 @@ public class TelaAgendamentos extends JFrame {
 		tcm.getColumn(1).setPreferredWidth(80);
 		tcm.getColumn(2).setPreferredWidth(120);
 		tcm.getColumn(3).setPreferredWidth(120);
-		tcm.getColumn(4).setPreferredWidth(190);
-		tcm.getColumn(5).setPreferredWidth(120);
-		tcm.getColumn(6).setPreferredWidth(110);
-		tcm.getColumn(7).setPreferredWidth(30);
-		tcm.getColumn(8).setPreferredWidth(80);
-		tcm.getColumn(9).setPreferredWidth(110);
-
+		tcm.getColumn(4).setPreferredWidth(180);
+		tcm.getColumn(5).setPreferredWidth(180);
+		tcm.getColumn(6).setPreferredWidth(100);
+		tcm.getColumn(7).setPreferredWidth(110);
+		tcm.getColumn(8).setPreferredWidth(60);
+		tcm.getColumn(9).setPreferredWidth(80);
+		tcm.getColumn(10).setPreferredWidth(110);
 		scrollPane.setViewportView(table);
 
 		JLabel lblListaAgendamento = new JLabel("Agendamentos:");
@@ -286,6 +293,18 @@ public class TelaAgendamentos extends JFrame {
 		btnEditarAgendamento.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				editarAgendamento();
+				
+				TelaAgendamentos frame;
+				try {
+					frame = new TelaAgendamentos();
+					frame.setVisible(false);
+					dispose();
+				} catch (ParseException e1) {
+					e1.printStackTrace();
+				}
+				
+				
+				
 			}
 		});
 		btnEditarAgendamento.setIcon(new ImageIcon(TelaAgendamentos.class.getResource("/br/com/senac/view/img/editar.png")));
@@ -293,9 +312,14 @@ public class TelaAgendamentos extends JFrame {
 		contentPane.add(btnEditarAgendamento);
 
 	}
+	
+	
 
 
 	protected void editarAgendamento() {
+		
+		
+		
 		if (table.getSelectedRow() < 0) {
 			JOptionPane.showMessageDialog(this, "É necessário selecionar ao menos um agendamento para Editar!",
 					"Mensagem de aviso.", JOptionPane.WARNING_MESSAGE);
@@ -309,12 +333,16 @@ public class TelaAgendamentos extends JFrame {
 
 				edtAgd.editar(aux);
 				edtAgd.setVisible(true);
-
+				
+ 
 			} catch (Exception e1) {
 				e1.printStackTrace();
 				JOptionPane.showMessageDialog(null, "Ocorreu um erro", "Erro.", JOptionPane.WARNING_MESSAGE);
 			}
+			
 		}
+		
+		
 		
 	}
 	
@@ -335,10 +363,11 @@ public class TelaAgendamentos extends JFrame {
 		        rowData.getValues().put(3, sdf.format(eventoVO.getDataHoraFim()));
 				rowData.getValues().put(4, eventoVO.getStatus());
 				rowData.getValues().put(5, eventoVO.getTipoServico());
-				rowData.getValues().put(6, eventoVO.getNomeCliente());
-				rowData.getValues().put(7, eventoVO.getDd());
-				rowData.getValues().put(8, eventoVO.getNumero());
-				rowData.getValues().put(9, eventoVO.getEmail());
+				rowData.getValues().put(6, eventoVO.getValor() + " R$");
+				rowData.getValues().put(7, eventoVO.getNomeCliente());
+				rowData.getValues().put(8, eventoVO.getDd());
+				rowData.getValues().put(9, eventoVO.getNumero());
+				rowData.getValues().put(10, eventoVO.getEmail());
 
 				rowData.setElement(eventoVO);
 				tableModel.addRow(rowData);
@@ -463,13 +492,14 @@ public class TelaAgendamentos extends JFrame {
 						rowData.getValues().put(0, eventoVO.getId().toString());
 						rowData.getValues().put(1, eventoVO.getLocal());
 						rowData.getValues().put(2, dateFormat.format(eventoVO.getDataHoraInicio()));
-				        rowData.getValues().put(3, dateFormat.format(eventoVO.getDataHoraFim()));
+						rowData.getValues().put(3, dateFormat.format(eventoVO.getDataHoraFim()));
 						rowData.getValues().put(4, eventoVO.getStatus());
 						rowData.getValues().put(5, eventoVO.getTipoServico());
-						rowData.getValues().put(6, eventoVO.getNomeCliente());
-						rowData.getValues().put(7, eventoVO.getDd());
-						rowData.getValues().put(8, eventoVO.getNumero());
-						rowData.getValues().put(9, eventoVO.getEmail());
+						rowData.getValues().put(6, eventoVO.getValor() + " R$");
+						rowData.getValues().put(7, eventoVO.getNomeCliente());
+						rowData.getValues().put(8, eventoVO.getDd());
+						rowData.getValues().put(9, eventoVO.getNumero());
+						rowData.getValues().put(10, eventoVO.getEmail());
 
 						rowData.setElement(eventoVO);
 						tableModel.addRow(rowData);
@@ -477,7 +507,7 @@ public class TelaAgendamentos extends JFrame {
 						JOptionPane.showMessageDialog(null, "Sem Agendamentos no momento!", null,
 								JOptionPane.WARNING_MESSAGE);
 					}
-
+ 
 				}
 
 			} catch (Exception e) {

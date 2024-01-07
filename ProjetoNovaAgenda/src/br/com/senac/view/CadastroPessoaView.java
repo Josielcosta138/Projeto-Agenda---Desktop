@@ -33,6 +33,7 @@ import javax.swing.JTable;
 import java.awt.event.ActionListener;
 import java.math.BigInteger;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -47,6 +48,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import java.awt.Font;
+import javax.swing.JTextField;
 
 public class CadastroPessoaView extends JFrame {
 
@@ -64,6 +66,7 @@ public class CadastroPessoaView extends JFrame {
 	private TelaCalendario telaCalendario;
 	private Disponibilidade disponibilidade;
 	private TelaAgendamentos telaAgendamentos;
+	private JTextField tftHoraAtual;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -94,9 +97,9 @@ public class CadastroPessoaView extends JFrame {
 
 		setTitle("MENU PRINCIPAL -STYLE MANAGER");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1163, 428);
+		setBounds(100, 100, 1269, 588);
 		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setBorder(new LineBorder(new Color(209, 209, 209)));
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -104,7 +107,7 @@ public class CadastroPessoaView extends JFrame {
 
 		panel = new JPanel();
 		panel.setBorder(new LineBorder(new Color(192, 192, 192)));
-		panel.setBounds(10, 21, 605, 79);
+		panel.setBounds(104, 104, 605, 79);
 		contentPane.add(panel);
 		panel.setLayout(null);
 
@@ -151,7 +154,7 @@ public class CadastroPessoaView extends JFrame {
 		});
 
 		btnAdcionar.setMnemonic('A');
-		btnAdcionar.setBounds(20, 139, 121, 21);
+		btnAdcionar.setBounds(114, 222, 121, 21);
 		contentPane.add(btnAdcionar);
 
 		JButton btnEditar = new JButton("Editar");
@@ -163,7 +166,7 @@ public class CadastroPessoaView extends JFrame {
 			}
 		});
 
-		btnEditar.setBounds(165, 139, 101, 21);
+		btnEditar.setBounds(259, 222, 101, 21);
 		contentPane.add(btnEditar);
 
 		JButton btnExcluir = new JButton("Excluir");
@@ -175,13 +178,13 @@ public class CadastroPessoaView extends JFrame {
 			}
 		});
 
-		btnExcluir.setBounds(288, 139, 101, 21);
+		btnExcluir.setBounds(382, 222, 101, 21);
 		contentPane.add(btnExcluir);
 
 		JScrollPane scrollPane = new JScrollPane();
 
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollPane.setBounds(20, 171, 595, 207);
+		scrollPane.setBounds(114, 254, 595, 207);
 		contentPane.add(scrollPane);
 
 		tableModel = new TableModel();
@@ -209,7 +212,7 @@ public class CadastroPessoaView extends JFrame {
 
 		scrollPane.setViewportView(table);
 
-		JButton btnVoltar = new JButton("Voltar");
+		JButton btnVoltar = new JButton("Sair");
 		btnVoltar.setIcon(new ImageIcon(CadastroPessoaView.class
 				.getResource("/br/com/senac/view/img/2303132_arrow_back_direction_left_navigation_icon.png")));
 		btnVoltar.addActionListener(new ActionListener() {
@@ -219,12 +222,12 @@ public class CadastroPessoaView extends JFrame {
 		});
 
 		btnVoltar.setMnemonic('V');
-		btnVoltar.setBounds(514, 139, 101, 21);
+		btnVoltar.setBounds(1119, 512, 101, 21);
 		contentPane.add(btnVoltar);
 
 		JScrollPane scrolPContelefone = new JScrollPane();
 		scrolPContelefone.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scrolPContelefone.setBounds(635, 42, 497, 284);
+		scrolPContelefone.setBounds(729, 125, 497, 284);
 		contentPane.add(scrolPContelefone);
 
 		table_1 = new JTable();
@@ -249,7 +252,7 @@ public class CadastroPessoaView extends JFrame {
 
 		JButton btnAdc = new JButton("Adicionar");
 		btnAdc.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/adicionar2.png")));
-		btnAdc.setBounds(633, 341, 119, 21);
+		btnAdc.setBounds(727, 424, 119, 21);
 		contentPane.add(btnAdc);
 
 		btnAdc.addActionListener(new ActionListener() {
@@ -265,7 +268,7 @@ public class CadastroPessoaView extends JFrame {
 				editarContatoTelefonico();
 			}
 		});
-		btnEdtar1.setBounds(762, 341, 95, 21);
+		btnEdtar1.setBounds(856, 424, 95, 21);
 		contentPane.add(btnEdtar1);
 
 		JButton btnExcluir1 = new JButton("Excluir");
@@ -275,14 +278,14 @@ public class CadastroPessoaView extends JFrame {
 				excluirContatoTelefonico();
 			}
 		});
-		btnExcluir1.setBounds(867, 341, 101, 21);
+		btnExcluir1.setBounds(961, 424, 101, 21);
 		contentPane.add(btnExcluir1);
 
 		JLabel lblContatoTelef = new JLabel("Contatos");
 		lblContatoTelef.setForeground(new Color(92, 92, 92));
 		lblContatoTelef.setFont(new Font("Tahoma", Font.BOLD, 11));
 		lblContatoTelef.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/zap.png")));
-		lblContatoTelef.setBounds(855, 11, 157, 31);
+		lblContatoTelef.setBounds(855, 96, 157, 31);
 		contentPane.add(lblContatoTelef);
 
 		JButton btnSincronizar = new JButton("Sincronizar");
@@ -294,11 +297,11 @@ public class CadastroPessoaView extends JFrame {
 				sincronizarContTelefonico();
 			}
 		});
-		btnSincronizar.setBounds(1004, 341, 128, 21);
+		btnSincronizar.setBounds(1098, 424, 128, 21);
 		contentPane.add(btnSincronizar);
 
 		JMenuBar menuBar = new JMenuBar();
-		menuBar.setBounds(20, 0, 185, 22);
+		menuBar.setBounds(12, 0, 185, 22);
 		contentPane.add(menuBar);
 
 		JMenu mnEventos = new JMenu("Eventos");
@@ -354,7 +357,6 @@ public class CadastroPessoaView extends JFrame {
 				try {
 					listarAgendamentos();
 				} catch (ParseException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				
@@ -393,8 +395,8 @@ public class CadastroPessoaView extends JFrame {
 		mnManutencao.setMnemonic('M');
 		menuBar.add(mnManutencao);
 
-		JMenuItem mntmNewMenuItem = new JMenuItem("Serviços");
-		mntmNewMenuItem.addActionListener(new ActionListener() {
+		JMenuItem mntmServicos = new JMenuItem("Serviços");
+		mntmServicos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (telaServicos == null) {
 					try {
@@ -411,18 +413,195 @@ public class CadastroPessoaView extends JFrame {
 		});
 			
 		
-		mntmNewMenuItem.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/manutencao.png")));
-		mntmNewMenuItem.setForeground(new Color(107, 107, 107));
-		mntmNewMenuItem.setFont(new Font("Segoe UI", Font.BOLD, 12));
-		mnManutencao.add(mntmNewMenuItem);
+		mntmServicos.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/manutencao.png")));
+		mntmServicos.setForeground(new Color(107, 107, 107));
+		mntmServicos.setFont(new Font("Segoe UI", Font.BOLD, 12));
+		mnManutencao.add(mntmServicos);
 		
-		JMenuItem mntmNewMenuItem_2 = new JMenuItem("New menu item");
+		JMenuItem mntmNewMenuItem_3 = new JMenuItem("Produtos");
+		mntmNewMenuItem_3.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/produto.png")));
+		mntmNewMenuItem_3.setForeground(new Color(89, 89, 89));
+		mntmNewMenuItem_3.setFont(new Font("Segoe UI", Font.BOLD, 12));
+		mnManutencao.add(mntmNewMenuItem_3);
+		
+		JMenuItem mntmNewMenuItem_2 = new JMenuItem("Parâmetros");
+		mntmNewMenuItem_2.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/parametros.png")));
+		mntmNewMenuItem_2.setForeground(new Color(89, 89, 89));
+		mntmNewMenuItem_2.setFont(new Font("Segoe UI", Font.BOLD, 12));
 		mnManutencao.add(mntmNewMenuItem_2);
+		
+		JMenuItem mntmNewMenuItem_5 = new JMenuItem("Relatórios");
+		mntmNewMenuItem_5.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/relatorio.png")));
+		mntmNewMenuItem_5.setForeground(new Color(115, 115, 115));
+		mntmNewMenuItem_5.setFont(new Font("Segoe UI", Font.BOLD, 12));
+		mnManutencao.add(mntmNewMenuItem_5);
 
 		JMenu mnAjuda = new JMenu("Ajuda");
 		mnAjuda.setForeground(new Color(92, 92, 92));
 		mnAjuda.setFont(new Font("Segoe UI", Font.BOLD, 12));
 		menuBar.add(mnAjuda);
+		
+		JMenuItem mntmNewMenuItem_4 = new JMenuItem("Suporte");
+		mntmNewMenuItem_4.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/suporte.png")));
+		mntmNewMenuItem_4.setForeground(new Color(89, 89, 89));
+		mntmNewMenuItem_4.setFont(new Font("Segoe UI", Font.BOLD, 12));
+		mnAjuda.add(mntmNewMenuItem_4);
+		
+		JLabel label = new JLabel("New label");
+		label.setBounds(17, 73, 608, -1);
+		contentPane.add(label);
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setForeground(new Color(211, 211, 211));
+		panel_1.setBorder(new LineBorder(new Color(174, 174, 174)));
+		panel_1.setBounds(107, 81, 1118, 2);
+		contentPane.add(panel_1);
+		
+		JLabel lblNewLabel = new JLabel("Cliente");
+		lblNewLabel.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/cliente2.png")));
+		lblNewLabel.setForeground(new Color(97, 97, 97));
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 11));
+		lblNewLabel.setBounds(108, 45, 79, 26);
+		contentPane.add(lblNewLabel);
+		
+		JPanel panel_1_1 = new JPanel();
+		panel_1_1.setForeground(new Color(211, 211, 211));
+		panel_1_1.setBorder(new LineBorder(new Color(174, 174, 174)));
+		panel_1_1.setBounds(103, 488, 1118, 2);
+		contentPane.add(panel_1_1);
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		tftHoraAtual = new JTextField();
+		tftHoraAtual.setEditable(false);
+		tftHoraAtual.setBounds(1104, 15, 119, 17);
+		contentPane.add(tftHoraAtual);
+		tftHoraAtual.setColumns(10);
+		tftHoraAtual.setText(sdf.format(new Date()));
+		
+		JButton btnAgendar2 = new JButton("");
+		btnAgendar2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (telaAgendar == null) {
+					try {
+						telaAgendar = new TelaAgendar();
+					} catch (ParseException e1) {
+						e1.printStackTrace();
+					}
+				}
+				telaAgendar.setVisible(true);
+				dispose();
+				System.out.println("Clicou no Agendar");
+			}
+		});
+		btnAgendar2.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/novo.png")));
+		btnAgendar2.setBounds(8, 42, 36, 34);
+		contentPane.add(btnAgendar2);
+		
+		JButton btnAgendamento2 = new JButton("");
+		btnAgendamento2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					listarAgendamentos();
+				} catch (ParseException e1) {
+					e1.printStackTrace();
+				}
+				
+			}
+		});
+		btnAgendamento2.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/tipo.png")));
+		btnAgendamento2.setBounds(8, 91, 36, 34);
+		contentPane.add(btnAgendamento2);
+		
+		JButton btnDisponibilidade2 = new JButton("");
+		btnDisponibilidade2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (disponibilidade == null) {
+					disponibilidade = new Disponibilidade();
+				}
+				disponibilidade.setVisible(true);
+				dispose();
+				System.out.println("Clicou na Disponibilidades");
+				
+			}
+		});
+		btnDisponibilidade2.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/availability.png")));
+		btnDisponibilidade2.setBounds(9, 142, 36, 34);
+		contentPane.add(btnDisponibilidade2);
+		
+		JButton btnFinanceiro2 = new JButton("");
+		btnFinanceiro2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+		btnFinanceiro2.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/financ2.png")));
+		btnFinanceiro2.setBounds(11, 198, 36, 34);
+		contentPane.add(btnFinanceiro2);
+		
+		JButton btnServico2 = new JButton("");
+		btnServico2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (telaServicos == null) {
+					try {
+						telaServicos = new TelaServicos();
+					} catch (ParseException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				telaServicos.setVisible(true);
+				dispose();
+				System.out.println("Clicou em Serviços");
+			}
+		});
+		btnServico2.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/manutencao.png")));
+		btnServico2.setBounds(13, 255, 36, 34);
+		contentPane.add(btnServico2);
+		
+		JButton btnProtudo2 = new JButton("");
+		btnProtudo2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+		btnProtudo2.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/produto.png")));
+		btnProtudo2.setBounds(14, 311, 36, 34);
+		contentPane.add(btnProtudo2);
+		
+		JButton btnParametros2 = new JButton("");
+		btnParametros2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+		btnParametros2.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/parametros.png")));
+		btnParametros2.setBounds(14, 363, 36, 34);
+		contentPane.add(btnParametros2);
+		
+		JButton btnRelatorios2 = new JButton("");
+		btnRelatorios2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+		btnRelatorios2.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/relatorio.png")));
+		btnRelatorios2.setBounds(12, 416, 36, 34);
+		contentPane.add(btnRelatorios2);
+		
+		JButton btnSuporte2 = new JButton("");
+		btnSuporte2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+		btnSuporte2.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/suporte.png")));
+		btnSuporte2.setBounds(13, 471, 36, 34);
+		contentPane.add(btnSuporte2);
+		
+		JPanel panel_2 = new JPanel();
+		panel_2.setBorder(new LineBorder(new Color(212, 212, 212)));
+		panel_2.setBounds(59, 37, 1, 481);
+		contentPane.add(panel_2);
 		
 		
 	}
