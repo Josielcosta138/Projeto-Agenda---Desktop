@@ -191,7 +191,7 @@ public class TelaAcessosView extends JFrame {
 				
 			}
 		});
-		btnDisponibilidade.setIcon(new ImageIcon(TelaAcessosView.class.getResource("/br/com/senac/view/img/planlist.png")));
+		btnDisponibilidade.setIcon(new ImageIcon(TelaAcessosView.class.getResource("/br/com/senac/view/img/availability.png")));
 		btnDisponibilidade.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnDisponibilidade.setBackground(new Color(214, 214, 214));
 		btnDisponibilidade.setBounds(10, 161, 168, 33);
