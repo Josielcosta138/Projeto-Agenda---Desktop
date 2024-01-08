@@ -6,15 +6,38 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.TableColumnModel;
+
+import br.com.senac.dao.HibernateUtil;
+import br.com.senac.exception.BOValidationException;
+import br.com.senac.vo.EventoVO;
+
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.Color;
+
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.swing.ImageIcon;
 import java.awt.Toolkit;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.swing.JFormattedTextField;
 import javax.swing.JButton;
@@ -27,6 +50,7 @@ public class Disponibilidade extends JFrame {
 	private JTable table;
 	private CadastroPessoaView cadastroPessoaView;
 	private TableModel tableModel;
+	private List<EventoVO> listaAgendamentos;
 
 	/**
 	 * Launch the application.
@@ -64,6 +88,7 @@ public class Disponibilidade extends JFrame {
 		contentPane.add(scrollPane);
 		
 		tableModel = new TableModel();
+		tableModel.addColumn("Cód");
 		tableModel.addColumn("Status");
 		tableModel.addColumn("Data hora inicio");
 		tableModel.addColumn("Data hora fim");
@@ -76,10 +101,11 @@ public class Disponibilidade extends JFrame {
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		
 		TableColumnModel tcm = table.getColumnModel();
-		tcm.getColumn(0).setPreferredWidth(140);
+		tcm.getColumn(0).setPreferredWidth(40);
 		tcm.getColumn(1).setPreferredWidth(140);
 		tcm.getColumn(2).setPreferredWidth(140);
-		tcm.getColumn(3).setPreferredWidth(120);
+		tcm.getColumn(3).setPreferredWidth(140);
+		tcm.getColumn(4).setPreferredWidth(120);
 		
 
 		scrollPane.setViewportView(table);
@@ -137,12 +163,84 @@ public class Disponibilidade extends JFrame {
 
 	protected void listarDisponibilidade() {
 		
-		
-		
-		
-		
-		
-		
+		if (tableModel != null) {
+			tableModel.clearTable();
+		}
+
+
+		try {
+
+			try {
+
+				System.out.println("******* Iniciando consulta de agendamentos *******");
+		        EntityManager em = HibernateUtil.getEntityManager();
+		        CriteriaBuilder cb = em.getCriteriaBuilder();
+				CriteriaQuery<EventoVO> criteria = cb.createQuery(EventoVO.class);
+
+				Root<EventoVO> agendamentosFrom = criteria.from(EventoVO.class);
+		        criteria.select(agendamentosFrom);
+
+		        // Adicionando filtro para trazer apenas eventos do mês atual
+		        Predicate predicate = cb.and(
+		                cb.equal(cb.function("MONTH", Integer.class, agendamentosFrom.get("dataHoraInicio")), cb.function("MONTH", Integer.class, cb.currentDate())),
+		                cb.equal(cb.function("YEAR", Integer.class, agendamentosFrom.get("dataHoraInicio")), cb.function("YEAR", Integer.class, cb.currentDate())),
+		                cb.not(agendamentosFrom.get("status").in("AGENDANDO", "AGUARDANDO_CONFIRMACAO"))
+		        );
+		        
+		        criteria.where(predicate);
+		        
+		        // Adicionando ORDER BY para ordenar por ID em ordem decrescente
+		        criteria.orderBy(cb.desc(agendamentosFrom.get("id")));
+		        TypedQuery<EventoVO> query = em.createQuery(criteria);
+
+		        //query.setMaxResults(1);
+		        listaAgendamentos = query.getResultList();
+		        
+		        
+		        // Criar uma estrutura para armazenar os dias e horários já agendados
+		        Map<Integer, Set<Integer>> diasEHorariosAgendados = new HashMap<>();
+		        SimpleDateFormat dayFormat = new SimpleDateFormat("dd");
+		        SimpleDateFormat hourFormat = new SimpleDateFormat("HH");
+		        
+		        
+		        for (EventoVO eventoVO : listaAgendamentos) {
+		            int dia = Integer.parseInt(dayFormat.format(eventoVO.getDataHoraInicio()));
+		            int horario = Integer.parseInt(hourFormat.format(eventoVO.getDataHoraInicio()));
+		            
+		            diasEHorariosAgendados.computeIfAbsent(dia, k -> new HashSet<>()).add(horario);
+		        }
+		        
+		        
+		     // Obter o último dia do mês atual
+		        Calendar calendar = Calendar.getInstance();
+		        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+		        int ultimoDiaDoMes = Integer.parseInt(dayFormat.format(calendar.getTime()));
+
+		        // Adicionar os dias e horários livres na tabela
+		        for (int dia = 1; dia <= ultimoDiaDoMes; dia++) {
+		            for (int horario = 0; horario < 24; horario++) {
+		                if (!diasEHorariosAgendados.getOrDefault(dia, Collections.emptySet()).contains(horario)) {
+		                    RowData rowData = new RowData();
+		                    rowData.getValues().put(0, "");  // Coluna de código vazia para dias/horários livres
+		                    rowData.getValues().put(1, "Livre");
+		                    rowData.getValues().put(2, String.format("%02d/%02d", dia, horario));  // Data/hora para dias/horários livres
+		                    rowData.getValues().put(3, "");  // Data/hora fim vazia para dias/horários livres
+		                    rowData.getValues().put(4, "");  // Local vazio para dias/horários livres
+		                    tableModel.addRow(rowData);
+		                }
+		            }
+		        }
+
+			} catch (Exception e) {
+				throw new BOValidationException("Código: erro de validação" + " valor inválido");
+			}
+
+		} catch (BOValidationException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(this, e.getMessage(), "Erro de validação", JOptionPane.WARNING_MESSAGE);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, e.getMessage(), "Erro de sistema", JOptionPane.ERROR_MESSAGE);
+		}
 		
 	}
 

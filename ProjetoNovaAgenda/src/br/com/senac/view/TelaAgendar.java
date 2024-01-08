@@ -175,9 +175,8 @@ public class TelaAgendar extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
-				System.out.println("Teste agendar");
 				agendar();
+				
 			}
 		});
 		btnAgendar.setBounds(10, 429, 114, 28);
