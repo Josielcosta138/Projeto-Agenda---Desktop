@@ -51,6 +51,9 @@ public class Disponibilidade extends JFrame {
 	private CadastroPessoaView cadastroPessoaView;
 	private TableModel tableModel;
 	private List<EventoVO> listaAgendamentos;
+	private int mes = 0;
+	private int ano = 0;
+	private String local;
 
 	/**
 	 * Launch the application.
@@ -88,10 +91,10 @@ public class Disponibilidade extends JFrame {
 		contentPane.add(scrollPane);
 		
 		tableModel = new TableModel();
-		tableModel.addColumn("Cód");
+		//tableModel.addColumn("Cód");
 		tableModel.addColumn("Status");
-		tableModel.addColumn("Data hora inicio");
-		tableModel.addColumn("Data hora fim");
+		tableModel.addColumn("Data");
+		tableModel.addColumn("Horário");
 		tableModel.addColumn("Local");
 		
 		
@@ -101,11 +104,11 @@ public class Disponibilidade extends JFrame {
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		
 		TableColumnModel tcm = table.getColumnModel();
-		tcm.getColumn(0).setPreferredWidth(40);
+		//tcm.getColumn(0).setPreferredWidth(40);
+		tcm.getColumn(0).setPreferredWidth(140);
 		tcm.getColumn(1).setPreferredWidth(140);
 		tcm.getColumn(2).setPreferredWidth(140);
-		tcm.getColumn(3).setPreferredWidth(140);
-		tcm.getColumn(4).setPreferredWidth(120);
+		tcm.getColumn(3).setPreferredWidth(120);
 		
 
 		scrollPane.setViewportView(table);
@@ -113,11 +116,11 @@ public class Disponibilidade extends JFrame {
 		//table = new JTable();
 		//scrollPane.setViewportView(table);
 		
-		JLabel lblNewLabel = new JLabel("Disponibilidade de horários");
+		JLabel lblNewLabel = new JLabel("Disponibilidade de horários mês:");
 		lblNewLabel.setIcon(new ImageIcon(Disponibilidade.class.getResource("/br/com/senac/view/img/DisPonibilidade (2).png")));
 		lblNewLabel.setForeground(new Color(107, 107, 107));
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 11));
-		lblNewLabel.setBounds(20, 21, 262, 31);
+		lblNewLabel.setBounds(20, 21, 223, 31);
 		contentPane.add(lblNewLabel);
 		
 		JLabel lblNewLabel_1 = new JLabel("");
@@ -126,7 +129,6 @@ public class Disponibilidade extends JFrame {
 		contentPane.add(lblNewLabel_1);
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-		
 		JFormattedTextField ftfHoraAtual = new JFormattedTextField();
 		ftfHoraAtual.setEditable(false);
 		ftfHoraAtual.setBounds(654, 11, 105, 20);
@@ -159,6 +161,13 @@ public class Disponibilidade extends JFrame {
 		lblNewLabel_2.setIcon(new ImageIcon(Disponibilidade.class.getResource("/br/com/senac/view/img/dateTime.png")));
 		lblNewLabel_2.setBounds(630, 11, 24, 20);
 		contentPane.add(lblNewLabel_2);
+		
+		SimpleDateFormat sdfMes = new SimpleDateFormat("dd/MM/yyyy");
+		JFormattedTextField ftfMesAtual = new JFormattedTextField();
+		ftfMesAtual.setEditable(false);
+		ftfMesAtual.setBounds(240, 26, 68, 20);
+		contentPane.add(ftfMesAtual);
+		ftfMesAtual.setText(sdfMes.format(new Date()));
 	}
 
 	protected void listarDisponibilidade() {
@@ -166,7 +175,7 @@ public class Disponibilidade extends JFrame {
 		if (tableModel != null) {
 			tableModel.clearTable();
 		}
-
+		
 
 		try {
 
@@ -199,37 +208,76 @@ public class Disponibilidade extends JFrame {
 		        
 		        // Criar uma estrutura para armazenar os dias e horários já agendados
 		        Map<Integer, Set<Integer>> diasEHorariosAgendados = new HashMap<>();
+		        Map<Integer, Set<Integer>> diasEMinutosAgendados = new HashMap<>();
 		        SimpleDateFormat dayFormat = new SimpleDateFormat("dd");
 		        SimpleDateFormat hourFormat = new SimpleDateFormat("HH");
+		        SimpleDateFormat minutesFormat = new SimpleDateFormat("mm");
+		        SimpleDateFormat monthFormat = new SimpleDateFormat("mm");
+		        SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
 		        
 		        
 		        for (EventoVO eventoVO : listaAgendamentos) {
 		            int dia = Integer.parseInt(dayFormat.format(eventoVO.getDataHoraInicio()));
 		            int horario = Integer.parseInt(hourFormat.format(eventoVO.getDataHoraInicio()));
+		            int minutos = Integer.parseInt(minutesFormat.format(eventoVO.getDataHoraInicio()));
+		            mes = Integer.parseInt(monthFormat.format(eventoVO.getDataHoraInicio()));
+		            ano = Integer.parseInt(yearFormat.format(eventoVO.getDataHoraInicio()));
+		            local = eventoVO.getLocal();
 		            
 		            diasEHorariosAgendados.computeIfAbsent(dia, k -> new HashSet<>()).add(horario);
+		            diasEMinutosAgendados.computeIfAbsent(dia, k -> new HashSet<>()).add(minutos);
+		            
 		        }
 		        
 		        
-		     // Obter o último dia do mês atual
+		     /// Obter o último dia do mês atual
 		        Calendar calendar = Calendar.getInstance();
 		        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
 		        int ultimoDiaDoMes = Integer.parseInt(dayFormat.format(calendar.getTime()));
+		        
+		        int ultimoMesDoAno = calendar.get(Calendar.MONTH) + 1; // Adiciona 1, pois o mês começa do zero no Calendar
+		        int ultimoAno = calendar.get(Calendar.YEAR);
 
 		        // Adicionar os dias e horários livres na tabela
 		        for (int dia = 1; dia <= ultimoDiaDoMes; dia++) {
-		            for (int horario = 0; horario < 24; horario++) {
-		                if (!diasEHorariosAgendados.getOrDefault(dia, Collections.emptySet()).contains(horario)) {
-		                    RowData rowData = new RowData();
-		                    rowData.getValues().put(0, "");  // Coluna de código vazia para dias/horários livres
-		                    rowData.getValues().put(1, "Livre");
-		                    rowData.getValues().put(2, String.format("%02d/%02d", dia, horario));  // Data/hora para dias/horários livres
-		                    rowData.getValues().put(3, "");  // Data/hora fim vazia para dias/horários livres
-		                    rowData.getValues().put(4, "");  // Local vazio para dias/horários livres
-		                    tableModel.addRow(rowData);
+		            for (int horario = 8; horario < 20; horario++) {
+		                for (int minutos = 0; minutos < 60; minutos += 30) {
+		                    int horarioAtual = horario * 60 + minutos; // Convertendo para minutos
+
+		                    // Verificando se o horário está ocupado
+		                    boolean horarioOcupado = diasEHorariosAgendados.getOrDefault(dia, Collections.emptySet()).contains(horarioAtual);
+
+		                    if (!horarioOcupado) {
+		                        // Convertendo minutos de volta para horas e minutos
+		                        int horas = horarioAtual / 60;
+		                        int minutosRestantes = horarioAtual % 60;
+		                        
+		                        
+		                     // Somando 30 minutos
+		                        int novaHoraEmMinutos = horarioAtual + 30;
+
+		                        // Convertendo o resultado de volta para horas e minutos
+		                        int novaHora = novaHoraEmMinutos / 60;
+		                        int novosMinutosRestantes = novaHoraEmMinutos % 60;
+
+		                        // Verificando se o horário está ocupado
+		                        boolean minutosOcupados = diasEMinutosAgendados.getOrDefault(dia, Collections.emptySet()).contains(minutos);
+		                        
+		                        
+		                        if (!minutosOcupados) {
+		                            RowData rowData = new RowData();
+		                            rowData.getValues().put(0, "Livre");
+		                            rowData.getValues().put(1, String.format("%02d/%02d/%04d", dia, ultimoMesDoAno, ultimoAno));  // Data para dias/horários livres
+		                            rowData.getValues().put(2, String.format("%02d:%02d - %02d:%02d", horas, minutosRestantes ,novaHora ,novosMinutosRestantes ));   // Horário para dias/horários livres
+		                            rowData.getValues().put(3, local);  // Local vazio para dias/horários livres
+		                            tableModel.addRow(rowData);
+		                        }
+		                    }
 		                }
 		            }
 		        }
+		        
+		        
 
 			} catch (Exception e) {
 				throw new BOValidationException("Código: erro de validação" + " valor inválido");
@@ -251,5 +299,4 @@ public class Disponibilidade extends JFrame {
 		cadastroPessoaView.setVisible(true);
 		dispose();
 	}
-		
 }
