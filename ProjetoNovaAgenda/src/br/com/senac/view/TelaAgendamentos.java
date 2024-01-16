@@ -144,8 +144,9 @@ public class TelaAgendamentos extends JFrame {
 		tableModel.addColumn("Data hora inicio");
 		tableModel.addColumn("Data hora fim");
 		tableModel.addColumn("Status");
-		tableModel.addColumn("Tipo serviço");//5
+		tableModel.addColumn("Tipo serviço");// 5
 		tableModel.addColumn("Valor");
+		tableModel.addColumn("Total");
 		tableModel.addColumn("Cliente");
 		tableModel.addColumn("DD");
 		tableModel.addColumn("Número");
@@ -166,10 +167,11 @@ public class TelaAgendamentos extends JFrame {
 		tcm.getColumn(4).setPreferredWidth(180);
 		tcm.getColumn(5).setPreferredWidth(180);
 		tcm.getColumn(6).setPreferredWidth(100);
-		tcm.getColumn(7).setPreferredWidth(110);
-		tcm.getColumn(8).setPreferredWidth(60);
-		tcm.getColumn(9).setPreferredWidth(80);
-		tcm.getColumn(10).setPreferredWidth(110);
+		tcm.getColumn(7).setPreferredWidth(100);
+		tcm.getColumn(8).setPreferredWidth(110);
+		tcm.getColumn(9).setPreferredWidth(60);
+		tcm.getColumn(10).setPreferredWidth(80);
+		tcm.getColumn(11).setPreferredWidth(110);
 		scrollPane.setViewportView(table);
 
 		JLabel lblListaAgendamento = new JLabel("Agendamentos:");
@@ -363,10 +365,11 @@ public class TelaAgendamentos extends JFrame {
 				rowData.getValues().put(4, eventoVO.getStatus());
 				rowData.getValues().put(5, eventoVO.getTipoServico());
 				rowData.getValues().put(6, eventoVO.getValor() + " R$");
-				rowData.getValues().put(7, eventoVO.getNomeCliente());
-				rowData.getValues().put(8, eventoVO.getDd());
-				rowData.getValues().put(9, eventoVO.getNumero());
-				rowData.getValues().put(10, eventoVO.getEmail());
+				rowData.getValues().put(7, eventoVO.getTotalServico() + " R$");
+				rowData.getValues().put(8, eventoVO.getNomeCliente());
+				rowData.getValues().put(9, eventoVO.getDd());
+				rowData.getValues().put(10, eventoVO.getNumero());
+				rowData.getValues().put(11, eventoVO.getEmail());
 
 				rowData.setElement(eventoVO);
 				tableModel.addRow(rowData);
@@ -495,10 +498,11 @@ public class TelaAgendamentos extends JFrame {
 						rowData.getValues().put(4, eventoVO.getStatus());
 						rowData.getValues().put(5, eventoVO.getTipoServico());
 						rowData.getValues().put(6, eventoVO.getValor() + " R$");
-						rowData.getValues().put(7, eventoVO.getNomeCliente());
-						rowData.getValues().put(8, eventoVO.getDd());
-						rowData.getValues().put(9, eventoVO.getNumero());
-						rowData.getValues().put(10, eventoVO.getEmail());
+						rowData.getValues().put(7, eventoVO.getTotalServico() + " R$");
+						rowData.getValues().put(8, eventoVO.getNomeCliente());
+						rowData.getValues().put(9, eventoVO.getDd());
+						rowData.getValues().put(10, eventoVO.getNumero());
+						rowData.getValues().put(11, eventoVO.getEmail());
 
 						rowData.setElement(eventoVO);
 						tableModel.addRow(rowData);
