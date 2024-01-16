@@ -86,12 +86,16 @@ public class EventoVO implements Serializable{
 	private BigDecimal valor;
     
     
+    @Column(name = "totalservico", precision = 10, scale = 2, nullable = false)
+	private BigDecimal totalservico;
+    
+    
 	public EventoVO() {
 		super();
 	}
 
 	public EventoVO(BigInteger id, Date  dataHoraInicio, Date  dataHoraFim, String local, BigInteger participantes, String status,
-			String ocupadoVago, String tipoServico, String numero, String dd, BigDecimal valor) {
+			String ocupadoVago, String tipoServico, String numero, String dd, BigDecimal valor, BigDecimal totalServico) {
 		super();
 		this.id = id;
 		this.dataHoraInicio = dataHoraInicio;
@@ -103,6 +107,8 @@ public class EventoVO implements Serializable{
 		this.numero = numero;
 		this.dd = dd;
 		this.valor = valor;
+		this.totalservico = totalServico;
+	
 		
 	}
 
@@ -205,12 +211,21 @@ public class EventoVO implements Serializable{
 		this.valor = valor;
 	}
 	
+	public BigDecimal getTotalServico() {
+		return totalservico;
+	}
+
+	public void setTotalServico(BigDecimal totalServico) {
+		this.totalservico = totalServico;
+	}
+	
+	
 	
 
 	@Override
 	public int hashCode() {
 		return Objects.hash(dataHoraFim, dataHoraInicio, dd, email, id, local, nomeCliente, numero, participantes,
-				status, tipoServico, valor);
+				status, tipoServico, totalservico, valor);
 	}
 
 	@Override
@@ -227,7 +242,7 @@ public class EventoVO implements Serializable{
 				&& Objects.equals(local, other.local) && Objects.equals(nomeCliente, other.nomeCliente)
 				&& Objects.equals(numero, other.numero) && Objects.equals(participantes, other.participantes)
 				&& Objects.equals(status, other.status) && Objects.equals(tipoServico, other.tipoServico)
-				&& Objects.equals(valor, other.valor);
+				&& Objects.equals(totalservico, other.totalservico) && Objects.equals(valor, other.valor);
 	}
 
 	@Override
@@ -235,15 +250,9 @@ public class EventoVO implements Serializable{
 		return "EventoVO [id=" + id + ", dataHoraInicio=" + dataHoraInicio + ", dataHoraFim=" + dataHoraFim + ", local="
 				+ local + ", numero=" + numero + ", dd=" + dd + ", participantes=" + participantes + ", status="
 				+ status + ", tipoServico=" + tipoServico + ", nomeCliente=" + nomeCliente + ", email=" + email
-				+ ", valor=" + valor + "]";
+				+ ", valor=" + valor + ", totalServico=" + totalservico + "]";
 	}
 	
-	
-	
 
 	
-
-
-
-
 } 

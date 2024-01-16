@@ -50,6 +50,8 @@ public interface IService {
 
 	public abstract void excluir(EventoVO eventoVO) throws BOValidationException, BOException;	
 	
+	public abstract void calcularTotal(EventoVO eventoVO) throws BOValidationException, BOException;	
+	
 	
 // TIPOS DE SERVIÇOS
 	

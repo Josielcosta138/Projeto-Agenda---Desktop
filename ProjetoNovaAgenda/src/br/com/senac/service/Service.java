@@ -110,6 +110,16 @@ public class Service implements IService {
 	}
 	
 	
+	@Override
+	public void calcularTotal(EventoVO eventoVO) throws BOValidationException, BOException {
+		System.out.println("entrou no método calcular de SERVICE");
+		IEventoBO evento = new EventoBO();
+		evento.calcularTotal(eventoVO);
+		
+	}
+	
+	
+	
 	
 	
 	// SERVIÇOS
@@ -141,5 +151,7 @@ public class Service implements IService {
 		tipoServico.excluir(tipoServicoVO);
 		
 	}
+
+	
 
 }
