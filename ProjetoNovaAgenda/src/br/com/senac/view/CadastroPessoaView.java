@@ -366,6 +366,12 @@ public class CadastroPessoaView extends JFrame {
 		mnEventos.add(mntmDisponibilidades);
 		
 		JMenuItem mntmNewMenuItem_1 = new JMenuItem("Financeiro");
+		mntmNewMenuItem_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				calcularFinanceiro();
+				
+			}
+		});
 		mntmNewMenuItem_1.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/financ2.png")));
 		mntmNewMenuItem_1.setForeground(new Color(107, 107, 107));
 		mntmNewMenuItem_1.setFont(new Font("Segoe UI", Font.BOLD, 12));
@@ -419,18 +425,33 @@ public class CadastroPessoaView extends JFrame {
 		mnManutencao.add(mntmServicos);
 		
 		JMenuItem mntmNewMenuItem_3 = new JMenuItem("Produtos");
+		mntmNewMenuItem_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				produtos();
+			}
+		});
 		mntmNewMenuItem_3.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/produto.png")));
 		mntmNewMenuItem_3.setForeground(new Color(89, 89, 89));
 		mntmNewMenuItem_3.setFont(new Font("Segoe UI", Font.BOLD, 12));
 		mnManutencao.add(mntmNewMenuItem_3);
 		
 		JMenuItem mntmNewMenuItem_2 = new JMenuItem("Parâmetros");
+		mntmNewMenuItem_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				parametros();
+			}
+		});
 		mntmNewMenuItem_2.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/parametros.png")));
 		mntmNewMenuItem_2.setForeground(new Color(89, 89, 89));
 		mntmNewMenuItem_2.setFont(new Font("Segoe UI", Font.BOLD, 12));
 		mnManutencao.add(mntmNewMenuItem_2);
 		
 		JMenuItem mntmNewMenuItem_5 = new JMenuItem("Relatórios");
+		mntmNewMenuItem_5.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				relatorios();
+			}
+		});
 		mntmNewMenuItem_5.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/relatorio.png")));
 		mntmNewMenuItem_5.setForeground(new Color(115, 115, 115));
 		mntmNewMenuItem_5.setFont(new Font("Segoe UI", Font.BOLD, 12));
@@ -442,6 +463,11 @@ public class CadastroPessoaView extends JFrame {
 		menuBar.add(mnAjuda);
 		
 		JMenuItem mntmNewMenuItem_4 = new JMenuItem("Suporte");
+		mntmNewMenuItem_4.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				suporte();
+			}
+		});
 		mntmNewMenuItem_4.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/suporte.png")));
 		mntmNewMenuItem_4.setForeground(new Color(89, 89, 89));
 		mntmNewMenuItem_4.setFont(new Font("Segoe UI", Font.BOLD, 12));
@@ -531,7 +557,7 @@ public class CadastroPessoaView extends JFrame {
 		JButton btnFinanceiro2 = new JButton("");
 		btnFinanceiro2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				calcularFinanceiro();
 			}
 		});
 		btnFinanceiro2.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/financ2.png")));
@@ -561,7 +587,7 @@ public class CadastroPessoaView extends JFrame {
 		JButton btnProtudo2 = new JButton("");
 		btnProtudo2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				produtos();
 			}
 		});
 		btnProtudo2.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/produto.png")));
@@ -571,7 +597,7 @@ public class CadastroPessoaView extends JFrame {
 		JButton btnParametros2 = new JButton("");
 		btnParametros2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				parametros();
 			}
 		});
 		btnParametros2.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/parametros.png")));
@@ -581,7 +607,7 @@ public class CadastroPessoaView extends JFrame {
 		JButton btnRelatorios2 = new JButton("");
 		btnRelatorios2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				relatorios();
 			}
 		});
 		btnRelatorios2.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/relatorio.png")));
@@ -591,7 +617,7 @@ public class CadastroPessoaView extends JFrame {
 		JButton btnSuporte2 = new JButton("");
 		btnSuporte2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				suporte();
 			}
 		});
 		btnSuporte2.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/suporte.png")));
@@ -606,8 +632,36 @@ public class CadastroPessoaView extends JFrame {
 		
 	}
 
-	
 
+	protected void suporte() {
+		JOptionPane.showMessageDialog(this, "Módulo em desenvolvimento. \nAguarde, ficará disponível na próxima versão. Obrigada :)",
+				"Atenção.", JOptionPane.WARNING_MESSAGE);
+		
+	}
+
+	protected void relatorios() {
+		JOptionPane.showMessageDialog(this, "Módulo em desenvolvimento. \nAguarde, ficará disponível na próxima versão. Obrigada :)",
+				"Atenção.", JOptionPane.WARNING_MESSAGE);
+		
+	}
+
+	protected void parametros() {
+		JOptionPane.showMessageDialog(this, "Módulo em desenvolvimento. \nAguarde, ficará disponível na próxima versão. Obrigada :)",
+				"Atenção.", JOptionPane.WARNING_MESSAGE);
+		
+	}
+
+	protected void produtos() {
+		JOptionPane.showMessageDialog(this, "Módulo em desenvolvimento. \nAguarde, ficará disponível na próxima versão. Obrigada :)",
+				"Atenção.", JOptionPane.WARNING_MESSAGE);
+		
+	}
+
+	protected void calcularFinanceiro() {
+		JOptionPane.showMessageDialog(this, "Módulo em desenvolvimento. \nAguarde, ficará disponível na próxima versão. Obrigada :)",
+				"Mensagem de aviso.", JOptionPane.WARNING_MESSAGE);
+		
+	}
 
 	protected void listarAgendamentos() throws ParseException {
 		if (telaAgendamentos == null) {
@@ -623,7 +677,7 @@ public class CadastroPessoaView extends JFrame {
 
 		if (table.getSelectedRow() < 0) {
 			JOptionPane.showMessageDialog(this, "É necessário selecionar ao menos uma Pessoa para Sincronizar!",
-					"Mensagem de aviso.", JOptionPane.WARNING_MESSAGE);
+					"Atenção.", JOptionPane.WARNING_MESSAGE);
 		} else {
 			listarContatosTelefonicos();
 		}

@@ -27,6 +27,7 @@ import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.border.LineBorder;
 
 public class TelaAcessosView extends JFrame {
@@ -198,6 +199,13 @@ public class TelaAcessosView extends JFrame {
 		panel.add(btnDisponibilidade);
 		
 		JButton btnFinanceiro = new JButton("Financeiro");
+		btnFinanceiro.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				calcularFinanceiro();
+				
+			}
+				
+		});
 		btnFinanceiro.setIcon(new ImageIcon(TelaAcessosView.class.getResource("/br/com/senac/view/img/financ2.png")));
 		btnFinanceiro.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnFinanceiro.setBackground(new Color(214, 214, 214));
@@ -237,6 +245,11 @@ public class TelaAcessosView extends JFrame {
 		contentPane.add(button);
 	}
 
+	protected void calcularFinanceiro() {
+		JOptionPane.showMessageDialog(this, "Módulo em desenvolvimento. \nAguarde, ficará disponível na próxima versão. Obrigada :)",
+				"Atenção.", JOptionPane.WARNING_MESSAGE);
+		
+	}
 	protected void cadastrar() {
 		if (cadastroPessoaView == null) {
 			cadastroPessoaView = new CadastroPessoaView();
