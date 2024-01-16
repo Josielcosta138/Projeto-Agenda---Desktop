@@ -74,7 +74,6 @@ public class TelaAgendamentos extends JFrame {
 	private JFormattedTextField ftfCliente;
 	private List<EventoVO> listaAgendamentos;
 	private JFormattedTextField ftfSFiltroStatus;
-	//private StatusServico statusServico;
 	private static TelaAgendamentos frame;
 
 	public static void main(String[] args) {

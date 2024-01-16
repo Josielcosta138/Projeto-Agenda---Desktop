@@ -80,6 +80,8 @@ public class Disponibilidade extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 791, 373);
 		contentPane = new JPanel();
+		//cor linha 
+		contentPane.setForeground(new Color(128, 128, 128));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -100,6 +102,7 @@ public class Disponibilidade extends JFrame {
 		
 		
 		table = new JTable(tableModel);
+		table.setDefaultRenderer(Object.class, new DayColorDisponibilidade());
 		table.setAutoscrolls(true);
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		
@@ -113,8 +116,6 @@ public class Disponibilidade extends JFrame {
 
 		scrollPane.setViewportView(table);
 		
-		//table = new JTable();
-		//scrollPane.setViewportView(table);
 		
 		JLabel lblNewLabel = new JLabel("Disponibilidade de horários mês:");
 		lblNewLabel.setIcon(new ImageIcon(Disponibilidade.class.getResource("/br/com/senac/view/img/DisPonibilidade (2).png")));
@@ -162,7 +163,8 @@ public class Disponibilidade extends JFrame {
 		lblNewLabel_2.setBounds(630, 11, 24, 20);
 		contentPane.add(lblNewLabel_2);
 		
-		SimpleDateFormat sdfMes = new SimpleDateFormat("dd/MM/yyyy");
+
+		SimpleDateFormat sdfMes = new SimpleDateFormat("MM/yyyy");
 		JFormattedTextField ftfMesAtual = new JFormattedTextField();
 		ftfMesAtual.setEditable(false);
 		ftfMesAtual.setBounds(240, 26, 68, 20);

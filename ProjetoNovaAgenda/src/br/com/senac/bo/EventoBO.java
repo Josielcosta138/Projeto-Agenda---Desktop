@@ -1,5 +1,7 @@
 package br.com.senac.bo;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.List;
 
 import br.com.senac.dao.ContelDAO;
@@ -62,5 +64,19 @@ public class EventoBO implements IEventoBO {
 		eventoDAO.excluir(eventoVO);
 
 	}
+
+
+	@Override
+	public void calcularTotal(EventoVO eventoVO) throws BOValidationException, BOException {
+		BigDecimal valor = eventoVO.getValor();
+		BigInteger qntParticipante = eventoVO.getParticipantes();
+		BigDecimal total = new BigDecimal(qntParticipante).multiply(valor);
+		
+		eventoVO.setTotalServico(total);
+		System.out.println("Salvando valor total: " + total);
+		
+	}
+	
+	
 
 }
