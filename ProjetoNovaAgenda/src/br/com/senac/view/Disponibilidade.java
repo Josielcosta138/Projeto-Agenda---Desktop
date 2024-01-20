@@ -63,6 +63,7 @@ public class Disponibilidade extends JFrame {
 			public void run() {
 				try {
 					Disponibilidade frame = new Disponibilidade();
+					//frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -84,8 +85,9 @@ public class Disponibilidade extends JFrame {
 		contentPane.setForeground(new Color(128, 128, 128));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		contentPane.setLayout(null);
+		//setExtendedState(JFrame.MAXIMIZED_BOTH);//maxima a tela
 		setLocationRelativeTo(null);
+		contentPane.setLayout(null);
 		
 		
 		JScrollPane scrollPane = new JScrollPane();
@@ -118,25 +120,26 @@ public class Disponibilidade extends JFrame {
 		
 		
 		JLabel lblNewLabel = new JLabel("Disponibilidade de horários mês:");
+		lblNewLabel.setBounds(20, 21, 223, 31);
 		lblNewLabel.setIcon(new ImageIcon(Disponibilidade.class.getResource("/br/com/senac/view/img/DisPonibilidade (2).png")));
 		lblNewLabel.setForeground(new Color(107, 107, 107));
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 11));
-		lblNewLabel.setBounds(20, 21, 223, 31);
 		contentPane.add(lblNewLabel);
 		
 		JLabel lblNewLabel_1 = new JLabel("");
-		lblNewLabel_1.setIcon(new ImageIcon(Disponibilidade.class.getResource("/br/com/senac/view/img/CopiaDispo.png")));
 		lblNewLabel_1.setBounds(559, 63, 206, 227);
+		lblNewLabel_1.setIcon(new ImageIcon(Disponibilidade.class.getResource("/br/com/senac/view/img/CopiaDispo.png")));
 		contentPane.add(lblNewLabel_1);
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		JFormattedTextField ftfHoraAtual = new JFormattedTextField();
-		ftfHoraAtual.setEditable(false);
 		ftfHoraAtual.setBounds(654, 11, 105, 20);
+		ftfHoraAtual.setEditable(false);
 		contentPane.add(ftfHoraAtual);
 		ftfHoraAtual.setText(sdf.format(new Date()));
 		
 		JButton btnNewButton = new JButton("Pesquisar");
+		btnNewButton.setBounds(10, 301, 125, 22);
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -144,10 +147,10 @@ public class Disponibilidade extends JFrame {
 			}
 		});
 		btnNewButton.setIcon(new ImageIcon(Disponibilidade.class.getResource("/br/com/senac/view/img/pesquisar.png")));
-		btnNewButton.setBounds(10, 301, 125, 22);
 		contentPane.add(btnNewButton);
 		
 		JButton btnNewButton_1 = new JButton("Voltar");
+		btnNewButton_1.setBounds(654, 301, 105, 23);
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -155,19 +158,18 @@ public class Disponibilidade extends JFrame {
 			}
 		});
 		btnNewButton_1.setIcon(new ImageIcon(Disponibilidade.class.getResource("/br/com/senac/view/img/2303132_arrow_back_direction_left_navigation_icon.png")));
-		btnNewButton_1.setBounds(654, 301, 105, 23);
 		contentPane.add(btnNewButton_1);
 		
 		JLabel lblNewLabel_2 = new JLabel("");
-		lblNewLabel_2.setIcon(new ImageIcon(Disponibilidade.class.getResource("/br/com/senac/view/img/dateTime.png")));
 		lblNewLabel_2.setBounds(630, 11, 24, 20);
+		lblNewLabel_2.setIcon(new ImageIcon(Disponibilidade.class.getResource("/br/com/senac/view/img/dateTime.png")));
 		contentPane.add(lblNewLabel_2);
 		
 
 		SimpleDateFormat sdfMes = new SimpleDateFormat("MM/yyyy");
 		JFormattedTextField ftfMesAtual = new JFormattedTextField();
-		ftfMesAtual.setEditable(false);
 		ftfMesAtual.setBounds(240, 26, 68, 20);
+		ftfMesAtual.setEditable(false);
 		contentPane.add(ftfMesAtual);
 		ftfMesAtual.setText(sdfMes.format(new Date()));
 	}
