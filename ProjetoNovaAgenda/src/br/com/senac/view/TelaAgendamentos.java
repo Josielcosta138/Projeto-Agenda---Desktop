@@ -151,6 +151,7 @@ public class TelaAgendamentos extends JFrame {
 		tableModel.addColumn("DD");
 		tableModel.addColumn("Número");
 		tableModel.addColumn("E-mail");
+		tableModel.addColumn("N°-Participantes");
 		
 		
 
@@ -172,6 +173,7 @@ public class TelaAgendamentos extends JFrame {
 		tcm.getColumn(9).setPreferredWidth(60);
 		tcm.getColumn(10).setPreferredWidth(80);
 		tcm.getColumn(11).setPreferredWidth(110);
+		tcm.getColumn(12).setPreferredWidth(80);
 		scrollPane.setViewportView(table);
 
 		JLabel lblListaAgendamento = new JLabel("Agendamentos:");
@@ -370,6 +372,7 @@ public class TelaAgendamentos extends JFrame {
 				rowData.getValues().put(9, eventoVO.getDd());
 				rowData.getValues().put(10, eventoVO.getNumero());
 				rowData.getValues().put(11, eventoVO.getEmail());
+				rowData.getValues().put(12, eventoVO.getParticipantes());
 
 				rowData.setElement(eventoVO);
 				tableModel.addRow(rowData);
@@ -503,6 +506,7 @@ public class TelaAgendamentos extends JFrame {
 						rowData.getValues().put(9, eventoVO.getDd());
 						rowData.getValues().put(10, eventoVO.getNumero());
 						rowData.getValues().put(11, eventoVO.getEmail());
+						rowData.getValues().put(12, eventoVO.getParticipantes());
 
 						rowData.setElement(eventoVO);
 						tableModel.addRow(rowData);

@@ -499,6 +499,7 @@ public class TelaAgendar extends JFrame {
 		tableModel.addColumn("DD");
 		tableModel.addColumn("Número");
 		tableModel.addColumn("E-mail");
+		tableModel.addColumn("N°-Participantes");
 
 		table_1 = new JTable(tableModel);
 		table_1.setDefaultRenderer(Object.class, new MonthColorRenderer());
@@ -518,6 +519,7 @@ public class TelaAgendar extends JFrame {
 		tcm.getColumn(9).setPreferredWidth(60);
 		tcm.getColumn(10).setPreferredWidth(80);
 		tcm.getColumn(11).setPreferredWidth(110);
+		tcm.getColumn(12).setPreferredWidth(80);
 
 		scrollPane.setViewportView(table_1);
 		listarAgendamentos();
@@ -977,6 +979,7 @@ public class TelaAgendar extends JFrame {
 						rowData.getValues().put(9, eventoVO.getDd());
 						rowData.getValues().put(10, eventoVO.getNumero());
 						rowData.getValues().put(11, eventoVO.getEmail());
+						rowData.getValues().put(12, eventoVO.getParticipantes());
 
 						rowData.setElement(eventoVO);
 						tableModel.addRow(rowData);
@@ -1119,6 +1122,7 @@ public class TelaAgendar extends JFrame {
 
 	}
 
+	//RAFATORAR PARA CLASSE BO
 	private List<EventoVO> buscarEventosPorPeriodo(Date dataHoraInicio, Date dataHoraFim) {
 		try {
 			EntityManager em = HibernateUtil.getEntityManager();
@@ -1146,7 +1150,7 @@ public class TelaAgendar extends JFrame {
 			System.out.println("Finally");
 		}
 	}
-
+	
 	public void pesquisarValorPorServico() throws ParseException {
 		try {
 			// Obter o item selecionado no comboBoxStatusServico
@@ -1196,7 +1200,7 @@ public class TelaAgendar extends JFrame {
 					JOptionPane.ERROR_MESSAGE);
 		}
 	}
-
+	//RAFATORAR PARA CLASSE BO
 	private boolean intervaloDisponivel(String dataHoraInicioStr, String dataHoraFimStr) {
 		try {
 			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
