@@ -66,6 +66,7 @@ public class CadastroPessoaView extends JFrame {
 	private TelaCalendario telaCalendario;
 	private Disponibilidade disponibilidade;
 	private TelaAgendamentos telaAgendamentos;
+	private TelaProdutos telaProdutos;
 	private JTextField tftHoraAtual;
 
 	public static void main(String[] args) {
@@ -430,7 +431,7 @@ public class CadastroPessoaView extends JFrame {
 				produtos();
 			}
 		});
-		mntmNewMenuItem_3.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/produto.png")));
+		mntmNewMenuItem_3.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/product.png")));
 		mntmNewMenuItem_3.setForeground(new Color(89, 89, 89));
 		mntmNewMenuItem_3.setFont(new Font("Segoe UI", Font.BOLD, 12));
 		mnManutencao.add(mntmNewMenuItem_3);
@@ -590,7 +591,7 @@ public class CadastroPessoaView extends JFrame {
 				produtos();
 			}
 		});
-		btnProtudo2.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/produto.png")));
+		btnProtudo2.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/product.png")));
 		btnProtudo2.setBounds(14, 311, 36, 34);
 		contentPane.add(btnProtudo2);
 		
@@ -652,8 +653,12 @@ public class CadastroPessoaView extends JFrame {
 	}
 
 	protected void produtos() {
-		JOptionPane.showMessageDialog(this, "Módulo em desenvolvimento. \nAguarde, ficará disponível na próxima versão. Obrigada :)",
-				"Atenção.", JOptionPane.WARNING_MESSAGE);
+		if (telaProdutos == null) {
+			telaProdutos = new TelaProdutos();
+		}
+		telaProdutos.setVisible(true);
+		dispose();
+		System.out.println("Clicou no Produtos");
 		
 	}
 
