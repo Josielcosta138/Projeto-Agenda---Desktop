@@ -12,6 +12,7 @@ import br.com.senac.exception.BOValidationException;
 import br.com.senac.vo.ContatoVO;
 import br.com.senac.vo.ContelVO;
 import br.com.senac.vo.EventoVO;
+import br.com.senac.vo.ProdutoVO;
 import br.com.senac.vo.TipoServicoVO;
 
 public interface IService {
@@ -62,6 +63,20 @@ public interface IService {
 	public abstract void salvar(TipoServicoVO tipoServicoVO) throws BOValidationException, BOException;
 
 	public abstract void excluir(TipoServicoVO tipoServicoVO) throws BOValidationException, BOException;
+	
+	
+	
+// TIPOS DE PRODUTOS
+	
+	public abstract ProdutoVO buscarTipoServicoPorId(ProdutoVO produtoVO) throws BOException;
+
+	public abstract List<ProdutoVO> listarServicos(ProdutoVO produtoVO) throws BOException;
+
+	public abstract void salvar(ProdutoVO produtoVO) throws BOValidationException, BOException;
+
+	public abstract void excluir(ProdutoVO produtoVO) throws BOValidationException, BOException;
+	
+	
 	
 	
 }

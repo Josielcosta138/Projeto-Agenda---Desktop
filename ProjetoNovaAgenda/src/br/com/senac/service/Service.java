@@ -10,13 +10,16 @@ import br.com.senac.bo.EventoBO;
 import br.com.senac.bo.IContatoBO;
 import br.com.senac.bo.IContelBO;
 import br.com.senac.bo.IEventoBO;
+import br.com.senac.bo.IProdutoBO;
 import br.com.senac.bo.ITipoServicoBO;
+import br.com.senac.bo.ProdutoBO;
 import br.com.senac.bo.TipoServicoBO;
 import br.com.senac.exception.BOException;
 import br.com.senac.exception.BOValidationException;
 import br.com.senac.vo.ContatoVO;
 import br.com.senac.vo.ContelVO;
 import br.com.senac.vo.EventoVO;
+import br.com.senac.vo.ProdutoVO;
 import br.com.senac.vo.TipoServicoVO;
 
 public class Service implements IService {
@@ -145,11 +148,42 @@ public class Service implements IService {
 				
 	}
 
+	
 	@Override
 	public void excluir(TipoServicoVO tipoServicoVO) throws BOValidationException, BOException {
 		ITipoServicoBO tipoServico = new TipoServicoBO();
 		tipoServico.excluir(tipoServicoVO);
 		
+	}
+	
+	
+	
+	
+	// PRODUTO
+
+	@Override
+	public ProdutoVO buscarTipoServicoPorId(ProdutoVO produtoVO) throws BOException {
+		IProdutoBO produto = new ProdutoBO();
+		return produto.buscarTipoServicoPorId(produtoVO);
+	}
+
+	@Override
+	public List<ProdutoVO> listarServicos(ProdutoVO produtoVO) throws BOException {
+		IProdutoBO produto = new ProdutoBO();
+		return produto.listarServicos(produtoVO);
+	}
+
+	@Override
+	public void salvar(ProdutoVO produtoVO) throws BOValidationException, BOException {
+		IProdutoBO produto = new ProdutoBO();
+		produto.salvar(produtoVO);
+		
+	}
+
+	@Override
+	public void excluir(ProdutoVO produtoVO) throws BOValidationException, BOException {
+		IProdutoBO produto = new ProdutoBO();
+		produto.excluir(produtoVO);
 	}
 
 	

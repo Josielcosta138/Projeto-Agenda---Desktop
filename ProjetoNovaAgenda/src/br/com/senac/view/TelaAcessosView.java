@@ -39,6 +39,8 @@ public class TelaAcessosView extends JFrame {
 	private TelaAgendamentos telaAgendamentos;
 	private Disponibilidade disponibilidade;
 	private TelaServicos telaServicos; 
+	private TelaProdutos telaProdutos;
+	
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -66,7 +68,7 @@ public class TelaAcessosView extends JFrame {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(TelaAcessosView.class.getResource("/br/com/senac/view/img/LogoSTYLEMANAGER black.png")));
 		setTitle("TELA DE INCIO");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 546, 414);
+		setBounds(100, 100, 546, 424);
 		contentPane = new JPanel();
 		
 		contentPane.setBackground(new Color(201, 201, 201));
@@ -120,7 +122,7 @@ public class TelaAcessosView extends JFrame {
 		JPanel panel = new JPanel();
 		panel.setBorder(new LineBorder(new Color(128, 128, 128)));
 		panel.setBackground(new Color(192, 192, 192));
-		panel.setBounds(45, 44, 188, 301);
+		panel.setBounds(45, 44, 188, 333);
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
@@ -233,6 +235,23 @@ public class TelaAcessosView extends JFrame {
 		btnServicos.setBackground(new Color(214, 214, 214));
 		btnServicos.setBounds(10, 249, 168, 33);
 		panel.add(btnServicos);
+		
+		JButton btnProduto = new JButton("Produtos");
+		btnProduto.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (telaProdutos == null) {
+					telaProdutos = new TelaProdutos();
+				}
+				telaProdutos.setVisible(true);
+				dispose();
+				System.out.println("Clicou em Produtos");
+			}
+		});
+		btnProduto.setIcon(new ImageIcon(TelaAcessosView.class.getResource("/br/com/senac/view/img/product.png")));
+		btnProduto.setFont(new Font("Tahoma", Font.BOLD, 13));
+		btnProduto.setBackground(new Color(214, 214, 214));
+		btnProduto.setBounds(10, 293, 168, 33);
+		panel.add(btnProduto);
 		
 		JLabel lblMenuRapido = new JLabel("Menu de acesso rápido");
 		lblMenuRapido.setForeground(new Color(128, 128, 128));
