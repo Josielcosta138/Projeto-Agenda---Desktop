@@ -220,6 +220,7 @@ public class TelaServicos extends JFrame {
 		tcm.getColumn(3).setPreferredWidth(200);
 
 		scrollPane.setViewportView(table);
+		
 
 		JLabel lblNomePesq = new JLabel("Nome:");
 		lblNomePesq.setForeground(new Color(96, 96, 96));
@@ -281,6 +282,8 @@ public class TelaServicos extends JFrame {
 		lblNewLabel_3.setIcon(new ImageIcon(TelaServicos.class.getResource("/br/com/senac/view/img/relogioMoney.png")));
 		lblNewLabel_3.setBounds(116, 210, 33, 32);
 		contentPane.add(lblNewLabel_3);
+		
+		listarTiposDeServicos();
 
 	}
 
