@@ -65,7 +65,7 @@ public class TelaAcessosView extends JFrame {
 			}
 		});
 		setForeground(new Color(0, 0, 0));
-		setIconImage(Toolkit.getDefaultToolkit().getImage(TelaAcessosView.class.getResource("/br/com/senac/view/img/LogoSTYLEMANAGER black.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(TelaAcessosView.class.getResource("/br/com/senac/view/img/business.png")));
 		setTitle("TELA DE INCIO");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 546, 424);
@@ -240,7 +240,11 @@ public class TelaAcessosView extends JFrame {
 		btnProduto.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (telaProdutos == null) {
-					telaProdutos = new TelaProdutos();
+					try {
+						telaProdutos = new TelaProdutos();
+					} catch (ParseException e1) {
+						e1.printStackTrace();
+					}
 				}
 				telaProdutos.setVisible(true);
 				dispose();

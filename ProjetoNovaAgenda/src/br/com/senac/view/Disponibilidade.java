@@ -76,7 +76,7 @@ public class Disponibilidade extends JFrame {
 	 * Create the frame.
 	 */
 	public Disponibilidade() {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(Disponibilidade.class.getResource("/br/com/senac/view/img/LogoSTYLEMANAGER black.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Disponibilidade.class.getResource("/br/com/senac/view/img/business.png")));
 		setTitle("DISPONIBILIDADE");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 791, 373);

@@ -7,18 +7,51 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.Toolkit;
 import javax.swing.border.LineBorder;
+import javax.swing.text.MaskFormatter;
+
+import br.com.senac.exception.BOValidationException;
+import br.com.senac.service.Service;
+import br.com.senac.vo.ProdutoVO;
+import br.com.senac.vo.StatusAgendamento;
+import br.com.senac.vo.StatusServico;
+import br.com.senac.vo.TipoServicoVO;
+
 import java.awt.Color;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.ImageIcon;
+import javax.swing.JFormattedTextField;
+import javax.swing.JRadioButton;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class TelaProdutos extends JFrame {
 
 	private JPanel contentPane;
-
-	/**
-	 * Launch the application.
-	 */
+	private JFormattedTextField ftfQuantidade;
+	private JFormattedTextField ftfPreco;
+	private JFormattedTextField ftfIdentificacao;
+	private JFormattedTextField ftfNome;
+	private JFormattedTextField ftfMarca;
+	private JFormattedTextField ftfDescricao;
+	private JFormattedTextField ftfValidade;
+	private JFormattedTextField ftfCodigo;
+	private JRadioButton RadioButtonSim;
+	private JRadioButton RadioButtonNao;
+	private String statusVenda = null;
+	
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -34,22 +67,152 @@ public class TelaProdutos extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * @throws ParseException 
 	 */
-	public TelaProdutos() {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(TelaProdutos.class.getResource("/br/com/senac/view/img/LogoSTYLEMANAGER black.png")));
+	public TelaProdutos() throws ParseException {
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				CadastroPessoaView cadastroPessoaView = new CadastroPessoaView();
+				cadastroPessoaView.setVisible(true);
+				setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			}
+		});
+		setIconImage(Toolkit.getDefaultToolkit().getImage(TelaProdutos.class.getResource("/br/com/senac/view/img/business.png")));
 		setTitle("PRODUTOS");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 869, 489);
+		setBounds(100, 100, 661, 769);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		setLocationRelativeTo(null);
 		
 		JPanel panel = new JPanel();
 		panel.setBorder(new LineBorder(new Color(160, 160, 160)));
-		panel.setBounds(10, 48, 370, 174);
+		panel.setBounds(10, 48, 625, 270);
 		contentPane.add(panel);
+		panel.setLayout(null);
+		
+		JLabel lblIdentificacao = new JLabel("Identificação:");
+		lblIdentificacao.setForeground(new Color(95, 95, 95));
+		lblIdentificacao.setBounds(10, 28, 81, 14);
+		panel.add(lblIdentificacao);
+		
+		ftfIdentificacao = new JFormattedTextField();
+		ftfIdentificacao.setBounds(91, 25, 243, 20);
+		panel.add(ftfIdentificacao);
+		
+		JLabel lblNome = new JLabel("Nome:");
+		lblNome.setForeground(new Color(95, 95, 95));
+		lblNome.setBounds(10, 66, 71, 14);
+		panel.add(lblNome);
+		
+		ftfNome = new JFormattedTextField();
+		ftfNome.setBounds(91, 63, 243, 20);
+		panel.add(ftfNome);
+		
+		JLabel lblMarca = new JLabel("Marca:");
+		lblMarca.setForeground(new Color(95, 95, 95));
+		lblMarca.setBounds(10, 102, 71, 14);
+		panel.add(lblMarca);
+		
+		ftfMarca = new JFormattedTextField();
+		ftfMarca.setBounds(91, 99, 243, 20);
+		panel.add(ftfMarca);
+		
+		JLabel lblDescricao = new JLabel("Descrição:");
+		lblDescricao.setForeground(new Color(95, 95, 95));
+		lblDescricao.setBounds(10, 142, 71, 14);
+		panel.add(lblDescricao);
+		
+		ftfDescricao = new JFormattedTextField();
+		ftfDescricao.setBounds(91, 139, 243, 20);
+		panel.add(ftfDescricao);
+		
+		JLabel lblQuantidade = new JLabel("Quantidade:");
+		lblQuantidade.setForeground(new Color(95, 95, 95));
+		lblQuantidade.setBounds(369, 28, 71, 14);
+		panel.add(lblQuantidade);
+		
+		
+		
+		ftfQuantidade = new JFormattedTextField(); 
+		ftfQuantidade.setBounds(437, 25, 176, 20);
+		panel.add(ftfQuantidade);
+		
+		JLabel lblPreco = new JLabel("Preço R$:");
+		lblPreco.setForeground(new Color(95, 95, 95));
+		lblPreco.setBounds(369, 66, 55, 14);
+		panel.add(lblPreco);
+		
+		
+		MaskFormatter maskPreco = new MaskFormatter("##.##");
+		maskPreco.setValidCharacters("0123456789");
+		ftfPreco = new JFormattedTextField(maskPreco); 
+		ftfPreco.setBounds(437, 63, 176, 20);
+		panel.add(ftfPreco);
+		
+		
+		JLabel lblDataValidade = new JLabel("Data de val:");
+		lblDataValidade.setForeground(new Color(95, 95, 95));
+		lblDataValidade.setBounds(369, 105, 65, 14);
+		panel.add(lblDataValidade);
+		
+		MaskFormatter maskDataVal = new MaskFormatter("##/##/####");
+		ftfValidade = new JFormattedTextField(maskDataVal);
+		ftfValidade.setBounds(437, 99, 176, 20);
+		panel.add(ftfValidade);
+		
+		JLabel lblVenda = new JLabel("Venda:");
+		lblVenda.setForeground(new Color(95, 95, 95));
+		lblVenda.setBounds(369, 142, 43, 14);
+		panel.add(lblVenda);
+		
+		RadioButtonSim = new JRadioButton("Sim");
+		RadioButtonSim.setForeground(new Color(95, 95, 95));
+		RadioButtonSim.setBounds(437, 138, 48, 23);
+		panel.add(RadioButtonSim);
+		
+		RadioButtonNao = new JRadioButton("Não");
+		RadioButtonNao.setForeground(new Color(95, 95, 95));
+		RadioButtonNao.setBounds(487, 138, 55, 23);
+		panel.add(RadioButtonNao);
+		
+		JButton btnSalvar = new JButton("Salvar");
+		btnSalvar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				salvarProduto();
+			}
+		});
+		btnSalvar.setIcon(new ImageIcon(TelaProdutos.class.getResource("/br/com/senac/view/img/salvar.png")));
+		btnSalvar.setForeground(new Color(95, 95, 95));
+		btnSalvar.setBounds(10, 221, 101, 23);
+		panel.add(btnSalvar);
+		
+		JButton btnCancelar = new JButton("Cancelar");
+		btnCancelar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cancelar();
+			}
+		});
+		
+		btnCancelar.setIcon(new ImageIcon(TelaProdutos.class.getResource("/br/com/senac/view/img/cancelar22.png")));
+		btnCancelar.setForeground(new Color(95, 95, 95));
+		btnCancelar.setBounds(487, 221, 114, 23);
+		panel.add(btnCancelar);
+		
+		JLabel lblCodigo = new JLabel("Cód:");
+		lblCodigo.setForeground(new Color(95, 95, 95));
+		lblCodigo.setBounds(10, 175, 71, 14);
+		panel.add(lblCodigo);
+		
+		ftfCodigo = new JFormattedTextField();
+		ftfCodigo.setEnabled(false);
+		ftfCodigo.setEditable(false);
+		ftfCodigo.setBounds(91, 172, 65, 20);
+		panel.add(ftfCodigo);
 		
 		JLabel lblCadastroProduto = new JLabel("Cadastro de produtos");
 		lblCadastroProduto.setForeground(new Color(115, 115, 115));
@@ -64,13 +227,13 @@ public class TelaProdutos extends JFrame {
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new LineBorder(new Color(160, 160, 160)));
-		panel_1.setBounds(448, 48, 370, 174);
+		panel_1.setBounds(10, 489, 625, 174);
 		contentPane.add(panel_1);
 		
-		JLabel lblEstoque = new JLabel("Estoque");
+		JLabel lblEstoque = new JLabel("Estoque de produtos");
 		lblEstoque.setForeground(new Color(115, 115, 115));
 		lblEstoque.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblEstoque.setBounds(450, 24, 64, 14);
+		lblEstoque.setBounds(10, 393, 141, 14);
 		contentPane.add(lblEstoque);
 		
 		JLabel lblNewLabel = new JLabel("New label");
@@ -79,7 +242,168 @@ public class TelaProdutos extends JFrame {
 		
 		JLabel lblNewLabel_2 = new JLabel("");
 		lblNewLabel_2.setIcon(new ImageIcon(TelaProdutos.class.getResource("/br/com/senac/view/img/storage.png")));
-		lblNewLabel_2.setBounds(504, 11, 33, 29);
+		lblNewLabel_2.setBounds(147, 378, 33, 29);
 		contentPane.add(lblNewLabel_2);
+		
+		JPanel panel_2 = new JPanel();
+		panel_2.setBorder(new LineBorder(new Color(95, 95, 95)));
+		panel_2.setBounds(10, 415, 625, 2);
+		contentPane.add(panel_2);
+		
+		JButton btnVoltar = new JButton("Voltar");
+		btnVoltar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CadastroPessoaView cadastroPessoaView = new CadastroPessoaView();
+				cadastroPessoaView.setVisible(true);
+				setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				dispose();
+			}
+		});
+		btnVoltar.setIcon(new ImageIcon(TelaProdutos.class.getResource("/br/com/senac/view/img/2303132_arrow_back_direction_left_navigation_icon.png")));
+		btnVoltar.setForeground(new Color(95, 95, 95));
+		btnVoltar.setBounds(534, 687, 101, 23);
+		contentPane.add(btnVoltar);
+		
+		JLabel lblNome_Pesquisa = new JLabel("Nome:");
+		lblNome_Pesquisa.setForeground(new Color(95, 95, 95));
+		lblNome_Pesquisa.setBounds(10, 447, 43, 14);
+		contentPane.add(lblNome_Pesquisa);
+		
+		JFormattedTextField ftfNome_Pesquisa = new JFormattedTextField();
+		ftfNome_Pesquisa.setBounds(51, 444, 176, 20);
+		contentPane.add(ftfNome_Pesquisa);
+		
+		JLabel lblPesquisa = new JLabel("Pesquisa:");
+		lblPesquisa.setForeground(new Color(95, 95, 95));
+		lblPesquisa.setBounds(252, 447, 69, 14);
+		contentPane.add(lblPesquisa);
+		
+		JFormattedTextField ftfIdentificacao_Pesquisa = new JFormattedTextField();
+		ftfIdentificacao_Pesquisa.setBounds(313, 444, 176, 20);
+		contentPane.add(ftfIdentificacao_Pesquisa);
+		
+		JButton btnPesquisar = new JButton("Pesquisar");
+		btnPesquisar.setIcon(new ImageIcon(TelaProdutos.class.getResource("/br/com/senac/view/img/pesquisar.png")));
+		btnPesquisar.setForeground(new Color(95, 95, 95));
+		btnPesquisar.setBounds(504, 443, 123, 23);
+		contentPane.add(btnPesquisar);
+		
+		JButton btnEditar = new JButton("Editar");
+		btnEditar.setBounds(10, 687, 101, 23);
+		contentPane.add(btnEditar);
+		btnEditar.setIcon(new ImageIcon(TelaProdutos.class.getResource("/br/com/senac/view/img/editar.png")));
+		btnEditar.setForeground(new Color(95, 95, 95));
+		
+		JButton btnExcluir = new JButton("Excluir");
+		btnExcluir.setBounds(232, 687, 101, 23);
+		contentPane.add(btnExcluir);
+		btnExcluir.setIcon(new ImageIcon(TelaProdutos.class.getResource("/br/com/senac/view/img/remove.png")));
+		btnExcluir.setForeground(new Color(95, 95, 95));
+		
+		JButton btnSalvar_2 = new JButton("Salvar");
+		btnSalvar_2.setIcon(new ImageIcon(TelaProdutos.class.getResource("/br/com/senac/view/img/salvar.png")));
+		btnSalvar_2.setForeground(new Color(95, 95, 95));
+		btnSalvar_2.setBounds(121, 687, 101, 23);
+		contentPane.add(btnSalvar_2);
+	}
+
+	protected void salvarProduto() {
+		
+		System.out.println("*****************Iniciando Salvar produto*****************");
+
+		try {
+
+			Service service = new Service();
+			ProdutoVO produtoVO = new ProdutoVO();
+
+			String codigo = ftfCodigo.getText().trim();
+			String preco = ftfPreco.getText().trim();
+			String identificacao = ftfIdentificacao.getText().trim();
+			String marca = ftfMarca.getText().trim();
+			String descricao = ftfDescricao.getText().trim();
+			String nome = ftfNome.getText().trim();
+			String quantidade = ftfQuantidade.getText().trim();
+			String dataVal = ftfValidade.getText().trim();
+
+			if (codigo != null && codigo.length() > 0) {
+				produtoVO.setId(new BigInteger(codigo));
+				produtoVO = service.buscarProdutoPorId(produtoVO);
+			}
+			
+			
+			//CRIAR STATUSVENDA NA MODEL E BANCO
+	        if (RadioButtonSim.isSelected()) {
+	            statusVenda = "Sim";
+	            //produtoVO.setStatusVenda(statusVenda);
+	           
+	        } else if (RadioButtonNao.isSelected()) {
+	            statusVenda = "Não";
+	            //produtoVO.setStatusVenda(statusVenda);
+	        }
+
+		
+			String pattern = "dd/MM/yyyy";
+			DateFormat dateFormat = new SimpleDateFormat(pattern);
+
+			try {
+				if (!dataVal.isEmpty()) {
+					Date date = dateFormat.parse(dataVal);
+					produtoVO.setDataValidade(date);
+				} else {
+					JOptionPane.showMessageDialog(this, "Data de nascimento vazia!", "Erro", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+
+			} catch (ParseException e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(this, "Formato de data inválido! Formato correto dd/MM/yyyy HH:mm:ss",
+						"Erro", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+ 
+			
+
+			if (preco != null) {
+				preco = preco.replace(",", ".");
+				produtoVO.setPreco(new BigDecimal(preco));
+			}
+
+			produtoVO.setNome(nome);
+			produtoVO.setDescricao(descricao);
+			int qntd = Integer.parseInt(quantidade); 
+			produtoVO.setQuantidadeEstoque(qntd);
+			produtoVO.setMarca(marca);
+			BigInteger ident = new BigInteger(identificacao);
+			produtoVO.setIndentificacao(ident); 
+			
+			service.salvar(produtoVO);
+
+			JOptionPane.showMessageDialog(null, "Cadastro salvo com sucesso!");
+
+		
+		} catch (BOValidationException b) {
+			b.printStackTrace();
+			JOptionPane.showMessageDialog(this, b.getMessage(), "Mensagem de aviso", JOptionPane.WARNING_MESSAGE);
+
+		} catch (Exception b) {
+			b.printStackTrace();
+			JOptionPane.showMessageDialog(this, "Ocorreu um erro ao realizar a operação!", "Erro",
+					JOptionPane.ERROR_MESSAGE);
+		} finally {
+			System.out.println("Finally");
+		}
+	}
+	
+
+	
+	protected void cancelar() {
+	
+			ftfPreco.setValue(null);
+			ftfIdentificacao.setValue("");
+			ftfNome.setValue("");
+			ftfMarca.setValue("");
+			ftfDescricao.setValue("");
+			ftfValidade.setValue(null);
+			ftfQuantidade.setValue("");
 	}
 }
