@@ -7,8 +7,10 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.Toolkit;
 import javax.swing.border.LineBorder;
+import javax.swing.table.TableColumnModel;
 import javax.swing.text.MaskFormatter;
 
+import br.com.senac.dao.HibernateUtil;
 import br.com.senac.exception.BOValidationException;
 import br.com.senac.service.Service;
 import br.com.senac.vo.ProdutoVO;
@@ -21,6 +23,12 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.Font;
+
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import javax.swing.ImageIcon;
 import javax.swing.JFormattedTextField;
 import javax.swing.JRadioButton;
@@ -35,6 +43,11 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+
+import javax.swing.JTable;
+import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 
 public class TelaProdutos extends JFrame {
 
@@ -50,6 +63,9 @@ public class TelaProdutos extends JFrame {
 	private JRadioButton RadioButtonSim;
 	private JRadioButton RadioButtonNao;
 	private String statusVenda = null;
+	private JTable table;
+	private TableModel tableModel;
+	private  List<ProdutoVO> listagemDeProdutos;
 	
 	
 	public static void main(String[] args) {
@@ -225,11 +241,6 @@ public class TelaProdutos extends JFrame {
 		lblNewLabel_1.setBounds(147, 11, 33, 29);
 		contentPane.add(lblNewLabel_1);
 		
-		JPanel panel_1 = new JPanel();
-		panel_1.setBorder(new LineBorder(new Color(160, 160, 160)));
-		panel_1.setBounds(10, 489, 625, 174);
-		contentPane.add(panel_1);
-		
 		JLabel lblEstoque = new JLabel("Estoque de produtos");
 		lblEstoque.setForeground(new Color(115, 115, 115));
 		lblEstoque.setFont(new Font("Tahoma", Font.BOLD, 12));
@@ -283,6 +294,11 @@ public class TelaProdutos extends JFrame {
 		contentPane.add(ftfIdentificacao_Pesquisa);
 		
 		JButton btnPesquisar = new JButton("Pesquisar");
+		btnPesquisar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				listarProdutos();
+			}
+		});
 		btnPesquisar.setIcon(new ImageIcon(TelaProdutos.class.getResource("/br/com/senac/view/img/pesquisar.png")));
 		btnPesquisar.setForeground(new Color(95, 95, 95));
 		btnPesquisar.setBounds(504, 443, 123, 23);
@@ -305,6 +321,97 @@ public class TelaProdutos extends JFrame {
 		btnSalvar_2.setForeground(new Color(95, 95, 95));
 		btnSalvar_2.setBounds(121, 687, 101, 23);
 		contentPane.add(btnSalvar_2);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		scrollPane.setBounds(10, 482, 625, 190);
+		contentPane.add(scrollPane);
+		
+		tableModel = new TableModel();
+		tableModel.addColumn("Código"); 
+		tableModel.addColumn("Identitifacação");
+		tableModel.addColumn("Nome");
+		tableModel.addColumn("Descrição");
+		tableModel.addColumn("Preço");
+		tableModel.addColumn("Quantidade");
+		tableModel.addColumn("Data validade");
+		tableModel.addColumn("Venda-Uso Consumo");
+
+		table = new JTable(tableModel);
+		table.setDefaultRenderer(Object.class, new MonthColorRenderer());
+		table.setAutoscrolls(true);
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
+		TableColumnModel tcm = table.getColumnModel();
+		tcm.getColumn(0).setPreferredWidth(80);
+		tcm.getColumn(1).setPreferredWidth(100);
+		tcm.getColumn(2).setPreferredWidth(120);
+		tcm.getColumn(3).setPreferredWidth(120);
+		tcm.getColumn(4).setPreferredWidth(80);
+		tcm.getColumn(5).setPreferredWidth(80);
+		tcm.getColumn(6).setPreferredWidth(100);
+		tcm.getColumn(7).setPreferredWidth(120);
+	
+		scrollPane.setViewportView(table);
+	}
+
+	protected void listarProdutos() {
+		
+		try {
+			try {
+				System.out.println("******* Iniciando liestagem de produtos *******");
+				EntityManager em = HibernateUtil.getEntityManager();
+
+				CriteriaBuilder cb = em.getCriteriaBuilder();
+				CriteriaQuery<ProdutoVO> criteria = cb.createQuery(ProdutoVO.class);
+
+				// Clausula from
+				Root<ProdutoVO> produtosFrom = criteria.from(ProdutoVO.class);
+				criteria.select(produtosFrom);
+		
+				
+				TypedQuery<ProdutoVO> query = em.createQuery(criteria);
+				listagemDeProdutos = query.getResultList();
+
+				tableModel.clearTable(); 
+
+				for (ProdutoVO produtossVO : listagemDeProdutos) {
+					if (produtossVO.getId() != null) {
+						
+						RowData rowData = new RowData();
+						
+						rowData.getValues().put(0, produtossVO.getId().toString());
+						rowData.getValues().put(1, produtossVO.getIndentificacao());
+						rowData.getValues().put(2, produtossVO.getNome());
+						rowData.getValues().put(3, produtossVO.getDescricao());
+						rowData.getValues().put(4, produtossVO.getPreco().toString() + " R$");
+						rowData.getValues().put(5, produtossVO.getQuantidadeEstoque());
+						rowData.getValues().put(6, produtossVO.getDataValidade());
+						rowData.getValues().put(7, "Teste");
+						
+
+						rowData.setElement(produtossVO);
+						tableModel.addRow(rowData);
+					} else {
+						JOptionPane.showMessageDialog(null, "Sem Agendamentos no momento!", null,
+								JOptionPane.WARNING_MESSAGE);
+					}
+				}
+
+			} catch (Exception e) {
+				throw new BOValidationException("Código: erro de validação" + " valor inválido");
+			}
+
+		} catch (BOValidationException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(this, e.getMessage(), "Erro de validação", JOptionPane.WARNING_MESSAGE);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, e.getMessage(), "Erro de sistema", JOptionPane.ERROR_MESSAGE);
+		}
+		
+		
+		
 	}
 
 	protected void salvarProduto() {
