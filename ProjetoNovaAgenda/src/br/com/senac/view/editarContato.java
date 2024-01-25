@@ -62,7 +62,7 @@ public class editarContato extends JFrame {
 	}
 
 	public editarContato(ContatoVO contato) throws ParseException {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(editarContato.class.getResource("/br/com/senac/view/img/LogoSTYLEMANAGER black.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(editarContato.class.getResource("/br/com/senac/view/img/business.png")));
 		contatoAtual = new ContelVO();
 		
 		this.contato = contato;

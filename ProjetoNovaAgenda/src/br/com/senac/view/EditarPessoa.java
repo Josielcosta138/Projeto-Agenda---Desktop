@@ -50,7 +50,7 @@ public class EditarPessoa extends JFrame {
 	}
 
 	public EditarPessoa() throws ParseException {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(EditarPessoa.class.getResource("/br/com/senac/view/img/LogoSTYLEMANAGER black.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(EditarPessoa.class.getResource("/br/com/senac/view/img/business.png")));
 		contatoAtual = new ContatoVO();
 
 		setTitle("Cliente");

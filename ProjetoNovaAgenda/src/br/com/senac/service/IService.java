@@ -68,9 +68,9 @@ public interface IService {
 	
 // TIPOS DE PRODUTOS
 	
-	public abstract ProdutoVO buscarTipoServicoPorId(ProdutoVO produtoVO) throws BOException;
+	public abstract ProdutoVO buscarProdutoPorId(ProdutoVO produtoVO) throws BOException;
 
-	public abstract List<ProdutoVO> listarServicos(ProdutoVO produtoVO) throws BOException;
+	public abstract List<ProdutoVO> listarProduto(ProdutoVO produtoVO) throws BOException;
 
 	public abstract void salvar(ProdutoVO produtoVO) throws BOValidationException, BOException;
 

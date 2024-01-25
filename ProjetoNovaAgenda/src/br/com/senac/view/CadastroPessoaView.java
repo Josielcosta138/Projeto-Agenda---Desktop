@@ -90,7 +90,7 @@ public class CadastroPessoaView extends JFrame {
 				setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			}
 		});
-		setIconImage(Toolkit.getDefaultToolkit().getImage(CadastroPessoaView.class.getResource("/br/com/senac/view/img/LogoSTYLEMANAGER black.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(CadastroPessoaView.class.getResource("/br/com/senac/view/img/business.png")));
 
 		table = new JTable();
 		tableModel = new TableModel();
@@ -428,7 +428,12 @@ public class CadastroPessoaView extends JFrame {
 		JMenuItem mntmNewMenuItem_3 = new JMenuItem("Produtos");
 		mntmNewMenuItem_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				produtos();
+				try {
+					produtos();
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 		mntmNewMenuItem_3.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/product.png")));
@@ -572,7 +577,6 @@ public class CadastroPessoaView extends JFrame {
 					try {
 						telaServicos = new TelaServicos();
 					} catch (ParseException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 				}
@@ -588,7 +592,11 @@ public class CadastroPessoaView extends JFrame {
 		JButton btnProtudo2 = new JButton("");
 		btnProtudo2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				produtos();
+				try {
+					produtos();
+				} catch (ParseException e1) {
+					e1.printStackTrace();
+				}
 			}
 		});
 		btnProtudo2.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/product.png")));
@@ -652,7 +660,7 @@ public class CadastroPessoaView extends JFrame {
 		
 	}
 
-	protected void produtos() {
+	protected void produtos() throws ParseException {
 		if (telaProdutos == null) {
 			telaProdutos = new TelaProdutos();
 		}

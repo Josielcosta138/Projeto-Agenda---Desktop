@@ -162,13 +162,13 @@ public class Service implements IService {
 	// PRODUTO
 
 	@Override
-	public ProdutoVO buscarTipoServicoPorId(ProdutoVO produtoVO) throws BOException {
+	public ProdutoVO buscarProdutoPorId(ProdutoVO produtoVO) throws BOException {
 		IProdutoBO produto = new ProdutoBO();
 		return produto.buscarTipoServicoPorId(produtoVO);
 	}
 
 	@Override
-	public List<ProdutoVO> listarServicos(ProdutoVO produtoVO) throws BOException {
+	public List<ProdutoVO> listarProduto(ProdutoVO produtoVO) throws BOException {
 		IProdutoBO produto = new ProdutoBO();
 		return produto.listarServicos(produtoVO);
 	}

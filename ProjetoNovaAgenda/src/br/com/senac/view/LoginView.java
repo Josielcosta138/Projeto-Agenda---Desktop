@@ -38,7 +38,7 @@ public class LoginView extends JFrame {
 	private JLabel lblNewLabel_4;
 	
 	public LoginView() {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(LoginView.class.getResource("/br/com/senac/view/img/stLOG.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(LoginView.class.getResource("/br/com/senac/view/img/business.png")));
 		setTitle("STYLE MANAGER SHOP");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 614, 386);

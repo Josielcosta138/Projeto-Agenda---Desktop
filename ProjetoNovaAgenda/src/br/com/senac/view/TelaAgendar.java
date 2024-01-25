@@ -118,8 +118,7 @@ public class TelaAgendar extends JFrame {
 				setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			}
 		});
-		setIconImage(Toolkit.getDefaultToolkit()
-				.getImage(TelaAgendar.class.getResource("/br/com/senac/view/img/LogoSTYLEMANAGER black.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(TelaAgendar.class.getResource("/br/com/senac/view/img/business.png")));
 		setTitle("AGENDAMENTO");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1055, 675);
