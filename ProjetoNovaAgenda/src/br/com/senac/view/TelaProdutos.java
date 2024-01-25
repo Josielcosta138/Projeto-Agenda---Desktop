@@ -81,6 +81,7 @@ public class TelaProdutos extends JFrame {
 		});
 	}
 
+	
 	/**
 	 * Create the frame.
 	 * @throws ParseException 
@@ -94,6 +95,7 @@ public class TelaProdutos extends JFrame {
 				setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			}
 		});
+		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(TelaProdutos.class.getResource("/br/com/senac/view/img/business.png")));
 		setTitle("PRODUTOS");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -299,6 +301,7 @@ public class TelaProdutos extends JFrame {
 				listarProdutos();
 			}
 		});
+		
 		btnPesquisar.setIcon(new ImageIcon(TelaProdutos.class.getResource("/br/com/senac/view/img/pesquisar.png")));
 		btnPesquisar.setForeground(new Color(95, 95, 95));
 		btnPesquisar.setBounds(504, 443, 123, 23);
@@ -354,8 +357,10 @@ public class TelaProdutos extends JFrame {
 		tcm.getColumn(7).setPreferredWidth(120);
 	
 		scrollPane.setViewportView(table);
+		listarProdutos();
 	}
 
+	
 	protected void listarProdutos() {
 		
 		try {

@@ -638,6 +638,8 @@ public class CadastroPessoaView extends JFrame {
 		panel_2.setBounds(59, 37, 1, 481);
 		contentPane.add(panel_2);
 		
+		pesquisar();
+		
 		
 	}
 

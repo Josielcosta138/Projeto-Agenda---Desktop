@@ -172,6 +172,8 @@ public class Disponibilidade extends JFrame {
 		ftfMesAtual.setEditable(false);
 		contentPane.add(ftfMesAtual);
 		ftfMesAtual.setText(sdfMes.format(new Date()));
+		
+		listarDisponibilidade();
 	}
 
 	protected void listarDisponibilidade() {

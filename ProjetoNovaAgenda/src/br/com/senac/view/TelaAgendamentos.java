@@ -234,6 +234,7 @@ public class TelaAgendamentos extends JFrame {
 				.setIcon(new ImageIcon(TelaAgendamentos.class.getResource("/br/com/senac/view/img/AgendaAberta.png")));
 		lblAgendaAberta.setBounds(1078, 70, 206, 235);
 		contentPane.add(lblAgendaAberta);
+		
 
 		JButton btnNewButton_1 = new JButton("Excluir");
 		btnNewButton_1.addActionListener(new ActionListener() {
@@ -312,6 +313,8 @@ public class TelaAgendamentos extends JFrame {
 		btnEditarAgendamento.setIcon(new ImageIcon(TelaAgendamentos.class.getResource("/br/com/senac/view/img/editar.png")));
 		btnEditarAgendamento.setBounds(283, 318, 113, 23);
 		contentPane.add(btnEditarAgendamento);
+		
+		listarAgendamentos();
 
 	}
 	
