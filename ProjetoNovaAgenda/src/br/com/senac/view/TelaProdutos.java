@@ -16,6 +16,7 @@ import br.com.senac.service.Service;
 import br.com.senac.vo.ProdutoVO;
 import br.com.senac.vo.StatusAgendamento;
 import br.com.senac.vo.StatusServico;
+import br.com.senac.vo.StatusVenda;
 import br.com.senac.vo.TipoServicoVO;
 
 import java.awt.Color;
@@ -118,8 +119,10 @@ public class TelaProdutos extends JFrame {
 		lblIdentificacao.setBounds(10, 28, 81, 14);
 		panel.add(lblIdentificacao);
 		
-		ftfIdentificacao = new JFormattedTextField();
+		MaskFormatter maskNum = new MaskFormatter("#########");
+		ftfIdentificacao = new JFormattedTextField(maskNum);
 		ftfIdentificacao.setBounds(91, 25, 243, 20);
+		ftfIdentificacao.setFocusLostBehavior(JFormattedTextField.PERSIST);
 		panel.add(ftfIdentificacao);
 		
 		JLabel lblNome = new JLabel("Nome:");
@@ -155,9 +158,10 @@ public class TelaProdutos extends JFrame {
 		panel.add(lblQuantidade);
 		
 		
-		
-		ftfQuantidade = new JFormattedTextField(); 
+		MaskFormatter maskQnt = new MaskFormatter("#########");
+		ftfQuantidade = new JFormattedTextField(maskQnt); 
 		ftfQuantidade.setBounds(437, 25, 176, 20);
+		ftfQuantidade.setFocusLostBehavior(JFormattedTextField.PERSIST);
 		panel.add(ftfQuantidade);
 		
 		JLabel lblPreco = new JLabel("Preço R$:");
@@ -286,13 +290,13 @@ public class TelaProdutos extends JFrame {
 		ftfNome_Pesquisa.setBounds(51, 444, 176, 20);
 		contentPane.add(ftfNome_Pesquisa);
 		
-		JLabel lblPesquisa = new JLabel("Pesquisa:");
-		lblPesquisa.setForeground(new Color(95, 95, 95));
-		lblPesquisa.setBounds(252, 447, 69, 14);
-		contentPane.add(lblPesquisa);
+		JLabel lblidentificacao = new JLabel("Identificação:");
+		lblidentificacao.setForeground(new Color(95, 95, 95));
+		lblidentificacao.setBounds(247, 447, 86, 14);
+		contentPane.add(lblidentificacao);
 		
 		JFormattedTextField ftfIdentificacao_Pesquisa = new JFormattedTextField();
-		ftfIdentificacao_Pesquisa.setBounds(313, 444, 176, 20);
+		ftfIdentificacao_Pesquisa.setBounds(337, 444, 152, 20);
 		contentPane.add(ftfIdentificacao_Pesquisa);
 		
 		JButton btnPesquisar = new JButton("Pesquisar");
@@ -339,7 +343,7 @@ public class TelaProdutos extends JFrame {
 		tableModel.addColumn("Preço");
 		tableModel.addColumn("Quantidade");
 		tableModel.addColumn("Data validade");
-		tableModel.addColumn("Venda-Uso Consumo");
+		tableModel.addColumn("Venda");
 
 		table = new JTable(tableModel);
 		table.setDefaultRenderer(Object.class, new MonthColorRenderer());
@@ -363,8 +367,18 @@ public class TelaProdutos extends JFrame {
 	
 	protected void listarProdutos() {
 		
+		
+		String nome = null;
+		
 		try {
 			try {
+				
+				if (this.ftfNome.getText() != null && ftfNome.getText().trim().length() > 0) {
+					nome = ftfNome.getText().trim();
+				}
+				
+				
+				
 				System.out.println("******* Iniciando liestagem de produtos *******");
 				EntityManager em = HibernateUtil.getEntityManager();
 
@@ -374,7 +388,13 @@ public class TelaProdutos extends JFrame {
 				// Clausula from
 				Root<ProdutoVO> produtosFrom = criteria.from(ProdutoVO.class);
 				criteria.select(produtosFrom);
-		
+				
+				//CORRIGIR 
+				/*
+				if (nome != null) {
+					String searchTerm = "%" + nome.toLowerCase() + "%";
+					criteria.where(cb.like(cb.lower(produtosFrom.get("nome")), searchTerm));
+				} */
 				
 				TypedQuery<ProdutoVO> query = em.createQuery(criteria);
 				listagemDeProdutos = query.getResultList();
@@ -386,14 +406,15 @@ public class TelaProdutos extends JFrame {
 						
 						RowData rowData = new RowData();
 						
+						SimpleDateFormat sdfMes = new SimpleDateFormat("dd/MM/yyyy");
 						rowData.getValues().put(0, produtossVO.getId().toString());
 						rowData.getValues().put(1, produtossVO.getIndentificacao());
 						rowData.getValues().put(2, produtossVO.getNome());
 						rowData.getValues().put(3, produtossVO.getDescricao());
 						rowData.getValues().put(4, produtossVO.getPreco().toString() + " R$");
 						rowData.getValues().put(5, produtossVO.getQuantidadeEstoque());
-						rowData.getValues().put(6, produtossVO.getDataValidade());
-						rowData.getValues().put(7, "Teste");
+						rowData.getValues().put(6, sdfMes.format(produtossVO.getDataValidade()));
+						rowData.getValues().put(7, produtossVO.getStatusVenda());
 						
 
 						rowData.setElement(produtossVO);
@@ -436,6 +457,7 @@ public class TelaProdutos extends JFrame {
 			String nome = ftfNome.getText().trim();
 			String quantidade = ftfQuantidade.getText().trim();
 			String dataVal = ftfValidade.getText().trim();
+			
 
 			if (codigo != null && codigo.length() > 0) {
 				produtoVO.setId(new BigInteger(codigo));
@@ -445,12 +467,10 @@ public class TelaProdutos extends JFrame {
 			
 			//CRIAR STATUSVENDA NA MODEL E BANCO
 	        if (RadioButtonSim.isSelected()) {
-	            statusVenda = "Sim";
-	            //produtoVO.setStatusVenda(statusVenda);
+	            produtoVO.setStatusVenda(StatusVenda.SIM);
 	           
 	        } else if (RadioButtonNao.isSelected()) {
-	            statusVenda = "Não";
-	            //produtoVO.setStatusVenda(statusVenda);
+	        	 produtoVO.setStatusVenda(StatusVenda.NAO);
 	        }
 
 		
