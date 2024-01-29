@@ -16,21 +16,3 @@ public class TesteHibernate {
 }
 	
 
-	
-	
-	
-	
-
-	
-	 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-

@@ -10,6 +10,8 @@ import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -60,6 +62,11 @@ public class ProdutoVO implements Serializable{
 	@Temporal(TemporalType.TIMESTAMP)
     private Date dataValidade;
     
+    @Enumerated(EnumType.STRING)
+    private StatusVenda statusVenda;
+    
+    
+    
     
 
 	public ProdutoVO() {
@@ -67,7 +74,7 @@ public class ProdutoVO implements Serializable{
 	}
 
 	public ProdutoVO(BigInteger id, BigInteger indentificacao, String nome, String marca, String descricao,
-			BigDecimal preco, int quantidadeEstoque, Date dataValidade) {
+			BigDecimal preco, int quantidadeEstoque, Date dataValidade, StatusVenda statusVenda) {
 		super();
 		this.id = id;
 		this.indentificacao = indentificacao;
@@ -77,6 +84,7 @@ public class ProdutoVO implements Serializable{
 		this.preco = preco;
 		this.quantidadeEstoque = quantidadeEstoque;
 		this.dataValidade = dataValidade;
+		this.statusVenda = statusVenda;
 	}
 
 	public BigInteger getId() {
@@ -144,12 +152,23 @@ public class ProdutoVO implements Serializable{
 	public void setDataValidade(Date dataValidade) {
 		this.dataValidade = dataValidade;
 	}
+	
+	public StatusVenda getStatusVenda() {
+		return statusVenda;
+	}
+
+	public void setStatusVenda(StatusVenda statusVenda) {
+		this.statusVenda = statusVenda;
+	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(dataValidade, descricao, id, indentificacao, marca, nome, preco, quantidadeEstoque);
+		return Objects.hash(dataValidade, descricao, id, indentificacao, marca, nome, preco, quantidadeEstoque,
+				statusVenda);
 	}
 
+	
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -160,22 +179,19 @@ public class ProdutoVO implements Serializable{
 			return false;
 		ProdutoVO other = (ProdutoVO) obj;
 		return Objects.equals(dataValidade, other.dataValidade) && Objects.equals(descricao, other.descricao)
-				&& Objects.equals(id, other.id) && indentificacao == other.indentificacao
+				&& Objects.equals(id, other.id) && Objects.equals(indentificacao, other.indentificacao)
 				&& Objects.equals(marca, other.marca) && Objects.equals(nome, other.nome)
-				&& Objects.equals(preco, other.preco) && quantidadeEstoque == other.quantidadeEstoque;
+				&& Objects.equals(preco, other.preco) && quantidadeEstoque == other.quantidadeEstoque
+				&& statusVenda == other.statusVenda;
 	}
 
 	@Override
 	public String toString() {
-		return "ProdutoVO [id=" + id + ", indentificacao=" + indentificacao + ", nome=" + nome
-				+ ", marca=" + marca + ", descricao=" + descricao + ", preco=" + preco + ", quantidadeEstoque="
-				+ quantidadeEstoque + ", dataValidade=" + dataValidade + "]";
+		return "ProdutoVO [id=" + id + ", indentificacao=" + indentificacao + ", nome=" + nome + ", marca=" + marca
+				+ ", descricao=" + descricao + ", preco=" + preco + ", quantidadeEstoque=" + quantidadeEstoque
+				+ ", dataValidade=" + dataValidade + ", statusVenda=" + statusVenda + "]";
 	}
 	
 	
-	
-
-   
-    
 
 }
