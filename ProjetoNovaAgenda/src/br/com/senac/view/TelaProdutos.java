@@ -67,6 +67,8 @@ public class TelaProdutos extends JFrame {
 	private JTable table;
 	private TableModel tableModel;
 	private  List<ProdutoVO> listagemDeProdutos;
+	private JFormattedTextField ftfNome_Pesquisa;
+	private JFormattedTextField ftfIdentificacao_Pesquisa;
 	
 	
 	public static void main(String[] args) {
@@ -286,7 +288,7 @@ public class TelaProdutos extends JFrame {
 		lblNome_Pesquisa.setBounds(10, 447, 43, 14);
 		contentPane.add(lblNome_Pesquisa);
 		
-		JFormattedTextField ftfNome_Pesquisa = new JFormattedTextField();
+		ftfNome_Pesquisa = new JFormattedTextField();
 		ftfNome_Pesquisa.setBounds(51, 444, 176, 20);
 		contentPane.add(ftfNome_Pesquisa);
 		
@@ -295,7 +297,7 @@ public class TelaProdutos extends JFrame {
 		lblidentificacao.setBounds(247, 447, 86, 14);
 		contentPane.add(lblidentificacao);
 		
-		JFormattedTextField ftfIdentificacao_Pesquisa = new JFormattedTextField();
+		ftfIdentificacao_Pesquisa = new JFormattedTextField();
 		ftfIdentificacao_Pesquisa.setBounds(337, 444, 152, 20);
 		contentPane.add(ftfIdentificacao_Pesquisa);
 		
@@ -369,6 +371,8 @@ public class TelaProdutos extends JFrame {
 		
 		
 		String nome = null;
+		String nomePesquisa = null;
+		BigInteger identificacao = null;
 		
 		try {
 			try {
@@ -377,7 +381,19 @@ public class TelaProdutos extends JFrame {
 					nome = ftfNome.getText().trim();
 				}
 				
+				if (this.ftfNome_Pesquisa.getText() != null && ftfNome_Pesquisa.getText().trim().length() > 0) {
+					nomePesquisa = ftfNome_Pesquisa.getText().trim();
+				}
 				
+				if (this.ftfIdentificacao_Pesquisa.getText() != null && this.ftfIdentificacao_Pesquisa.getText().trim().length() > 0) {
+					try {
+						identificacao = new BigInteger(ftfIdentificacao_Pesquisa.getText().trim());
+					} catch (Exception e) {
+						throw new BOValidationException("Código: erro de validação" + " identificação inválida");
+					}
+				}
+				
+								
 				
 				System.out.println("******* Iniciando liestagem de produtos *******");
 				EntityManager em = HibernateUtil.getEntityManager();
@@ -390,11 +406,18 @@ public class TelaProdutos extends JFrame {
 				criteria.select(produtosFrom);
 				
 				//CORRIGIR 
-				/*
-				if (nome != null) {
-					String searchTerm = "%" + nome.toLowerCase() + "%";
+				
+				if (nomePesquisa != null) {
+					String searchTerm = "%" + nomePesquisa.toLowerCase() + "%";
 					criteria.where(cb.like(cb.lower(produtosFrom.get("nome")), searchTerm));
-				} */
+				} 
+				
+				
+				if (identificacao != null) {
+					criteria.where(cb.equal(produtosFrom.get("indentificacao"), identificacao));
+				}
+				
+				
 				
 				TypedQuery<ProdutoVO> query = em.createQuery(criteria);
 				listagemDeProdutos = query.getResultList();
