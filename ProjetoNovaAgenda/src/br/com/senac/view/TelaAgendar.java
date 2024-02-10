@@ -328,6 +328,7 @@ public class TelaAgendar extends JFrame {
 		ftfNome = new JFormattedTextField();
 		ftfNome.setBounds(82, 48, 183, 20);
 		panel.add(ftfNome);
+		
 		ftfDD = new JFormattedTextField(maskDD);
 		ftfDD.setBounds(82, 117, 38, 20);
 		panel.add(ftfDD);
@@ -579,6 +580,7 @@ public class TelaAgendar extends JFrame {
 
 	}
 
+	//Esse método é uma situação que o calculo deverá ir pra classe BO
 	protected void calcularValorTotal() {
 		String valorCal = ftfValor.getText().trim().replace(',', '.');
 		double valorDouble = Double.parseDouble(valorCal);
