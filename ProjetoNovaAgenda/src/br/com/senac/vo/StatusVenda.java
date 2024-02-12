@@ -19,7 +19,6 @@ public enum StatusVenda {
 
 
 	public String getDescricao() {
-	
 		return status;
 	}
 	

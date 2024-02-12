@@ -14,6 +14,7 @@ import br.com.senac.vo.ContelVO;
 import br.com.senac.vo.EventoVO;
 import br.com.senac.vo.ProdutoVO;
 import br.com.senac.vo.TipoServicoVO;
+import br.com.senac.vo.VendaVO;
 
 public interface IService {
 
@@ -75,6 +76,19 @@ public interface IService {
 	public abstract void salvar(ProdutoVO produtoVO) throws BOValidationException, BOException;
 
 	public abstract void excluir(ProdutoVO produtoVO) throws BOValidationException, BOException;
+	
+	
+	
+	
+// TIPOS DE VENDAS
+	
+	public abstract VendaVO buscarVendaPorId(VendaVO vendaVO) throws BOException;
+
+	public abstract List<VendaVO> listarVendas(VendaVO vendaVO) throws BOException;
+
+	public abstract void salvar(VendaVO vendaVO) throws BOValidationException, BOException;
+
+	public abstract void excluir(VendaVO vendaVO) throws BOValidationException, BOException;	
 	
 	
 	
