@@ -271,10 +271,7 @@ public class TelaAgendar extends JFrame {
 		ftfLocal.setBounds(82, 213, 183, 20);
 		panel.add(ftfLocal);
 
-		// Lista de telefones
-		listaTelefone = new JList();
-		listaTelefone.setBounds(103, 163, 130, 100);
-		panel.add(listaTelefone);
+		
 
 		comboBoxStatus = new JComboBox();
 		comboBoxStatus.setBounds(82, 179, 183, 20);
@@ -284,20 +281,21 @@ public class TelaAgendar extends JFrame {
 		ftfTelefone = new JFormattedTextField(maskTel);
 		ftfTelefone.setBounds(82, 148, 183, 20);
 		panel.add(ftfTelefone);
+		
+		// Lista de telefones
+		listaTelefone = new JList();
+		listaTelefone.setBounds(106, 164, 130, 100);
+		panel.add(listaTelefone);
 
-		// Lista de e-mail na busca de campos
-		emailList = new JList<>();
-		emailList.setBounds(103, 96, 130, 100);
-		panel.add(emailList);
-
-		// Lista de Nomes na busca de campos
-		nomeList = new JList<>();
-		nomeList.setBounds(102, 49, 130, 77);
-		panel.add(nomeList);
 
 		ftfEmail = new JFormattedTextField();
 		ftfEmail.setBounds(82, 80, 184, 20);
 		panel.add(ftfEmail);
+		
+		// Lista de e-mail na busca de campos
+		emailList = new JList<>();
+		emailList.setBounds(106, 96, 130, 100);
+		panel.add(emailList);
 
 		JButton btnNewButton = new JButton("");
 		btnNewButton.setBounds(272, 83, 24, 17);
@@ -328,6 +326,11 @@ public class TelaAgendar extends JFrame {
 		ftfNome = new JFormattedTextField();
 		ftfNome.setBounds(82, 48, 183, 20);
 		panel.add(ftfNome);
+		
+		// Lista de Nomes na busca de campos
+		nomeList = new JList<>();
+		nomeList.setBounds(103, 65, 147, 77);
+		panel.add(nomeList);
 		
 		ftfDD = new JFormattedTextField(maskDD);
 		ftfDD.setBounds(82, 117, 38, 20);

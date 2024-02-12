@@ -36,6 +36,7 @@ public class LoginView extends JFrame {
 	private JLabel lblNewLabel;
 	private LoginView loginView;
 	private JLabel lblNewLabel_4;
+	private JLabel lblNewLabel_5;
 	
 	public LoginView() {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(LoginView.class.getResource("/br/com/senac/view/img/business.png")));
@@ -87,10 +88,10 @@ public class LoginView extends JFrame {
 		contentPane.add(passwordField);
 		passwordField.setText("****");
 		
-		lblNewLabel = new JLabel("Seja bem-vindo(a).");
+		lblNewLabel = new JLabel("Seja bem-vindo(a)");
 		lblNewLabel.setForeground(new Color(131, 131, 131));
 		lblNewLabel.setFont(new Font("Arial", Font.BOLD, 14));
-		lblNewLabel.setBounds(111, 26, 134, 14);
+		lblNewLabel.setBounds(111, 11, 134, 18);
 		contentPane.add(lblNewLabel);
 		
 		JLabel lblNewLabel_1 = new JLabel("");
@@ -128,6 +129,17 @@ public class LoginView extends JFrame {
 		lblNewLabel_4.setForeground(new Color(107, 107, 107));
 		lblNewLabel_4.setBounds(520, 322, 68, 14);
 		contentPane.add(lblNewLabel_4);
+		
+		JLabel lblStyleManegerShop = new JLabel("Style Manager Shop");
+		lblStyleManegerShop.setForeground(new Color(131, 131, 131));
+		lblStyleManegerShop.setFont(new Font("Arial", Font.BOLD, 14));
+		lblStyleManegerShop.setBounds(365, 8, 160, 21);
+		contentPane.add(lblStyleManegerShop);
+		
+		lblNewLabel_5 = new JLabel("");
+		lblNewLabel_5.setIcon(new ImageIcon(LoginView.class.getResource("/br/com/senac/view/img/tesoura2.png")));
+		lblNewLabel_5.setBounds(511, 0, 40, 32);
+		contentPane.add(lblNewLabel_5);
 	}
 	
 	public void validaSenha() {
