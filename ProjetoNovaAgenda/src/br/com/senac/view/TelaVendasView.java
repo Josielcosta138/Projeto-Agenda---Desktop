@@ -23,6 +23,7 @@ import javax.swing.ImageIcon;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableColumnModel;
 import javax.swing.text.MaskFormatter;
 
 import br.com.senac.dao.HibernateUtil;
@@ -54,6 +55,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JRadioButton;
 import javax.swing.UIManager;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ScrollPaneConstants;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class TelaVendasView extends JFrame {
 
@@ -74,7 +80,9 @@ public class TelaVendasView extends JFrame {
 	private JRadioButton rdbtnDinheiro;
 	private JRadioButton rdbtnCartao;
 	private JRadioButton RadioButtonPix;
-
+	private JTable table;
+	private TableModel tableModel;
+	private  List<VendaVO> listagemDeVendas;
 	/**
 	 * Launch the application.
 	 */
@@ -97,6 +105,15 @@ public class TelaVendasView extends JFrame {
 	 * @throws ParseException
 	 */
 	public TelaVendasView() throws ParseException {
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				TelaAcessosView telaAcessosView = new TelaAcessosView();
+				telaAcessosView.setVisible(true);
+				setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				
+			}
+		});
 		setIconImage(Toolkit.getDefaultToolkit()
 				.getImage(TelaVendasView.class.getResource("/br/com/senac/view/img/business.png")));
 		setTitle("VENDAS ");
@@ -107,6 +124,7 @@ public class TelaVendasView extends JFrame {
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		setLocationRelativeTo(null);
 
 		JLabel lblVendaProdutos = new JLabel("Venda de produtos ");
 		lblVendaProdutos.setForeground(new Color(120, 120, 120));
@@ -147,7 +165,7 @@ public class TelaVendasView extends JFrame {
 
 		// Lista de telefones
 		listaTelefone = new JList();
-		listaTelefone.setBounds(80, 177, 186, 68);
+		listaTelefone.setBounds(80, 177, 186, 97);
 		panel.add(listaTelefone);
 
 		ftfNome = new JFormattedTextField();
@@ -170,7 +188,7 @@ public class TelaVendasView extends JFrame {
 
 		MaskFormatter maskDD = new MaskFormatter("(##)");
 		ftfDD = new JFormattedTextField(maskDD);
-		ftfDD.setBounds(71, 127, 207, 17);
+		ftfDD.setBounds(71, 127, 38, 17);
 		panel.add(ftfDD);
 
 		ftfTelefone = new JFormattedTextField();
@@ -314,12 +332,12 @@ public class TelaVendasView extends JFrame {
 		panel_1.add(rdbtnDinheiro);
 
 		rdbtnCartao = new JRadioButton("Cartão");
-		rdbtnCartao.setForeground(UIManager.getColor("Button.darkShadow"));
+		rdbtnCartao.setForeground(new Color(111, 111, 111));
 		rdbtnCartao.setBounds(89, 154, 77, 23);
 		panel_1.add(rdbtnCartao);
 
 		RadioButtonPix = new JRadioButton("Pix");
-		RadioButtonPix.setForeground(UIManager.getColor("Button.darkShadow"));
+		RadioButtonPix.setForeground(new Color(111, 111, 111));
 		RadioButtonPix.setBounds(162, 154, 77, 23);
 		panel_1.add(RadioButtonPix);
 
@@ -345,18 +363,12 @@ public class TelaVendasView extends JFrame {
 		lblProdutoTitulos.setBounds(351, 70, 100, 29);
 		contentPane.add(lblProdutoTitulos);
 
-		JLabel lblResumo = new JLabel("Resumo");
+		JLabel lblResumo = new JLabel("Resumo de vendas");
 		lblResumo.setIcon(new ImageIcon(TelaVendasView.class.getResource("/br/com/senac/view/img/resumo.png")));
 		lblResumo.setForeground(new Color(120, 120, 120));
 		lblResumo.setFont(new Font("Tahoma", Font.BOLD, 13));
-		lblResumo.setBounds(10, 405, 100, 29);
+		lblResumo.setBounds(10, 405, 162, 29);
 		contentPane.add(lblResumo);
-
-		JPanel panel_1_1 = new JPanel();
-		panel_1_1.setBorder(new LineBorder(new Color(128, 128, 128)));
-		panel_1_1.setBounds(10, 470, 706, 158);
-		contentPane.add(panel_1_1);
-		panel_1_1.setLayout(null);
 
 		JPanel panel_2 = new JPanel();
 		panel_2.setBorder(new LineBorder(new Color(128, 128, 128)));
@@ -440,6 +452,113 @@ public class TelaVendasView extends JFrame {
 				.getResource("/br/com/senac/view/img/2303132_arrow_back_direction_left_navigation_icon.png")));
 		btnVoltar.setBounds(603, 654, 113, 23);
 		contentPane.add(btnVoltar);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		scrollPane.setBounds(10, 457, 706, 182);
+		contentPane.add(scrollPane);
+		
+		tableModel = new TableModel();
+		tableModel.addColumn("Código"); 
+		tableModel.addColumn("Cliente"); 
+		tableModel.addColumn("DD");
+		tableModel.addColumn("Tefone"); 
+		tableModel.addColumn("E-mail"); 
+		tableModel.addColumn("Descrição");
+		tableModel.addColumn("Quantidade");
+		tableModel.addColumn("R$ Preço");
+		tableModel.addColumn("R$ Total");
+		tableModel.addColumn("Forma Pagto");
+		
+		
+		table = new JTable(tableModel);
+		table.setDefaultRenderer(Object.class, new MonthColorRenderer());
+		table.setAutoscrolls(true);
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
+		TableColumnModel tcm = table.getColumnModel();
+		tcm.getColumn(0).setPreferredWidth(60);
+		tcm.getColumn(1).setPreferredWidth(100);
+		tcm.getColumn(2).setPreferredWidth(60);
+		tcm.getColumn(3).setPreferredWidth(120);
+		tcm.getColumn(4).setPreferredWidth(120);
+		tcm.getColumn(5).setPreferredWidth(120);
+		tcm.getColumn(6).setPreferredWidth(80);
+		tcm.getColumn(7).setPreferredWidth(120);
+		tcm.getColumn(8).setPreferredWidth(120);
+		tcm.getColumn(9).setPreferredWidth(120);
+		
+	
+		scrollPane.setViewportView(table);
+		listarVendas();
+		
+		
+	}
+
+	private void listarVendas() {
+		
+		String nome = null;
+		String nomePesquisa = null;
+		BigInteger identificacao = null;
+		
+		try {
+			try {
+											
+				
+				System.out.println("******* Iniciando liestagem de vendas *******");
+				EntityManager em = HibernateUtil.getEntityManager();
+
+				CriteriaBuilder cb = em.getCriteriaBuilder();
+				CriteriaQuery<VendaVO> criteria = cb.createQuery(VendaVO.class);
+
+				// Clausula from
+				Root<VendaVO> vendasFrom = criteria.from(VendaVO.class);
+				criteria.select(vendasFrom);
+				
+		
+				TypedQuery<VendaVO> query = em.createQuery(criteria);
+				listagemDeVendas = query.getResultList();
+
+				tableModel.clearTable(); 
+
+				for (VendaVO vendaVOO : listagemDeVendas) {
+					if (vendaVOO.getId() != null) {
+						
+						RowData rowData = new RowData();
+						
+						rowData.getValues().put(0, vendaVOO.getId().toString());
+						rowData.getValues().put(1, vendaVOO.getNome());
+						rowData.getValues().put(2, vendaVOO.getDd());
+						rowData.getValues().put(3, vendaVOO.getTelefone());
+						rowData.getValues().put(4, vendaVOO.getEmail());
+						rowData.getValues().put(5, vendaVOO.getDescricao());
+						rowData.getValues().put(6, vendaVOO.getQuantidade());
+						rowData.getValues().put(7, vendaVOO.getValor());
+						rowData.getValues().put(8, vendaVOO.getTotal());
+						rowData.getValues().put(9, vendaVOO.getStatusFormaPagto());
+						
+						
+
+						rowData.setElement(vendaVOO);
+						tableModel.addRow(rowData);
+					} else {
+						JOptionPane.showMessageDialog(null, "Sem Agendamentos no momento!", null,
+								JOptionPane.WARNING_MESSAGE);
+					}
+				}
+
+			} catch (Exception e) {
+				throw new BOValidationException("Código: erro de validação" + " valor inválido");
+			}
+
+		} catch (BOValidationException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(this, e.getMessage(), "Erro de validação", JOptionPane.WARNING_MESSAGE);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, e.getMessage(), "Erro de sistema", JOptionPane.ERROR_MESSAGE);
+		}
+		
 	}
 
 	// Esse método é uma situação que o calculo deverá ir pra classe BO
@@ -552,56 +671,7 @@ public class TelaVendasView extends JFrame {
 
 	}
 
-	protected void pesquisarPorIdenficacao() throws ParseException {
 
-		/*
-		 * TelaProdutos telaProdutos = new TelaProdutos();
-		 * telaProdutos.listarProdutos();
-		 * 
-		 * String identificao = null;
-		 * 
-		 * try {
-		 * 
-		 * System.out.
-		 * println("******* Iniciando consulta de identificação de produtos *******");
-		 * EntityManager em = HibernateUtil.getEntityManager();
-		 * 
-		 * CriteriaBuilder cb = em.getCriteriaBuilder(); CriteriaQuery<ProdutoVO>
-		 * criteria = cb.createQuery(ProdutoVO.class);
-		 * 
-		 * // Clausula from Root<ProdutoVO> identificacaoFrom =
-		 * criteria.from(ProdutoVO.class); criteria.select(identificacaoFrom);
-		 * 
-		 * if (this.ftfIdentificacao.getText() != null &&
-		 * ftfIdentificacao.getText().trim().length() > 0) { identificao =
-		 * ftfIdentificacao.getText().trim(); }
-		 * 
-		 * if (identificao != null) { String searchTerm = "%" +
-		 * identificao.toLowerCase() + "%";
-		 * criteria.where(cb.like(cb.lower(identificacaoFrom.get("indentificacao")),
-		 * searchTerm)); }
-		 * 
-		 * TypedQuery<ProdutoVO> query = em.createQuery(criteria); List<ProdutoVO>
-		 * listaIdentificacao = query.getResultList();
-		 * System.out.println(listaIdentificacao);
-		 * 
-		 * // edição lista identificação DefaultListModel<String> model = new
-		 * DefaultListModel<>(); for (ProdutoVO produtoVO : listaIdentificacao) {
-		 * model.addElement(produtoVO.getIndentificacao().toString()); }
-		 * 
-		 * JList<String> listaIdentificacaoJList = new JList<>(model);
-		 * 
-		 * //listaIdentificacao.setModel(model); if (model.getSize() == 0) {
-		 * listaIdentificacaoJList.setVisible(false); } else {
-		 * listaIdentificacaoJList.setVisible(true); }
-		 * 
-		 * } catch (Exception e) { JOptionPane.showMessageDialog(this, e.getMessage(),
-		 * "Erro de sistema", JOptionPane.ERROR_MESSAGE); } finally {
-		 * System.out.println("Finally"); }
-		 * 
-		 */
-
-	}
 
 	protected void pesquisarPorTelefone() {
 		CadastroPessoaView cadastroPessoaView = new CadastroPessoaView();
@@ -832,7 +902,7 @@ public class TelaVendasView extends JFrame {
 			JOptionPane.showMessageDialog(null, "Venda salva com sucesso!");
 
 			try {
-				// listarAgendamentos();
+				listarVendas();
 			} catch (Exception e) {
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(this, "Ocorreu um erro ao realizar a operação!", "Erro",

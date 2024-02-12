@@ -68,6 +68,8 @@ public class CadastroPessoaView extends JFrame {
 	private TelaAgendamentos telaAgendamentos;
 	private TelaProdutos telaProdutos;
 	private JTextField tftHoraAtual;
+	private TelaVendasView telaVendasView;
+	
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -98,7 +100,7 @@ public class CadastroPessoaView extends JFrame {
 
 		setTitle("MENU PRINCIPAL -STYLE MANAGER");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1269, 588);
+		setBounds(100, 100, 1269, 594);
 		contentPane = new JPanel();
 		contentPane.setBorder(new LineBorder(new Color(209, 209, 209)));
 
@@ -447,6 +449,26 @@ public class CadastroPessoaView extends JFrame {
 				parametros();
 			}
 		});
+		
+		JMenuItem mntmVendas = new JMenuItem("Vendas");
+		mntmVendas.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (telaVendasView == null) {
+					try {
+						telaVendasView = new TelaVendasView();
+					} catch (ParseException e1) {
+						e1.printStackTrace();
+					}
+				}
+				telaVendasView.setVisible(true);
+				dispose();
+				System.out.println("Clicou em Serviços");
+			}
+		});
+		mntmVendas.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/vendas.png")));
+		mntmVendas.setForeground(new Color(111, 111, 111));
+		mntmVendas.setFont(new Font("Segoe UI", Font.BOLD, 12));
+		mnManutencao.add(mntmVendas);
 		mntmNewMenuItem_2.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/parametros.png")));
 		mntmNewMenuItem_2.setForeground(new Color(89, 89, 89));
 		mntmNewMenuItem_2.setFont(new Font("Segoe UI", Font.BOLD, 12));
@@ -567,7 +589,7 @@ public class CadastroPessoaView extends JFrame {
 			}
 		});
 		btnFinanceiro2.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/financ2.png")));
-		btnFinanceiro2.setBounds(11, 198, 36, 34);
+		btnFinanceiro2.setBounds(12, 499, 36, 34);
 		contentPane.add(btnFinanceiro2);
 		
 		JButton btnServico2 = new JButton("");
@@ -586,7 +608,7 @@ public class CadastroPessoaView extends JFrame {
 			}
 		});
 		btnServico2.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/manutencao.png")));
-		btnServico2.setBounds(13, 255, 36, 34);
+		btnServico2.setBounds(12, 187, 36, 34);
 		contentPane.add(btnServico2);
 		
 		JButton btnProtudo2 = new JButton("");
@@ -600,7 +622,7 @@ public class CadastroPessoaView extends JFrame {
 			}
 		});
 		btnProtudo2.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/product.png")));
-		btnProtudo2.setBounds(14, 311, 36, 34);
+		btnProtudo2.setBounds(12, 238, 36, 34);
 		contentPane.add(btnProtudo2);
 		
 		JButton btnParametros2 = new JButton("");
@@ -610,7 +632,7 @@ public class CadastroPessoaView extends JFrame {
 			}
 		});
 		btnParametros2.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/parametros.png")));
-		btnParametros2.setBounds(14, 363, 36, 34);
+		btnParametros2.setBounds(12, 344, 36, 34);
 		contentPane.add(btnParametros2);
 		
 		JButton btnRelatorios2 = new JButton("");
@@ -620,7 +642,7 @@ public class CadastroPessoaView extends JFrame {
 			}
 		});
 		btnRelatorios2.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/relatorio.png")));
-		btnRelatorios2.setBounds(12, 416, 36, 34);
+		btnRelatorios2.setBounds(12, 397, 36, 34);
 		contentPane.add(btnRelatorios2);
 		
 		JButton btnSuporte2 = new JButton("");
@@ -630,13 +652,31 @@ public class CadastroPessoaView extends JFrame {
 			}
 		});
 		btnSuporte2.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/suporte.png")));
-		btnSuporte2.setBounds(13, 471, 36, 34);
+		btnSuporte2.setBounds(12, 445, 36, 34);
 		contentPane.add(btnSuporte2);
 		
 		JPanel panel_2 = new JPanel();
 		panel_2.setBorder(new LineBorder(new Color(212, 212, 212)));
-		panel_2.setBounds(59, 37, 1, 481);
+		panel_2.setBounds(60, 45, 1, 481);
 		contentPane.add(panel_2);
+		
+		JButton btnVendas = new JButton("");
+		btnVendas.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (telaVendasView == null) {
+					try {
+						telaVendasView = new TelaVendasView();
+					} catch (ParseException e1) {
+						e1.printStackTrace();
+					}
+				}
+				telaVendasView.setVisible(true);
+				dispose();
+			}
+		});
+		btnVendas.setIcon(new ImageIcon(CadastroPessoaView.class.getResource("/br/com/senac/view/img/vendas.png")));
+		btnVendas.setBounds(12, 292, 36, 34);
+		contentPane.add(btnVendas);
 		
 		pesquisar();
 		
