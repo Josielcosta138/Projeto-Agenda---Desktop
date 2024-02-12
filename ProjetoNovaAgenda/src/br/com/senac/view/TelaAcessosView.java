@@ -41,7 +41,7 @@ public class TelaAcessosView extends JFrame {
 	private TelaServicos telaServicos; 
 	private TelaProdutos telaProdutos;
 	private TelaVendasView telaVendasView;
-	
+	private TelaFinanceiro telaFinanceiro;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -303,8 +303,11 @@ public class TelaAcessosView extends JFrame {
 	}
 
 	protected void calcularFinanceiro() {
-		JOptionPane.showMessageDialog(this, "Módulo em desenvolvimento. \nAguarde, ficará disponível na próxima versão. Obrigada :)",
-				"Atenção.", JOptionPane.WARNING_MESSAGE);
+		if (telaFinanceiro == null) { 	
+			telaFinanceiro = new TelaFinanceiro();
+		}
+		telaFinanceiro.setVisible(true);
+		dispose();
 		
 	}
 	protected void cadastrar() {
