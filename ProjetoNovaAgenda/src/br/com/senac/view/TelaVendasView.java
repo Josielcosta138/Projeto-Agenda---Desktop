@@ -26,20 +26,34 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.text.MaskFormatter;
 
 import br.com.senac.dao.HibernateUtil;
+import br.com.senac.exception.BOValidationException;
+import br.com.senac.service.Service;
 import br.com.senac.vo.ContatoVO;
 import br.com.senac.vo.ContelVO;
+import br.com.senac.vo.EventoVO;
 import br.com.senac.vo.ProdutoVO;
+import br.com.senac.vo.StatusAgendamento;
+import br.com.senac.vo.StatusFormaPagto;
+import br.com.senac.vo.StatusServico;
+import br.com.senac.vo.StatusVenda;
+import br.com.senac.vo.VendaVO;
 
 import javax.swing.JFormattedTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.JRadioButton;
+import javax.swing.UIManager;
 
 public class TelaVendasView extends JFrame {
 
@@ -56,7 +70,11 @@ public class TelaVendasView extends JFrame {
 	private JFormattedTextField ftfValor;
 	private JFormattedTextField ftfQuantidade;
 	private JFormattedTextField ftfTotalProd;
-	
+	private JFormattedTextField ftfCodigo;
+	private JRadioButton rdbtnDinheiro;
+	private JRadioButton rdbtnCartao;
+	private JRadioButton RadioButtonPix;
+
 	/**
 	 * Launch the application.
 	 */
@@ -164,11 +182,11 @@ public class TelaVendasView extends JFrame {
 		lblCod.setBounds(10, 14, 46, 14);
 		panel.add(lblCod);
 
-		JFormattedTextField ftfNome_1 = new JFormattedTextField();
-		ftfNome_1.setEditable(false);
-		ftfNome_1.setEnabled(false);
-		ftfNome_1.setBounds(71, 11, 207, 17);
-		panel.add(ftfNome_1);
+		ftfCodigo = new JFormattedTextField();
+		ftfCodigo.setEditable(false);
+		ftfCodigo.setEnabled(false);
+		ftfCodigo.setBounds(71, 11, 207, 17);
+		panel.add(ftfCodigo);
 
 		JButton btnPesquisarNome = new JButton("");
 		btnPesquisarNome.addActionListener(new ActionListener() {
@@ -243,7 +261,6 @@ public class TelaVendasView extends JFrame {
 		MaskFormatter mask = new MaskFormatter("##.00");
 		mask.setValidCharacters("0123456789");
 		ftfValor = new JFormattedTextField();
-		ftfValor.setEnabled(false);
 		ftfValor.setEditable(false);
 		ftfValor.setBounds(97, 50, 233, 17);
 		panel_1.add(ftfValor);
@@ -258,7 +275,6 @@ public class TelaVendasView extends JFrame {
 		panel_1.add(lblTotal);
 
 		ftfTotalProd = new JFormattedTextField();
-		ftfTotalProd.setEnabled(false);
 		ftfTotalProd.setEditable(false);
 		ftfTotalProd.setFont(new Font("Tahoma", Font.BOLD, 11));
 		ftfTotalProd.setBounds(97, 120, 119, 17);
@@ -280,16 +296,32 @@ public class TelaVendasView extends JFrame {
 				.setIcon(new ImageIcon(TelaVendasView.class.getResource("/br/com/senac/view/img/pesquisar.png")));
 		btnPesquisarDescricao.setBounds(340, 11, 18, 17);
 		panel_1.add(btnPesquisarDescricao);
-		
+
 		JButton btnPesquisarDescricao_1 = new JButton("");
 		btnPesquisarDescricao_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				calcularValorTotal();
 			}
 		});
-		btnPesquisarDescricao_1.setIcon(new ImageIcon(TelaVendasView.class.getResource("/br/com/senac/view/img/click.png")));
+		btnPesquisarDescricao_1
+				.setIcon(new ImageIcon(TelaVendasView.class.getResource("/br/com/senac/view/img/click.png")));
 		btnPesquisarDescricao_1.setBounds(340, 85, 18, 17);
 		panel_1.add(btnPesquisarDescricao_1);
+
+		rdbtnDinheiro = new JRadioButton("Dinheiro");
+		rdbtnDinheiro.setForeground(new Color(105, 105, 105));
+		rdbtnDinheiro.setBounds(10, 154, 77, 23);
+		panel_1.add(rdbtnDinheiro);
+
+		rdbtnCartao = new JRadioButton("Cartão");
+		rdbtnCartao.setForeground(UIManager.getColor("Button.darkShadow"));
+		rdbtnCartao.setBounds(89, 154, 77, 23);
+		panel_1.add(rdbtnCartao);
+
+		RadioButtonPix = new JRadioButton("Pix");
+		RadioButtonPix.setForeground(UIManager.getColor("Button.darkShadow"));
+		RadioButtonPix.setBounds(162, 154, 77, 23);
+		panel_1.add(RadioButtonPix);
 
 		descricaoList.setVisible(false);
 		// edição campo descrição
@@ -410,33 +442,30 @@ public class TelaVendasView extends JFrame {
 		contentPane.add(btnVoltar);
 	}
 
-
-	
-	//Esse método é uma situação que o calculo deverá ir pra classe BO
+	// Esse método é uma situação que o calculo deverá ir pra classe BO
 	protected void calcularValorTotal() {
-		
+
 		String valorCal = ftfValor.getText().trim().replace(',', '.');
-	    double valorDouble = Double.parseDouble(valorCal);
+		double valorDouble = Double.parseDouble(valorCal);
 
-	    String qntParticipantesCalString = ftfQuantidade.getText().trim();
-	    if (!qntParticipantesCalString.isEmpty()) {
-	        try {
-	            int qntParticipantesCal = Integer.parseInt(qntParticipantesCalString);
+		String qntParticipantesCalString = ftfQuantidade.getText().trim();
+		if (!qntParticipantesCalString.isEmpty()) {
+			try {
+				int qntParticipantesCal = Integer.parseInt(qntParticipantesCalString);
 
-	            double totalDouble = qntParticipantesCal * valorDouble;
-	            String totalFormatted = String.format("%.2f", totalDouble);
+				double totalDouble = qntParticipantesCal * valorDouble;
+				String totalFormatted = String.format("%.2f", totalDouble);
 
-	            // Atualize apenas o texto do ftfTotalProd
-	            ftfTotalProd.setText(totalFormatted);
+				// Atualize apenas o texto do ftfTotalProd
+				ftfTotalProd.setText(totalFormatted);
 
-	        } catch (NumberFormatException e) {
-	            System.err.println("Erro ao converter para número: " + e.getMessage());
-	        }
-	    } else {
-	        System.err.println("A quantidade de participantes não pode estar vazia.");
-	    }
-		
-		
+			} catch (NumberFormatException e) {
+				System.err.println("Erro ao converter para número: " + e.getMessage());
+			}
+		} else {
+			System.err.println("A quantidade de participantes não pode estar vazia.");
+		}
+
 	}
 
 	protected void PesquisarPorDescricao() throws ParseException {
@@ -466,8 +495,6 @@ public class TelaVendasView extends JFrame {
 				criteria.where(cb.like(cb.lower(produtoVOFrom.get("descricao")), searchTerm));
 			}
 
-			
-			
 			TypedQuery<ProdutoVO> query = em.createQuery(criteria);
 			List<ProdutoVO> listaProdutoNome = query.getResultList();
 			System.out.println(listaProdutoNome);
@@ -478,51 +505,44 @@ public class TelaVendasView extends JFrame {
 			String item = null;
 			String itemValor = null;
 			ProdutoVO produtoVO2 = null;
-			
+
 			for (ProdutoVO produtoVO : listaProdutoNome) {
 				item = produtoVO.getIndentificacao().toString() + " - " + produtoVO.getDescricao();
 				model.addElement(item);
-				
+
 			}
-			
-			
+
 			MaskFormatter mask = new MaskFormatter("##.00");
 			mask.setValidCharacters("0123456789");
 			descricaoList.setModel(model);
-			
-			
-			
+
 			if (descricaoList.getModel().getSize() == 0) {
 				descricaoList.setVisible(false);
 			} else {
 				descricaoList.setVisible(true);
 			}
-			
-			descricaoList.addListSelectionListener(new ListSelectionListener() {
-			    public void valueChanged(ListSelectionEvent event) {
-			        if (!event.getValueIsAdjusting()) {
-			            int selectedIndex = descricaoList.getSelectedIndex();
-			            if (selectedIndex != -1) {
-			                String selectedItem = descricaoList.getModel().getElementAt(selectedIndex);
-			                String[] parts = selectedItem.split(" - ");
-			                String selectedItemId = parts[0].trim(); // Supondo que o ID seja a primeira parte do item selecionado
-			                // Procurando o produto correspondente ao ID selecionado
-			                for (ProdutoVO produtoVO : listaProdutoNome) {
-			                    if (produtoVO.getIndentificacao().toString().equals(selectedItemId)) {
-			                        // Quando encontrar o produto correspondente, definir o valor no ftfValor
-			                        ftfValor.setValue(produtoVO.getPreco());
-			                        break; // Saia do loop assim que encontrar o produto correspondente
-			                    }
-			                }
-			            }
-			        }
-			    }
-			});
 
-			
-			
-			
-			
+			descricaoList.addListSelectionListener(new ListSelectionListener() {
+				public void valueChanged(ListSelectionEvent event) {
+					if (!event.getValueIsAdjusting()) {
+						int selectedIndex = descricaoList.getSelectedIndex();
+						if (selectedIndex != -1) {
+							String selectedItem = descricaoList.getModel().getElementAt(selectedIndex);
+							String[] parts = selectedItem.split(" - ");
+							String selectedItemId = parts[0].trim(); // Supondo que o ID seja a primeira parte do item
+																		// selecionado
+							// Procurando o produto correspondente ao ID selecionado
+							for (ProdutoVO produtoVO : listaProdutoNome) {
+								if (produtoVO.getIndentificacao().toString().equals(selectedItemId)) {
+									// Quando encontrar o produto correspondente, definir o valor no ftfValor
+									ftfValor.setValue(produtoVO.getPreco());
+									break; // Saia do loop assim que encontrar o produto correspondente
+								}
+							}
+						}
+					}
+				}
+			});
 
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(this, e.getMessage(), "Erro de sistema", JOptionPane.ERROR_MESSAGE);
@@ -535,58 +555,51 @@ public class TelaVendasView extends JFrame {
 	protected void pesquisarPorIdenficacao() throws ParseException {
 
 		/*
-		TelaProdutos telaProdutos = new TelaProdutos();
-		telaProdutos.listarProdutos();
-
-		String identificao = null;
-
-		try {
-
-			System.out.println("******* Iniciando consulta de identificação de produtos *******");
-			EntityManager em = HibernateUtil.getEntityManager();
-
-			CriteriaBuilder cb = em.getCriteriaBuilder();
-			CriteriaQuery<ProdutoVO> criteria = cb.createQuery(ProdutoVO.class);
-
-			// Clausula from
-			Root<ProdutoVO> identificacaoFrom = criteria.from(ProdutoVO.class);
-			criteria.select(identificacaoFrom);
-
-			if (this.ftfIdentificacao.getText() != null && ftfIdentificacao.getText().trim().length() > 0) {
-				identificao = ftfIdentificacao.getText().trim();
-			}
-
-			if (identificao != null) {
-				String searchTerm = "%" + identificao.toLowerCase() + "%";
-				criteria.where(cb.like(cb.lower(identificacaoFrom.get("indentificacao")), searchTerm));
-			}
-
-			TypedQuery<ProdutoVO> query = em.createQuery(criteria);
-			List<ProdutoVO> listaIdentificacao = query.getResultList();
-			System.out.println(listaIdentificacao);
-
-			// edição lista identificação
-			DefaultListModel<String> model = new DefaultListModel<>();
-			for (ProdutoVO produtoVO : listaIdentificacao) {
-				model.addElement(produtoVO.getIndentificacao().toString());
-			}
-
-			JList<String> listaIdentificacaoJList = new JList<>(model);
-			
-			//listaIdentificacao.setModel(model);
-			if (model.getSize() == 0) {
-				listaIdentificacaoJList.setVisible(false);
-			} else {
-				listaIdentificacaoJList.setVisible(true);
-			}
-
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(this, e.getMessage(), "Erro de sistema", JOptionPane.ERROR_MESSAGE);
-		} finally {
-			System.out.println("Finally");
-		}
-		
-		*/
+		 * TelaProdutos telaProdutos = new TelaProdutos();
+		 * telaProdutos.listarProdutos();
+		 * 
+		 * String identificao = null;
+		 * 
+		 * try {
+		 * 
+		 * System.out.
+		 * println("******* Iniciando consulta de identificação de produtos *******");
+		 * EntityManager em = HibernateUtil.getEntityManager();
+		 * 
+		 * CriteriaBuilder cb = em.getCriteriaBuilder(); CriteriaQuery<ProdutoVO>
+		 * criteria = cb.createQuery(ProdutoVO.class);
+		 * 
+		 * // Clausula from Root<ProdutoVO> identificacaoFrom =
+		 * criteria.from(ProdutoVO.class); criteria.select(identificacaoFrom);
+		 * 
+		 * if (this.ftfIdentificacao.getText() != null &&
+		 * ftfIdentificacao.getText().trim().length() > 0) { identificao =
+		 * ftfIdentificacao.getText().trim(); }
+		 * 
+		 * if (identificao != null) { String searchTerm = "%" +
+		 * identificao.toLowerCase() + "%";
+		 * criteria.where(cb.like(cb.lower(identificacaoFrom.get("indentificacao")),
+		 * searchTerm)); }
+		 * 
+		 * TypedQuery<ProdutoVO> query = em.createQuery(criteria); List<ProdutoVO>
+		 * listaIdentificacao = query.getResultList();
+		 * System.out.println(listaIdentificacao);
+		 * 
+		 * // edição lista identificação DefaultListModel<String> model = new
+		 * DefaultListModel<>(); for (ProdutoVO produtoVO : listaIdentificacao) {
+		 * model.addElement(produtoVO.getIndentificacao().toString()); }
+		 * 
+		 * JList<String> listaIdentificacaoJList = new JList<>(model);
+		 * 
+		 * //listaIdentificacao.setModel(model); if (model.getSize() == 0) {
+		 * listaIdentificacaoJList.setVisible(false); } else {
+		 * listaIdentificacaoJList.setVisible(true); }
+		 * 
+		 * } catch (Exception e) { JOptionPane.showMessageDialog(this, e.getMessage(),
+		 * "Erro de sistema", JOptionPane.ERROR_MESSAGE); } finally {
+		 * System.out.println("Finally"); }
+		 * 
+		 */
 
 	}
 
@@ -747,7 +760,7 @@ public class TelaVendasView extends JFrame {
 	}
 
 	protected void cancelarVenda() {
-		
+
 		ftfValor.setValue(null);
 		ftfDescricao.setValue("");
 		ftfNome.setValue("");
@@ -760,7 +773,85 @@ public class TelaVendasView extends JFrame {
 	}
 
 	protected void salvarVenda() {
-		// TODO Auto-generated method stub
+
+		try {
+
+			Service service = new Service();
+			// EventoVO eventoVO = new EventoVO();
+			VendaVO vendaVO = new VendaVO();
+
+			String codigo = ftfCodigo.getText().trim();
+			String nome = ftfNome.getText().trim();
+			String email = ftfEmail.getText().trim();
+			String dd = ftfDD.getText().trim();
+			String numero = ftfTelefone.getText().trim();
+			String descricao = ftfDescricao.getText().trim();
+			String telefone = ftfTelefone.getText().trim();
+			String valor = ftfValor.getText().trim();
+			String quantidade = ftfQuantidade.getText().trim();
+			String total = ftfTotalProd.getText().trim();
+
+			if (codigo != null && codigo.length() > 0) {
+				vendaVO.setId(new BigInteger(codigo));
+				vendaVO = service.buscarVendaPorId(vendaVO);
+			}
+
+			
+			if (RadioButtonPix.isSelected()) {
+				vendaVO.setStatusFormaPagto(StatusFormaPagto.PIX);
+
+			}else if (rdbtnDinheiro.isSelected()) {
+				vendaVO.setStatusFormaPagto(StatusFormaPagto.DINHEIRO);
+	        }else {
+	        	vendaVO.setStatusFormaPagto(StatusFormaPagto.CARTAO);
+	        }
+			
+
+
+			if (valor != null) {
+				valor = valor.replace(",", ".");
+				vendaVO.setValor(new BigDecimal(valor));
+			}
+			
+			if (total != null) {
+				total = total.replace(",", ".");
+				vendaVO.setTotal(new BigDecimal(total));
+			}
+			
+			
+
+			vendaVO.setNome(nome);
+			vendaVO.setEmail(email);
+			vendaVO.setDd(dd);
+			vendaVO.setTelefone(telefone);
+			int qntd = Integer.parseInt(quantidade); 
+			vendaVO.setQuantidade(qntd);
+			vendaVO.setDescricao(descricao);
+			service.salvar(vendaVO);
+
+			JOptionPane.showMessageDialog(null, "Venda salva com sucesso!");
+
+			try {
+				// listarAgendamentos();
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(this, "Ocorreu um erro ao realizar a operação!", "Erro",
+						JOptionPane.ERROR_MESSAGE);
+			}
+
+			setVisible(true);
+
+		} catch (BOValidationException b) {
+			b.printStackTrace();
+			JOptionPane.showMessageDialog(this, b.getMessage(), "Mensagem de aviso", JOptionPane.WARNING_MESSAGE);
+
+		} catch (Exception b) {
+			b.printStackTrace();
+			JOptionPane.showMessageDialog(this, "Ocorreu um erro ao realizar a operação!", "Erro",
+					JOptionPane.ERROR_MESSAGE);
+		} finally {
+			System.out.println("Finally");
+		}
 
 	}
 }

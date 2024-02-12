@@ -12,8 +12,10 @@ import br.com.senac.bo.IContelBO;
 import br.com.senac.bo.IEventoBO;
 import br.com.senac.bo.IProdutoBO;
 import br.com.senac.bo.ITipoServicoBO;
+import br.com.senac.bo.IVendaBO;
 import br.com.senac.bo.ProdutoBO;
 import br.com.senac.bo.TipoServicoBO;
+import br.com.senac.bo.VendaBO;
 import br.com.senac.exception.BOException;
 import br.com.senac.exception.BOValidationException;
 import br.com.senac.vo.ContatoVO;
@@ -21,6 +23,7 @@ import br.com.senac.vo.ContelVO;
 import br.com.senac.vo.EventoVO;
 import br.com.senac.vo.ProdutoVO;
 import br.com.senac.vo.TipoServicoVO;
+import br.com.senac.vo.VendaVO;
 
 public class Service implements IService {
 
@@ -185,6 +188,41 @@ public class Service implements IService {
 		IProdutoBO produto = new ProdutoBO();
 		produto.excluir(produtoVO);
 	}
+	
+	
+	
+	
+	// VENDA
+
+	@Override
+	public VendaVO buscarVendaPorId(VendaVO vendaVO) throws BOException {
+		IVendaBO venda = new VendaBO();
+		return venda.buscarVendaPorId(vendaVO);
+	}
+
+	@Override
+	public List<VendaVO> listarVendas(VendaVO vendaVO) throws BOException {
+		IVendaBO venda = new VendaBO();
+		return venda.listarVendasBO(vendaVO);
+	}
+
+	@Override
+	public void salvar(VendaVO vendaVO) throws BOValidationException, BOException {
+		IVendaBO venda = new VendaBO();
+		venda.salvar(vendaVO);
+		
+	}
+
+	@Override
+	public void excluir(VendaVO vendaVO) throws BOValidationException, BOException {
+		IVendaBO venda = new VendaBO();
+		venda.excluir(vendaVO);
+		
+	}
+	
+	
+	
+	
 
 	
 

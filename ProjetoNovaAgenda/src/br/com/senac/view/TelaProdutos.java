@@ -488,7 +488,6 @@ public class TelaProdutos extends JFrame {
 			}
 			
 			
-			//CRIAR STATUSVENDA NA MODEL E BANCO
 	        if (RadioButtonSim.isSelected()) {
 	            produtoVO.setStatusVenda(StatusVenda.SIM);
 	           
