@@ -423,6 +423,8 @@ public class TelaAgendamentos extends JFrame {
 
 	
 	}
+	
+	
 	@SuppressWarnings("unused")
 	protected void listarAgendamentos() {
 		if (tableModel != null) {
