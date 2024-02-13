@@ -7,11 +7,26 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.Toolkit;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.Color;
+
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import javax.swing.ImageIcon;
 import javax.swing.border.LineBorder;
 import javax.swing.table.TableColumnModel;
+
+import antlr.collections.List;
+import br.com.senac.dao.HibernateUtil;
+import br.com.senac.exception.BOValidationException;
+import br.com.senac.vo.EventoVO;
+import br.com.senac.vo.VendaVO;
+
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
@@ -20,12 +35,17 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.math.BigInteger;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class TelaFinanceiro extends JFrame {
 
 	private JPanel contentPane;
 	private JTable table;
 	private TableModel tableModel;
+	private java.util.List<VendaVO> listagemDeVendas;
+	private java.util.List<EventoVO> listaAgendamentos;
 
 	/**
 	 * Launch the application.
@@ -68,13 +88,13 @@ public class TelaFinanceiro extends JFrame {
 		setLocationRelativeTo(null);
 		
 		JLabel lblNewLabel = new JLabel("Financeiro ");
-		lblNewLabel.setBounds(10, 27, 75, 14);
+		lblNewLabel.setBounds(10, 27, 92, 14);
 		lblNewLabel.setForeground(new Color(97, 97, 97));
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
 		contentPane.add(lblNewLabel);
 		
 		JLabel lblNewLabel_1 = new JLabel("");
-		lblNewLabel_1.setBounds(87, 11, 30, 40);
+		lblNewLabel_1.setBounds(112, 10, 30, 40);
 		lblNewLabel_1.setIcon(new ImageIcon(TelaFinanceiro.class.getResource("/br/com/senac/view/img/finance.png")));
 		contentPane.add(lblNewLabel_1);
 		
@@ -128,7 +148,7 @@ public class TelaFinanceiro extends JFrame {
 		tcm.getColumn(4).setPreferredWidth(140);
 		
 		scrollPaneAgendamentos.setViewportView(table);
-		//listarVendas();
+		listarVendasAgendamentos();
 		
 		
 		JScrollPane scrollPaneVendProdutos = new JScrollPane();
@@ -159,6 +179,8 @@ public class TelaFinanceiro extends JFrame {
 		tcm2.getColumn(4).setPreferredWidth(140);
 		
 		scrollPaneVendProdutos.setViewportView(table);
+		listarTotaisVendasProd();
+		
 		
 		JButton btnVoltar = new JButton("Voltar");
 		btnVoltar.addActionListener(new ActionListener() {
@@ -173,8 +195,121 @@ public class TelaFinanceiro extends JFrame {
 		btnVoltar.setBounds(517, 522, 112, 23);
 		contentPane.add(btnVoltar);
 		
+	}
+	
+	
+	
+
+	private void listarVendasAgendamentos() {
+		if (tableModel != null) {
+			tableModel.clearTable();
+		}
+
+		try {
+
+			try {				   
+				
+				System.out.println("******* Iniciando listagem de agendamentos *******");
+				EntityManager em = HibernateUtil.getEntityManager();
+
+				CriteriaBuilder cb = em.getCriteriaBuilder();
+				CriteriaQuery<EventoVO> criteria = cb.createQuery(EventoVO.class);
+
+				// Clausula from
+				Root<EventoVO> agendamentosFrom = criteria.from(EventoVO.class);
+				criteria.select(agendamentosFrom);
+					
+				TypedQuery<EventoVO> query = em.createQuery(criteria);
+				listaAgendamentos = query.getResultList();
+				
+
+				for (EventoVO eventoVO : listaAgendamentos) {
+
+					if (eventoVO.getId() != null) {
+						System.out.println("Lista agendamentos --> " + listaAgendamentos);
+					
+						RowData rowData = new RowData();
+						rowData.getValues().put(0, eventoVO.getId().toString());
+						rowData.getValues().put(1, eventoVO.getNomeCliente());
+						rowData.getValues().put(2, eventoVO.getDd());
+						rowData.getValues().put(3, eventoVO.getNumero());
+						rowData.getValues().put(4, eventoVO.getTotalServico() + " R$");
+
+						rowData.setElement(eventoVO);
+						tableModel.addRow(rowData);
+					} else {
+						JOptionPane.showMessageDialog(null, "Sem Agendamentos no momento!", null,
+								JOptionPane.WARNING_MESSAGE);
+					}
+ 
+				}
+
+			} catch (Exception e) {
+				throw new BOValidationException("Código: erro de validação" + " valor inválido");
+			}
+
+		} catch (BOValidationException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(this, e.getMessage(), "Erro de validação", JOptionPane.WARNING_MESSAGE);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, e.getMessage(), "Erro de sistema", JOptionPane.ERROR_MESSAGE);
+		}
+
+	}
 		
+	
+	
+
+	private void listarTotaisVendasProd() {
 		
+		try {
+			try {
+											
+				System.out.println("******* Iniciando liestagem de vendas *******");
+				EntityManager em = HibernateUtil.getEntityManager();
+
+				CriteriaBuilder cb = em.getCriteriaBuilder();
+				CriteriaQuery<VendaVO> criteria = cb.createQuery(VendaVO.class);
+
+				// Clausula from
+				Root<VendaVO> vendasFrom = criteria.from(VendaVO.class);
+				criteria.select(vendasFrom);
+				
 		
+				TypedQuery<VendaVO> query = em.createQuery(criteria);
+				listagemDeVendas = query.getResultList();
+
+				tableModel.clearTable(); 
+
+				for (VendaVO vendaVOO : listagemDeVendas) {
+					if (vendaVOO.getId() != null) {
+						
+						RowData rowData = new RowData();
+						
+						rowData.getValues().put(0, vendaVOO.getId().toString());
+						rowData.getValues().put(1, vendaVOO.getDescricao());
+						rowData.getValues().put(2, vendaVOO.getQuantidade());
+						rowData.getValues().put(3, vendaVOO.getValor());
+						rowData.getValues().put(4, vendaVOO.getTotal());
+						
+
+						rowData.setElement(vendaVOO);
+						tableModel.addRow(rowData);
+					} else {
+						JOptionPane.showMessageDialog(null, "Sem Agendamentos no momento!", null,
+								JOptionPane.WARNING_MESSAGE);
+					}
+				}
+
+			} catch (Exception e) {
+				throw new BOValidationException("Código: erro de validação" + " valor inválido");
+			}
+
+		} catch (BOValidationException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(this, e.getMessage(), "Erro de validação", JOptionPane.WARNING_MESSAGE);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, e.getMessage(), "Erro de sistema", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 }
