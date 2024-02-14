@@ -19,6 +19,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.swing.ImageIcon;
 import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
 import antlr.collections.List;
@@ -35,9 +36,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javax.swing.JFormattedTextField;
+import javax.swing.UIManager;
 
 public class TelaFinanceiro extends JFrame {
 
@@ -46,6 +51,9 @@ public class TelaFinanceiro extends JFrame {
 	private TableModel tableModel;
 	private java.util.List<VendaVO> listagemDeVendas;
 	private java.util.List<EventoVO> listaAgendamentos;
+	private java.util.List<EventoVO> listaServicos;
+	private java.util.List<VendaVO> listaServicosFinal;
+	public BigDecimal totalAgendamentoVal = BigDecimal.ZERO;
 
 	/**
 	 * Launch the application.
@@ -79,7 +87,7 @@ public class TelaFinanceiro extends JFrame {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(TelaFinanceiro.class.getResource("/br/com/senac/view/img/business.png")));
 		setTitle("FINANCEIRO");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 655, 610);
+		setBounds(100, 100, 654, 834);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -124,7 +132,7 @@ public class TelaFinanceiro extends JFrame {
 		JScrollPane scrollPaneAgendamentos = new JScrollPane();
 		scrollPaneAgendamentos.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPaneAgendamentos.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-		scrollPaneAgendamentos.setBounds(10, 127, 619, 167);
+		scrollPaneAgendamentos.setBounds(10, 127, 619, 85);
 		contentPane.add(scrollPaneAgendamentos);
 		
 		tableModel = new TableModel();
@@ -133,6 +141,7 @@ public class TelaFinanceiro extends JFrame {
 		tableModel.addColumn("DD");
 		tableModel.addColumn("Tefone"); 
 		tableModel.addColumn("Total R$"); 
+		tableModel.addColumn("Total de agendamentos R$"); 
 
 		
 		table = new JTable(tableModel);
@@ -146,6 +155,7 @@ public class TelaFinanceiro extends JFrame {
 		tcm.getColumn(2).setPreferredWidth(100);
 		tcm.getColumn(3).setPreferredWidth(140);
 		tcm.getColumn(4).setPreferredWidth(140);
+		tcm.getColumn(5).setPreferredWidth(180);
 		
 		scrollPaneAgendamentos.setViewportView(table);
 		listarVendasAgendamentos();
@@ -154,7 +164,7 @@ public class TelaFinanceiro extends JFrame {
 		JScrollPane scrollPaneVendProdutos = new JScrollPane();
 		scrollPaneVendProdutos.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPaneVendProdutos.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-		scrollPaneVendProdutos.setBounds(10, 344, 619, 167);
+		scrollPaneVendProdutos.setBounds(10, 344, 619, 85);
 		contentPane.add(scrollPaneVendProdutos);
 		
 		
@@ -192,13 +202,331 @@ public class TelaFinanceiro extends JFrame {
 			}
 		});
 		btnVoltar.setIcon(new ImageIcon(TelaFinanceiro.class.getResource("/br/com/senac/view/img/2303132_arrow_back_direction_left_navigation_icon.png")));
-		btnVoltar.setBounds(517, 522, 112, 23);
+		btnVoltar.setBounds(517, 769, 112, 23);
 		contentPane.add(btnVoltar);
+		
+		JLabel lblTotaisServiosR = new JLabel("Totais Serviços R$");
+		lblTotaisServiosR.setIcon(new ImageIcon(TelaFinanceiro.class.getResource("/br/com/senac/view/img/tesoura2.png")));
+		lblTotaisServiosR.setForeground(new Color(97, 97, 97));
+		lblTotaisServiosR.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblTotaisServiosR.setBounds(10, 534, 206, 28);
+		contentPane.add(lblTotaisServiosR);
+		
+		
+		//---------------SERVIÇOS---------------
+		JScrollPane scrollPaneVendServicos = new JScrollPane();
+		scrollPaneVendServicos.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPaneVendServicos.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		scrollPaneVendServicos.setBounds(10, 573, 619, 114);
+		contentPane.add(scrollPaneVendServicos);
+				
+		tableModel = new TableModel();
+		tableModel.addColumn("Código"); 
+		tableModel.addColumn("Serviço"); 
+		tableModel.addColumn("Quantidade");
+		tableModel.addColumn("Valor"); 
+		tableModel.addColumn("Total R$"); 
+		
+		table = new JTable(tableModel);
+		table.setDefaultRenderer(Object.class, new MonthColorRenderer());
+		table.setAutoscrolls(true);
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
+		TableColumnModel tcm3 = table.getColumnModel();
+		tcm3.getColumn(0).setPreferredWidth(60);
+		tcm3.getColumn(1).setPreferredWidth(180);
+		tcm3.getColumn(2).setPreferredWidth(100);
+		tcm3.getColumn(3).setPreferredWidth(140);
+		tcm3.getColumn(4).setPreferredWidth(140);
+		scrollPaneVendServicos.setViewportView(table);
+		listarTotaisDeServicos();
+		
+		
+		
+		//---------------AGENDAMENTOS---------------
+		JScrollPane scrollPaneTotalAgendamento = new JScrollPane();
+		scrollPaneTotalAgendamento.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+		scrollPaneTotalAgendamento.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPaneTotalAgendamento.setBounds(445, 223, 184, 40);
+		contentPane.add(scrollPaneTotalAgendamento);
+		
+		
+	
+		tableModel = new TableModel();
+		tableModel.addColumn("Total de agendamentos R$"); 
+		
+		table = new JTable(tableModel);
+		table.setDefaultRenderer(Object.class, new MonthColorRenderer());
+		table.setAutoscrolls(true);
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
+		TableColumnModel tcm4 = table.getColumnModel();
+		tcm4.getColumn(0).setPreferredWidth(180);
+		scrollPaneTotalAgendamento.setViewportView(table); 
+		listarTotalFinalAgendamentos();
+		
+		
+		//---------------PRODUTOS---------------
+		JScrollPane scrollPaneTotalProdutos = new JScrollPane();
+		scrollPaneTotalProdutos.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+		scrollPaneTotalProdutos.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPaneTotalProdutos.setBounds(445, 440, 184, 40);
+		contentPane.add(scrollPaneTotalProdutos);
+		
+		tableModel = new TableModel();
+		tableModel.addColumn("Total de produtos R$"); 
+		
+		table = new JTable(tableModel);
+		table.setDefaultRenderer(Object.class, new MonthColorRenderer());
+		table.setAutoscrolls(true);
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
+		TableColumnModel tcm5 = table.getColumnModel();
+		tcm5.getColumn(0).setPreferredWidth(180);
+		scrollPaneTotalProdutos.setViewportView(table); 
+		listarTotalFinalVendaProdutos();
+		
+		
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setBackground(new Color(200, 200, 200));
+		panel_1.setBorder(new LineBorder(new Color(192, 192, 192)));
+		panel_1.setBounds(10, 274, 619, 1);
+		contentPane.add(panel_1);
+		
+		JPanel panel_1_1 = new JPanel();
+		panel_1_1.setBorder(new LineBorder(new Color(192, 192, 192)));
+		panel_1_1.setBackground(UIManager.getColor("ScrollBar.background"));
+		panel_1_1.setBounds(10, 491, 619, 1);
+		contentPane.add(panel_1_1);
+		
+		
+		JPanel panel_1_1_1 = new JPanel();
+		panel_1_1_1.setBorder(new LineBorder(new Color(192, 192, 192)));
+		panel_1_1_1.setBackground(UIManager.getColor("ScrollBar.background"));
+		panel_1_1_1.setBounds(10, 749, 619, 1);
+		contentPane.add(panel_1_1_1);
+		
+		
+		//---------------SERVIÇOS---------------
+		JScrollPane scrollPaneTotalServicos = new JScrollPane();
+		scrollPaneTotalServicos.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+		scrollPaneTotalServicos.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPaneTotalServicos.setBounds(423, 698, 206, 40);
+		contentPane.add(scrollPaneTotalServicos);
+		
+		
+		tableModel = new TableModel();
+		tableModel.addColumn("Serviço com maior faturamento R$"); 
+		tableModel.addColumn("Serviço teste R$"); 
+		
+		table = new JTable(tableModel);
+		table.setDefaultRenderer(Object.class, new MonthColorRenderer());
+		table.setAutoscrolls(true);
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
+		TableColumnModel tcm6 = table.getColumnModel();
+		tcm6.getColumn(0).setPreferredWidth(200);
+		tcm6.getColumn(1).setPreferredWidth(200);
+		scrollPaneTotalServicos.setViewportView(table); 
+		listarTotalFinalVendaServicos();
+		
+		
+		
+		
+		
+		
+		
 		
 	}
 	
+
+	private void listarTotalFinalVendaServicos() {
+	    System.out.println("******* Iniciando listagem total de final de produtos *******");
+
+	    EntityManager em = null;
+	    try {
+	        em = HibernateUtil.getEntityManager();
+	        CriteriaBuilder cb = em.getCriteriaBuilder();
+
+	        // Consulta para calcular o faturamento total por tipo de serviço
+	        CriteriaQuery<Object[]> sumQuery = cb.createQuery(Object[].class);
+	        Root<EventoVO> root = sumQuery.from(EventoVO.class);
+	        sumQuery.multiselect(root.get("tiposervico"), cb.sum(root.get("total")));
+	        sumQuery.groupBy(root.get("tiposervico"));
+
+	        // Ordena os resultados pelo faturamento total em ordem decrescente
+	        sumQuery.orderBy(cb.desc(cb.sum(root.get("total"))));
+
+	        // Executa a consulta
+	        java.util.List<Object[]> resultados = em.createQuery(sumQuery).getResultList();
+
+	        if (!resultados.isEmpty()) {
+	            for (Object[] resultado : resultados) {
+	                RowData rowData = new RowData();
+
+	                // Obter os dados do resultado
+	                String tipoServico = (String) resultado[0];
+	                BigDecimal faturamento = (BigDecimal) resultado[1];
+
+	                rowData.getValues().put(0, tipoServico);
+	                rowData.getValues().put(1, String.format("%.2f", faturamento.doubleValue()) + " R$");
+
+	                tableModel.addRow(rowData);
+	            }
+	            // Após adicionar os dados, atualize a tabela
+	            tableModel.fireTableDataChanged();
+	        } else {
+	            System.out.println("Nenhum resultado encontrado.");
+	        }
+	    } catch (Exception ex) {
+	        ex.printStackTrace();
+	    } finally {
+	        if (em != null && em.isOpen()) {
+	            em.close();
+	        }
+	    }
+	}
+
+
+	private void listarTotalFinalVendaProdutos() {
+		
+		System.out.println("******* Iniciando listagem total de final de produtos *******");
+
+		EntityManager em = HibernateUtil.getEntityManager();
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+
+		
+		CriteriaQuery<BigDecimal> sumQuery = cb.createQuery(BigDecimal.class);
+		Root<VendaVO> root = sumQuery.from(VendaVO.class);
+		sumQuery.select(cb.sum(root.get("total")));
+		BigDecimal totalSoma = em.createQuery(sumQuery).getSingleResult();
+
+	
+		String totalFormattedProd = String.format("%.2f", totalSoma.doubleValue());
+
+		
+		CriteriaQuery<VendaVO> criteria = cb.createQuery(VendaVO.class);
+		Root<VendaVO> rootVenda = criteria.from(VendaVO.class);
+		criteria.select(rootVenda);
+
+		
+		listaServicosFinal = em.createQuery(criteria).getResultList();
+		
+		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+		centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
+		table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+
+		RowData rowData = new RowData();
+		for (VendaVO vendaVO : listaServicosFinal) {
+		    
+		    rowData.setElement(vendaVO);
+			rowData.getValues().put(0, totalFormattedProd + " R$");
+		    tableModel.addRow(rowData);
+		   
+		}
+		
+		
+	}
+
+	private void listarTotalFinalAgendamentos() {
+		
+		System.out.println("******* Iniciando listagem total de final de agendamentos *******");
+		EntityManager em = HibernateUtil.getEntityManager();
+
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		
+		CriteriaQuery<BigDecimal> sumQuery = cb.createQuery(BigDecimal.class);
+		Root<EventoVO> root = sumQuery.from(EventoVO.class);
+		sumQuery.select(cb.sum(root.get("totalservico")));
+		
+		BigDecimal totalSoma = em.createQuery(sumQuery).getSingleResult();
+
+		String totalFormatted = String.format("%.2f", totalSoma.doubleValue()); // Converte para double e formata com duas casas decimais
+		
+		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+		centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
+		table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+		
+		RowData rowData = new RowData();
+		for (EventoVO eventoVO : listaAgendamentos) {
+
+			if (eventoVO.getId() != null) {
+				rowData.getValues().put(0, totalFormatted + " R$");
+				rowData.setElement(eventoVO);
+			} else {
+				JOptionPane.showMessageDialog(null, "Sem Agendamentos no momento!", null,
+						JOptionPane.WARNING_MESSAGE);
+			}
+		}
+		tableModel.addRow(rowData);
+	}
+
+	private void listarTotaisDeServicos() {
+	
+		
+		if (tableModel != null) {
+			tableModel.clearTable();
+		}
+
+		try {
+
+			try {				   
+				
+				System.out.println("******* Iniciando listagem de serviços *******");
+				EntityManager em = HibernateUtil.getEntityManager();
+
+				CriteriaBuilder cb = em.getCriteriaBuilder();
+				CriteriaQuery<EventoVO> criteria = cb.createQuery(EventoVO.class);
+
+				// Clausula from
+				Root<EventoVO> agendamentosFrom = criteria.from(EventoVO.class);
+				criteria.select(agendamentosFrom);
+					
+				TypedQuery<EventoVO> query = em.createQuery(criteria);
+				listaServicos = query.getResultList();
+				
+				
+				DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+				centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
+				table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+				
+				
+				for (EventoVO eventoVO : listaServicos) {
+
+					if (eventoVO.getId() != null) {
+						System.out.println("Lista agendamentos --> " + listaServicos);
+					
+						RowData rowData = new RowData();
+						rowData.getValues().put(0, eventoVO.getId().toString());
+						rowData.getValues().put(1, eventoVO.getTipoServico());
+						rowData.getValues().put(2, eventoVO.getParticipantes());
+						rowData.getValues().put(3, eventoVO.getValor() + " R$");
+						rowData.getValues().put(4, eventoVO.getTotalServico() + " R$");
+
+						rowData.setElement(eventoVO);
+						tableModel.addRow(rowData);
+					} else {
+						JOptionPane.showMessageDialog(null, "Sem Agendamentos no momento!", null,
+								JOptionPane.WARNING_MESSAGE);
+					}
+ 
+				}
+
+			} catch (Exception e) {
+				throw new BOValidationException("Código: erro de validação" + " valor inválido");
+			}
+
+		} catch (BOValidationException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(this, e.getMessage(), "Erro de validação", JOptionPane.WARNING_MESSAGE);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, e.getMessage(), "Erro de sistema", JOptionPane.ERROR_MESSAGE);
+		}
 	
 	
+		
+	}
 
 	private void listarVendasAgendamentos() {
 		if (tableModel != null) {
@@ -222,7 +550,8 @@ public class TelaFinanceiro extends JFrame {
 				TypedQuery<EventoVO> query = em.createQuery(criteria);
 				listaAgendamentos = query.getResultList();
 				
-
+	
+				
 				for (EventoVO eventoVO : listaAgendamentos) {
 
 					if (eventoVO.getId() != null) {
@@ -234,14 +563,18 @@ public class TelaFinanceiro extends JFrame {
 						rowData.getValues().put(2, eventoVO.getDd());
 						rowData.getValues().put(3, eventoVO.getNumero());
 						rowData.getValues().put(4, eventoVO.getTotalServico() + " R$");
+						
+						//totalAgendamentoVal = totalAgendamentoVal.add(eventoVO.getTotalServico());
+						
 
 						rowData.setElement(eventoVO);
 						tableModel.addRow(rowData);
+						
+									
 					} else {
 						JOptionPane.showMessageDialog(null, "Sem Agendamentos no momento!", null,
 								JOptionPane.WARNING_MESSAGE);
 					}
- 
 				}
 
 			} catch (Exception e) {
