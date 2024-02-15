@@ -21,6 +21,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.text.MaskFormatter;
 
@@ -526,7 +527,7 @@ public class TelaAgendar extends JFrame {
 
 		scrollPane.setViewportView(table_1);
 		listarAgendamentos();
-
+		
 		JLabel lblNewLabel_3 = new JLabel("");
 		lblNewLabel_3.setIcon(new ImageIcon(TelaAgendar.class.getResource("/br/com/senac/view/img/foto2Agenda.png")));
 		lblNewLabel_3.setBounds(803, 72, 223, 332);
@@ -963,20 +964,26 @@ public class TelaAgendar extends JFrame {
 
 				query.setMaxResults(1);
 				listaAgendamentos = query.getResultList();
-
+				
 				for (EventoVO eventoVO : listaAgendamentos) {
 
 					if (eventoVO.getId() != null) {
 						System.out.println("Lista agendamentos --> " + listaAgendamentos);
 						RowData rowData = new RowData();
 						SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+						
+						StatusServico statusServicoEnum = StatusServico.valueOf(eventoVO.getTipoServico());
+						String tipoServico = statusServicoEnum.getDescricao();
+						
+						StatusAgendamento statusAgendamentoEnum = StatusAgendamento.valueOf(eventoVO.getStatus());
+						String statusAgendamento = statusAgendamentoEnum.getStatus();
 
 						rowData.getValues().put(0, eventoVO.getId().toString());
 						rowData.getValues().put(1, eventoVO.getLocal());
 						rowData.getValues().put(2, dateFormat.format(eventoVO.getDataHoraInicio()));
 						rowData.getValues().put(3, dateFormat.format(eventoVO.getDataHoraFim()));
-						rowData.getValues().put(4, eventoVO.getStatus());
-						rowData.getValues().put(5, eventoVO.getTipoServico());
+						rowData.getValues().put(4, statusAgendamento);
+						rowData.getValues().put(5, tipoServico);
 						rowData.getValues().put(6, eventoVO.getValor() + " R$");
 						rowData.getValues().put(7, eventoVO.getTotalServico() + " R$");
 						rowData.getValues().put(8, eventoVO.getNomeCliente());

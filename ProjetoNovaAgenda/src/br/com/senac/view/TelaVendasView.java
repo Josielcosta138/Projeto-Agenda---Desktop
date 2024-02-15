@@ -23,6 +23,7 @@ import javax.swing.ImageIcon;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.text.MaskFormatter;
 
@@ -519,6 +520,18 @@ public class TelaVendasView extends JFrame {
 		
 				TypedQuery<VendaVO> query = em.createQuery(criteria);
 				listagemDeVendas = query.getResultList();
+				
+				DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+				centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
+				table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+				table.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
+				table.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
+				table.getColumnModel().getColumn(6).setCellRenderer(centerRenderer);
+				table.getColumnModel().getColumn(7).setCellRenderer(centerRenderer);
+				table.getColumnModel().getColumn(8).setCellRenderer(centerRenderer);
+				table.getColumnModel().getColumn(9).setCellRenderer(centerRenderer);
+				
+				
 
 				tableModel.clearTable(); 
 

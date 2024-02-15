@@ -5,6 +5,7 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
 import br.com.senac.dao.HibernateUtil;
@@ -210,6 +211,13 @@ public class Disponibilidade extends JFrame {
 
 		        //query.setMaxResults(1);
 		        listaAgendamentos = query.getResultList();
+		        
+		        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+				centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
+				table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+				table.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
+				table.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
+				table.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
 		        
 		        
 		        // Criar uma estrutura para armazenar os dias e horários já agendados
