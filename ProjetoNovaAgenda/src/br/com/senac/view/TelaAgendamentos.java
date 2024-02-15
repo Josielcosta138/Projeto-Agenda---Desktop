@@ -10,6 +10,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.text.MaskFormatter;
 
@@ -490,11 +491,25 @@ public class TelaAgendamentos extends JFrame {
 				TypedQuery<EventoVO> query = em.createQuery(criteria);
 				listaAgendamentos = query.getResultList();
 				
+				DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+				centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
+				table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+				table.getColumnModel().getColumn(6).setCellRenderer(centerRenderer);
+				table.getColumnModel().getColumn(7).setCellRenderer(centerRenderer);
+				table.getColumnModel().getColumn(12).setCellRenderer(centerRenderer);
+				table.getColumnModel().getColumn(9).setCellRenderer(centerRenderer);
+				
 
 				for (EventoVO eventoVO : listaAgendamentos) {
 
 					if (eventoVO.getId() != null) {
-						System.out.println("Lista agendamentos --> " + listaAgendamentos);
+						
+						//StatusServico statusServicoEnum = StatusServico.valueOf(eventoVO.getTipoServico());
+						//String tipoServico2 = statusServicoEnum.getDescricao();
+						
+						//StatusServico statusServicoEnum2 = StatusServico.valueOf(eventoVO.getStatus());
+						//String status2 = statusServicoEnum2.getDescricao();
+						
 						RowData rowData = new RowData();
 						SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 					

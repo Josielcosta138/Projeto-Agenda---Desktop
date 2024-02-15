@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.Toolkit;
 import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.text.MaskFormatter;
 
@@ -421,6 +422,14 @@ public class TelaProdutos extends JFrame {
 				
 				TypedQuery<ProdutoVO> query = em.createQuery(criteria);
 				listagemDeProdutos = query.getResultList();
+				DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+				centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
+				table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+				table.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
+				table.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
+				table.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
+				table.getColumnModel().getColumn(6).setCellRenderer(centerRenderer);
+				table.getColumnModel().getColumn(7).setCellRenderer(centerRenderer);
 
 				tableModel.clearTable(); 
 
@@ -428,6 +437,7 @@ public class TelaProdutos extends JFrame {
 					if (produtossVO.getId() != null) {
 						
 						RowData rowData = new RowData();
+					
 						
 						SimpleDateFormat sdfMes = new SimpleDateFormat("dd/MM/yyyy");
 						rowData.getValues().put(0, produtossVO.getId().toString());

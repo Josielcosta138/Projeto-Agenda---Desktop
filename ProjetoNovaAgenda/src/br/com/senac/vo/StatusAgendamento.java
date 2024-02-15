@@ -8,14 +8,20 @@ public enum StatusAgendamento {
 
 	private String status;
 
-	private StatusAgendamento(String descricao) {
-		this.status = descricao;
+	private StatusAgendamento(String status) {
+		this.status = status;
 	}
 
 	@Override
 	public String toString() {
 		return status;
 	}
+
+	public String getStatus() {
+		return status;
+	}
+	
+	
 
 }
 

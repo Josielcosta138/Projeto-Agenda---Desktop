@@ -36,6 +36,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.SoftBevelBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.text.MaskFormatter;
 
@@ -408,11 +409,23 @@ public class TelaServicos extends JFrame {
 				
 				TypedQuery<TipoServicoVO> query = em.createQuery(criteria);
 				listagemDeTiposDeServicos = query.getResultList();
+				
+				DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+				centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
+				table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+				table.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
+				table.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
+				
 
 				tableModel.clearTable(); 
 
 				for (TipoServicoVO tServicoVO : listagemDeTiposDeServicos) {
 					if (tServicoVO.getId() != null) {
+						
+						
+						StatusServico statusServicoEnum = StatusServico.valueOf(tServicoVO.getNome());
+						String tipoServ = statusServicoEnum.getDescricao();
+						
 						int duracaoInt = tServicoVO.getDuracao();
 						String duracaoString = String.format("%04d", duracaoInt);
 						// Obter os dois primeiros dígitos (horas) e os dois últimos dígitos (minutos)
@@ -421,8 +434,9 @@ public class TelaServicos extends JFrame {
 						String duracaoFormatada = horas + ":" + minutos + " min";
 						RowData rowData = new RowData();
 						
+						
 						rowData.getValues().put(0, tServicoVO.getId().toString());
-						rowData.getValues().put(1, tServicoVO.getNome());
+						rowData.getValues().put(1, tipoServ);
 						rowData.getValues().put(2, tServicoVO.getValor().toString() + " R$");
 						rowData.getValues().put(3, duracaoFormatada);
 

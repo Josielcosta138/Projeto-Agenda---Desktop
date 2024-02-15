@@ -69,6 +69,7 @@ public class CadastroPessoaView extends JFrame {
 	private TelaProdutos telaProdutos;
 	private JTextField tftHoraAtual;
 	private TelaVendasView telaVendasView;
+	private TelaFinanceiro telaFinanceiro; 
 	
 
 	public static void main(String[] args) {
@@ -713,8 +714,12 @@ public class CadastroPessoaView extends JFrame {
 	}
 
 	protected void calcularFinanceiro() {
-		JOptionPane.showMessageDialog(this, "Módulo em desenvolvimento. \nAguarde, ficará disponível na próxima versão. Obrigada :)",
-				"Mensagem de aviso.", JOptionPane.WARNING_MESSAGE);
+		if (telaFinanceiro == null) {
+			telaFinanceiro = new TelaFinanceiro();
+		}
+		telaFinanceiro.setVisible(true);
+		dispose();
+		System.out.println("Clicou no Produtos");
 		
 	}
 

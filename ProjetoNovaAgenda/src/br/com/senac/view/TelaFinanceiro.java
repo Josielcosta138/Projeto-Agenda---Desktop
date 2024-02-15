@@ -568,10 +568,6 @@ public class TelaFinanceiro extends JFrame {
 
 					if (eventoVO.getId() != null) {
 						System.out.println("Lista agendamentos --> " + listaAgendamentos);
-						
-						 StatusServico statusServicoEnum = StatusServico.valueOf(eventoVO.getTipoServico());
-						 String totalServ = statusServicoEnum.getDescricao();
-					
 						RowData rowData = new RowData();
 						rowData.getValues().put(0, eventoVO.getId().toString());
 						rowData.getValues().put(1, eventoVO.getNomeCliente());
