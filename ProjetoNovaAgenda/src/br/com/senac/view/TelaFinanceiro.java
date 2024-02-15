@@ -143,7 +143,6 @@ public class TelaFinanceiro extends JFrame {
 		tableModel.addColumn("DD");
 		tableModel.addColumn("Tefone"); 
 		tableModel.addColumn("Total R$"); 
-		tableModel.addColumn("Total de agendamentos R$"); 
 
 		
 		table = new JTable(tableModel);
@@ -157,7 +156,6 @@ public class TelaFinanceiro extends JFrame {
 		tcm.getColumn(2).setPreferredWidth(100);
 		tcm.getColumn(3).setPreferredWidth(140);
 		tcm.getColumn(4).setPreferredWidth(140);
-		tcm.getColumn(5).setPreferredWidth(180);
 		
 		scrollPaneAgendamentos.setViewportView(table);
 		listarVendasAgendamentos();
@@ -489,19 +487,26 @@ public class TelaFinanceiro extends JFrame {
 				listaServicos = query.getResultList();
 				
 				
+				
+				
 				DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 				centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
 				table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
-				
+				table.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
+				table.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
+				table.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
 				
 				for (EventoVO eventoVO : listaServicos) {
 
 					if (eventoVO.getId() != null) {
 						System.out.println("Lista agendamentos --> " + listaServicos);
 					
+						 StatusServico statusServicoEnum = StatusServico.valueOf(eventoVO.getTipoServico());
+						 String tipoServico = statusServicoEnum.getDescricao();
+						
 						RowData rowData = new RowData();
 						rowData.getValues().put(0, eventoVO.getId().toString());
-						rowData.getValues().put(1, eventoVO.getTipoServico());
+						rowData.getValues().put(1, tipoServico);
 						rowData.getValues().put(2, eventoVO.getParticipantes());
 						rowData.getValues().put(3, eventoVO.getValor() + " R$");
 						rowData.getValues().put(4, eventoVO.getTotalServico() + " R$");
@@ -551,13 +556,21 @@ public class TelaFinanceiro extends JFrame {
 					
 				TypedQuery<EventoVO> query = em.createQuery(criteria);
 				listaAgendamentos = query.getResultList();
-				
+				DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+				centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
+				table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+				table.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
+				table.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
+				table.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
 	
 				
 				for (EventoVO eventoVO : listaAgendamentos) {
 
 					if (eventoVO.getId() != null) {
 						System.out.println("Lista agendamentos --> " + listaAgendamentos);
+						
+						 StatusServico statusServicoEnum = StatusServico.valueOf(eventoVO.getTipoServico());
+						 String totalServ = statusServicoEnum.getDescricao();
 					
 						RowData rowData = new RowData();
 						rowData.getValues().put(0, eventoVO.getId().toString());
@@ -566,7 +579,6 @@ public class TelaFinanceiro extends JFrame {
 						rowData.getValues().put(3, eventoVO.getNumero());
 						rowData.getValues().put(4, eventoVO.getTotalServico() + " R$");
 						
-						//totalAgendamentoVal = totalAgendamentoVal.add(eventoVO.getTotalServico());
 						
 
 						rowData.setElement(eventoVO);
@@ -613,6 +625,12 @@ public class TelaFinanceiro extends JFrame {
 		
 				TypedQuery<VendaVO> query = em.createQuery(criteria);
 				listagemDeVendas = query.getResultList();
+				DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+				centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
+				table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+				table.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
+				table.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
+				table.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
 
 				tableModel.clearTable(); 
 
