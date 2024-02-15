@@ -26,6 +26,7 @@ import antlr.collections.List;
 import br.com.senac.dao.HibernateUtil;
 import br.com.senac.exception.BOValidationException;
 import br.com.senac.vo.EventoVO;
+import br.com.senac.vo.StatusServico;
 import br.com.senac.vo.VendaVO;
 
 import javax.swing.JTable;
@@ -54,6 +55,7 @@ public class TelaFinanceiro extends JFrame {
 	private java.util.List<EventoVO> listaServicos;
 	private java.util.List<VendaVO> listaServicosFinal;
 	public BigDecimal totalAgendamentoVal = BigDecimal.ZERO;
+	public StatusServico statusServico; 
 
 	/**
 	 * Launch the application.
@@ -312,13 +314,13 @@ public class TelaFinanceiro extends JFrame {
 		JScrollPane scrollPaneTotalServicos = new JScrollPane();
 		scrollPaneTotalServicos.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 		scrollPaneTotalServicos.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPaneTotalServicos.setBounds(423, 698, 206, 40);
+		scrollPaneTotalServicos.setBounds(257, 698, 372, 40);
 		contentPane.add(scrollPaneTotalServicos);
 		
 		
 		tableModel = new TableModel();
 		tableModel.addColumn("Serviço com maior faturamento R$"); 
-		tableModel.addColumn("Serviço teste R$"); 
+		tableModel.addColumn("Valor R$"); 
 		
 		table = new JTable(tableModel);
 		table.setDefaultRenderer(Object.class, new MonthColorRenderer());
@@ -331,62 +333,62 @@ public class TelaFinanceiro extends JFrame {
 		scrollPaneTotalServicos.setViewportView(table); 
 		listarTotalFinalVendaServicos();
 		
-		
-		
-		
-		
-		
-		
-		
+	
 	}
 	
-
+	//DESENVOLVENDO
+	@SuppressWarnings("unlikely-arg-type")
 	private void listarTotalFinalVendaServicos() {
-	    System.out.println("******* Iniciando listagem total de final de produtos *******");
+		System.out.println("******* Iniciando listagem total de final de agendamentos *******");
+	    EntityManager em = HibernateUtil.getEntityManager();
 
-	    EntityManager em = null;
-	    try {
-	        em = HibernateUtil.getEntityManager();
-	        CriteriaBuilder cb = em.getCriteriaBuilder();
+	    CriteriaBuilder cb = em.getCriteriaBuilder();
+	    
+	    // Define o tipo de retorno da consulta como um array de objetos
+	    CriteriaQuery<Object[]> query = cb.createQuery(Object[].class);
+	    Root<EventoVO> root = query.from(EventoVO.class);
 
-	        // Consulta para calcular o faturamento total por tipo de serviço
-	        CriteriaQuery<Object[]> sumQuery = cb.createQuery(Object[].class);
-	        Root<EventoVO> root = sumQuery.from(EventoVO.class);
-	        sumQuery.multiselect(root.get("tiposervico"), cb.sum(root.get("total")));
-	        sumQuery.groupBy(root.get("tiposervico"));
+	    // Seleciona o total do serviço e o tipo de serviço
+	    query.multiselect(root.get("totalservico"), root.get("tiposervico"));
 
-	        // Ordena os resultados pelo faturamento total em ordem decrescente
-	        sumQuery.orderBy(cb.desc(cb.sum(root.get("total"))));
+	    // Ordena em ordem decrescente pelo total do serviço
+	    query.orderBy(cb.desc(root.get("totalservico")));
 
-	        // Executa a consulta
-	        java.util.List<Object[]> resultados = em.createQuery(sumQuery).getResultList();
+	    // Limita o resultado a apenas um registro (o maior valor)
+	    TypedQuery<Object[]> typedQuery = em.createQuery(query).setMaxResults(1);
 
-	        if (!resultados.isEmpty()) {
-	            for (Object[] resultado : resultados) {
-	                RowData rowData = new RowData();
+	    // Executa a consulta
+	    Object[] result = typedQuery.getSingleResult();
+	    
+	    // Extrai o total do serviço e o tipo de serviço do resultado
+	    BigDecimal totalSoma = (BigDecimal) result[0];
+	    String tipoServico = (String) result[1];
 
-	                // Obter os dados do resultado
-	                String tipoServico = (String) resultado[0];
-	                BigDecimal faturamento = (BigDecimal) resultado[1];
+	    StatusServico statusServicoEnum = StatusServico.valueOf(tipoServico);
+	    tipoServico = statusServicoEnum.getDescricao();
+	    
+	    // Formata o total do serviço
+	    String totalFormatted = String.format("%.2f", totalSoma.doubleValue()) + " R$";
+	    
+	    
+	    DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+		centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
+		table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+		table.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
 
-	                rowData.getValues().put(0, tipoServico);
-	                rowData.getValues().put(1, String.format("%.2f", faturamento.doubleValue()) + " R$");
+	    // Adiciona o total do serviço e o tipo de serviço ao rowData
+	    RowData rowData = new RowData();
+	    rowData.getValues().put(0, tipoServico);
+	    //rowData.getValues().put(0, statusServico.getDescricao());
+	    rowData.getValues().put(1, totalFormatted);
+	    
 
-	                tableModel.addRow(rowData);
-	            }
-	            // Após adicionar os dados, atualize a tabela
-	            tableModel.fireTableDataChanged();
-	        } else {
-	            System.out.println("Nenhum resultado encontrado.");
-	        }
-	    } catch (Exception ex) {
-	        ex.printStackTrace();
-	    } finally {
-	        if (em != null && em.isOpen()) {
-	            em.close();
-	        }
-	    }
+	    // Adiciona a linha ao tableModel
+	    tableModel.addRow(rowData);
+		
+		
 	}
+
 
 
 	private void listarTotalFinalVendaProdutos() {

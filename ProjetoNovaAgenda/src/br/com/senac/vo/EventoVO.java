@@ -74,7 +74,7 @@ public class EventoVO implements Serializable{
     private String status;
     
     @Column(name = "tiposervico", length = 100)
-    private String tipoServico;
+    private String tiposervico;
     
     @Column(name = "nomecliente", length = 100)
     private String nomeCliente;
@@ -103,7 +103,7 @@ public class EventoVO implements Serializable{
 		this.local = local;
 		this.participantes = participantes;
 		this.status = status;
-		this.tipoServico = tipoServico;
+		this.tiposervico = tipoServico;
 		this.numero = numero;
 		this.dd = dd;
 		this.valor = valor;
@@ -163,11 +163,11 @@ public class EventoVO implements Serializable{
 	
 	
 	public String getTipoServico() {
-		return tipoServico;
+		return tiposervico;
 	}
 
 	public void setTipoServico(String tipoServico) {
-		this.tipoServico = tipoServico;
+		this.tiposervico = tipoServico;
 	}
 
 	public String getNomeCliente() {
@@ -225,7 +225,7 @@ public class EventoVO implements Serializable{
 	@Override
 	public int hashCode() {
 		return Objects.hash(dataHoraFim, dataHoraInicio, dd, email, id, local, nomeCliente, numero, participantes,
-				status, tipoServico, totalservico, valor);
+				status, tiposervico, totalservico, valor);
 	}
 
 	@Override
@@ -241,7 +241,7 @@ public class EventoVO implements Serializable{
 				&& Objects.equals(dd, other.dd) && Objects.equals(email, other.email) && Objects.equals(id, other.id)
 				&& Objects.equals(local, other.local) && Objects.equals(nomeCliente, other.nomeCliente)
 				&& Objects.equals(numero, other.numero) && Objects.equals(participantes, other.participantes)
-				&& Objects.equals(status, other.status) && Objects.equals(tipoServico, other.tipoServico)
+				&& Objects.equals(status, other.status) && Objects.equals(tiposervico, other.tiposervico)
 				&& Objects.equals(totalservico, other.totalservico) && Objects.equals(valor, other.valor);
 	}
 
@@ -249,7 +249,7 @@ public class EventoVO implements Serializable{
 	public String toString() {
 		return "EventoVO [id=" + id + ", dataHoraInicio=" + dataHoraInicio + ", dataHoraFim=" + dataHoraFim + ", local="
 				+ local + ", numero=" + numero + ", dd=" + dd + ", participantes=" + participantes + ", status="
-				+ status + ", tipoServico=" + tipoServico + ", nomeCliente=" + nomeCliente + ", email=" + email
+				+ status + ", tipoServico=" + tiposervico + ", nomeCliente=" + nomeCliente + ", email=" + email
 				+ ", valor=" + valor + ", totalServico=" + totalservico + "]";
 	}
 	
