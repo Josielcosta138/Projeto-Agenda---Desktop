@@ -273,8 +273,8 @@ public class TelaProdutos extends JFrame {
 		JButton btnVoltar = new JButton("Voltar");
 		btnVoltar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				CadastroPessoaView cadastroPessoaView = new CadastroPessoaView();
-				cadastroPessoaView.setVisible(true);
+					TelaAcessosView telaAcessosView = new TelaAcessosView();
+					telaAcessosView.setVisible(true);
 				setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				dispose();
 			}

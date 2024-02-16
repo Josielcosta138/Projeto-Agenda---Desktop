@@ -241,8 +241,8 @@ public class TelaServicos extends JFrame {
 		JButton btnNewButton = new JButton("Voltar");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				CadastroPessoaView cadastroPessoaView = new CadastroPessoaView();
-				cadastroPessoaView.setVisible(true);
+				TelaAcessosView telaAcessosView = new TelaAcessosView();
+				telaAcessosView.setVisible(true);
 				setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				dispose();
 

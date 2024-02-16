@@ -49,12 +49,10 @@ public class Disponibilidade extends JFrame {
 
 	private JPanel contentPane;
 	private JTable table;
-	private CadastroPessoaView cadastroPessoaView;
 	private TableModel tableModel;
 	private List<EventoVO> listaAgendamentos;
-	private int mes = 0;
-	private int ano = 0;
 	private String local;
+	private TelaAcessosView telaAcessosView;
 
 	/**
 	 * Launch the application.
@@ -234,8 +232,8 @@ public class Disponibilidade extends JFrame {
 		            int dia = Integer.parseInt(dayFormat.format(eventoVO.getDataHoraInicio()));
 		            int horario = Integer.parseInt(hourFormat.format(eventoVO.getDataHoraInicio()));
 		            int minutos = Integer.parseInt(minutesFormat.format(eventoVO.getDataHoraInicio()));
-		            mes = Integer.parseInt(monthFormat.format(eventoVO.getDataHoraInicio()));
-		            ano = Integer.parseInt(yearFormat.format(eventoVO.getDataHoraInicio()));
+		            int mes = Integer.parseInt(monthFormat.format(eventoVO.getDataHoraInicio()));
+		            int ano = Integer.parseInt(yearFormat.format(eventoVO.getDataHoraInicio()));
 		            local = eventoVO.getLocal();
 		            
 		            diasEHorariosAgendados.computeIfAbsent(dia, k -> new HashSet<>()).add(horario);
@@ -307,10 +305,11 @@ public class Disponibilidade extends JFrame {
 	}
 
 	protected void voltar() {
-		if (cadastroPessoaView == null) {
-			cadastroPessoaView = new CadastroPessoaView();
+		if (telaAcessosView == null) {
+			telaAcessosView = new TelaAcessosView();
 		}
-		cadastroPessoaView.setVisible(true);
+		telaAcessosView.setVisible(true);
 		dispose();
+
 	}
 }

@@ -23,6 +23,7 @@ import br.com.senac.service.Service;
 import br.com.senac.vo.ContatoVO;
 import br.com.senac.vo.ContelVO;
 import br.com.senac.vo.EventoVO;
+import br.com.senac.vo.StatusAgendamento;
 import br.com.senac.vo.StatusServico;
 
 import java.awt.Toolkit;
@@ -76,6 +77,7 @@ public class TelaAgendamentos extends JFrame {
 	private List<EventoVO> listaAgendamentos;
 	private JFormattedTextField ftfSFiltroStatus;
 	private static TelaAgendamentos frame;
+	private TelaAcessosView telaAcessosView;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -210,11 +212,12 @@ public class TelaAgendamentos extends JFrame {
 		btnVoltar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				if (cadastroPessoaView == null) {
-					cadastroPessoaView = new CadastroPessoaView();
+				if (telaAcessosView == null) {
+					telaAcessosView = new TelaAcessosView();
 				}
-				cadastroPessoaView.setVisible(true);
+				telaAcessosView.setVisible(true);
 				dispose();
+
 			}
 
 		});
@@ -494,6 +497,8 @@ public class TelaAgendamentos extends JFrame {
 				DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 				centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
 				table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+				table.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
+				table.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
 				table.getColumnModel().getColumn(6).setCellRenderer(centerRenderer);
 				table.getColumnModel().getColumn(7).setCellRenderer(centerRenderer);
 				table.getColumnModel().getColumn(12).setCellRenderer(centerRenderer);
@@ -502,13 +507,13 @@ public class TelaAgendamentos extends JFrame {
 
 				for (EventoVO eventoVO : listaAgendamentos) {
 
-					if (eventoVO.getId() != null) {
+					if (eventoVO.getId() != null) { 
 						
-						//StatusServico statusServicoEnum = StatusServico.valueOf(eventoVO.getTipoServico());
-						//String tipoServico2 = statusServicoEnum.getDescricao();
+						StatusServico statusServicoEnum = StatusServico.valueOf(eventoVO.getTipoServico());
+						String tipoServico2 = statusServicoEnum.getDescricao();
 						
-						//StatusServico statusServicoEnum2 = StatusServico.valueOf(eventoVO.getStatus());
-						//String status2 = statusServicoEnum2.getDescricao();
+						StatusAgendamento statusServicoEnum2 = StatusAgendamento.valueOf(eventoVO.getStatus()); 
+						String status2 = statusServicoEnum2.getStatus();
 						
 						RowData rowData = new RowData();
 						SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
@@ -517,8 +522,8 @@ public class TelaAgendamentos extends JFrame {
 						rowData.getValues().put(1, eventoVO.getLocal());
 						rowData.getValues().put(2, dateFormat.format(eventoVO.getDataHoraInicio()));
 						rowData.getValues().put(3, dateFormat.format(eventoVO.getDataHoraFim()));
-						rowData.getValues().put(4, eventoVO.getStatus());
-						rowData.getValues().put(5, eventoVO.getTipoServico());
+						rowData.getValues().put(4, status2);
+						rowData.getValues().put(5, tipoServico2);
 						rowData.getValues().put(6, eventoVO.getValor() + " R$");
 						rowData.getValues().put(7, eventoVO.getTotalServico() + " R$");
 						rowData.getValues().put(8, eventoVO.getNomeCliente());
