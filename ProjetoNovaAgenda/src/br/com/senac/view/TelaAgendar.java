@@ -96,6 +96,7 @@ public class TelaAgendar extends JFrame {
 	private JFormattedTextField ftfValor;
 	private List<TipoServicoVO> listagemDeTiposDeServicos;
 	private JFormattedTextField ftfTotal;
+	private TelaAcessosView telaAcessosView;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -686,7 +687,7 @@ public class TelaAgendar extends JFrame {
 
 			TypedQuery<ContelVO> query = em.createQuery(criteria);
 			List<ContelVO> listaContat = query.getResultList();
-			System.out.println(listaContat);
+			
 
 			// edição lista e-mail
 			DefaultListModel<String> model = new DefaultListModel<>();
@@ -961,6 +962,8 @@ public class TelaAgendar extends JFrame {
 				// Adicionando ORDER BY para ordenar por ID em ordem decrescente
 				criteria.orderBy(cb.desc(agendamentosFrom.get("id")));
 				TypedQuery<EventoVO> query = em.createQuery(criteria);
+				
+		
 
 				query.setMaxResults(1);
 				listaAgendamentos = query.getResultList();
@@ -970,6 +973,7 @@ public class TelaAgendar extends JFrame {
 					if (eventoVO.getId() != null) {
 						System.out.println("Lista agendamentos --> " + listaAgendamentos);
 						RowData rowData = new RowData();
+						
 						SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 						
 						StatusServico statusServicoEnum = StatusServico.valueOf(eventoVO.getTipoServico());
@@ -1125,10 +1129,10 @@ public class TelaAgendar extends JFrame {
 	}
 
 	protected void cancelarVoltar() {
-		if (cadastroPessoaView == null) {
-			cadastroPessoaView = new CadastroPessoaView();
+		if (telaAcessosView == null) {
+			telaAcessosView = new TelaAcessosView();
 		}
-		cadastroPessoaView.setVisible(true);
+		telaAcessosView.setVisible(true);
 		dispose();
 
 	}

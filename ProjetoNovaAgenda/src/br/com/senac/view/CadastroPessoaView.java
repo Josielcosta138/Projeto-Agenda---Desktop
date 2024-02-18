@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
 import br.com.senac.dao.HibernateUtil;
@@ -864,6 +865,7 @@ public class CadastroPessoaView extends JFrame {
 			tableModel1.clearTable();
 		}
 
+		
 		ContatoVO contatos = (ContatoVO) tableModel.getRows().get(table.getSelectedRow()).getElement();
 
 		if (contatos != null) {
@@ -877,6 +879,7 @@ public class CadastroPessoaView extends JFrame {
 				String emails = null;
 
 				for (ContelVO contelVO : telefones) {
+					
 					RowData rowData = new RowData();
 					rowData.getValues().put(0, contelVO.getId().toString());
 					rowData.getValues().put(1, contelVO.getDddnum());
@@ -969,6 +972,10 @@ public class CadastroPessoaView extends JFrame {
 			criteria.orderBy(contatoOrderBy);
 
 			List<ContatoVO> listaContat = query.getResultList();
+			DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+			centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
+			table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+			
 
 			System.out.println(listaContat);
 			Collections.sort(listaContat, (contato1, contato2) -> contato1.getNome().compareTo(contato2.getNome()));
