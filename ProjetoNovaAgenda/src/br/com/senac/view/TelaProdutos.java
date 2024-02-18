@@ -11,6 +11,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.text.MaskFormatter;
 
+import Relatorio.RelatorioPdfSimples;
+import Relatorio.RelatorioTeste;
 import br.com.senac.dao.HibernateUtil;
 import br.com.senac.exception.BOValidationException;
 import br.com.senac.service.Service;
@@ -19,6 +21,7 @@ import br.com.senac.vo.StatusAgendamento;
 import br.com.senac.vo.StatusServico;
 import br.com.senac.vo.StatusVenda;
 import br.com.senac.vo.TipoServicoVO;
+import net.sf.jasperreports.engine.JRException;
 
 import java.awt.Color;
 import javax.swing.JLabel;
@@ -39,11 +42,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -70,7 +75,8 @@ public class TelaProdutos extends JFrame {
 	private  List<ProdutoVO> listagemDeProdutos;
 	private JFormattedTextField ftfNome_Pesquisa;
 	private JFormattedTextField ftfIdentificacao_Pesquisa;
-	
+	private List<ProdutoVO> listagemProdutoParaRelatorio;
+	List<String> strings1 = new ArrayList<>();
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -238,6 +244,35 @@ public class TelaProdutos extends JFrame {
 		ftfCodigo.setEditable(false);
 		ftfCodigo.setBounds(91, 172, 65, 20);
 		panel.add(ftfCodigo);
+		
+		
+	
+		
+		
+		JButton btnRelatorio = new JButton("Relatorio");
+		btnRelatorio.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				//RelatorioTeste relatorioTeste = new RelatorioTeste();
+				RelatorioPdfSimples relatorioPdfSimples = new RelatorioPdfSimples();
+				
+				try {
+					relatorioPdfSimples.gerarImprimir();
+					relatorioPdfSimples.gerarCabecalho();
+					
+					
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				
+				
+				
+				
+			}
+		});
+		btnRelatorio.setForeground(new Color(95, 95, 95));
+		btnRelatorio.setBounds(220, 221, 101, 23);
+		panel.add(btnRelatorio);
 		
 		JLabel lblCadastroProduto = new JLabel("Cadastro de produtos");
 		lblCadastroProduto.setForeground(new Color(115, 115, 115));
@@ -570,4 +605,31 @@ public class TelaProdutos extends JFrame {
 			ftfValidade.setValue(null);
 			ftfQuantidade.setValue("");
 	}
+	
+	
+	
+	public void buscarListaDeProdutosParaRelatorio() {
+		System.out.println("******* Iniciando liestagem de produtos *******");
+		EntityManager em = HibernateUtil.getEntityManager();
+
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<ProdutoVO> criteria = cb.createQuery(ProdutoVO.class);
+
+		// Clausula from
+		Root<ProdutoVO> produtosFrom = criteria.from(ProdutoVO.class);
+		criteria.select(produtosFrom);
+
+		TypedQuery<ProdutoVO> query = em.createQuery(criteria);
+		listagemProdutoParaRelatorio = query.getResultList();
+
+		for (ProdutoVO produto : listagemProdutoParaRelatorio) {
+			String string = produto.getId() + ", " + produto.getIndentificacao() + ", " + produto.getNome() + ", "
+					+ produto.getMarca() + ", " + produto.getDescricao() + ", " + produto.getPreco() + ", "
+					+ produto.getQuantidadeEstoque() + ", " + produto.getDataValidade() + ", "
+					+ produto.getStatusVenda();
+			strings1.add(string);
+		}
+		
+	}
+	
 }

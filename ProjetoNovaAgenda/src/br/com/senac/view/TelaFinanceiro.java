@@ -22,12 +22,15 @@ import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
+import Relatorio.RelatorioTeste;
 import antlr.collections.List;
 import br.com.senac.dao.HibernateUtil;
 import br.com.senac.exception.BOValidationException;
 import br.com.senac.vo.EventoVO;
+import br.com.senac.vo.RelatorioItem;
 import br.com.senac.vo.StatusServico;
 import br.com.senac.vo.VendaVO;
+import net.sf.jasperreports.engine.JRException;
 
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
@@ -41,6 +44,8 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import javax.swing.JFormattedTextField;
 import javax.swing.UIManager;
@@ -54,6 +59,7 @@ public class TelaFinanceiro extends JFrame {
 	private java.util.List<EventoVO> listaAgendamentos;
 	private java.util.List<EventoVO> listaServicos;
 	private java.util.List<VendaVO> listaServicosFinal;
+	public java.util.List<String> listaRelatorio;
 	public BigDecimal totalAgendamentoVal = BigDecimal.ZERO;
 	public StatusServico statusServico; 
 
@@ -328,7 +334,7 @@ public class TelaFinanceiro extends JFrame {
 		TableColumnModel tcm6 = table.getColumnModel();
 		tcm6.getColumn(0).setPreferredWidth(200);
 		tcm6.getColumn(1).setPreferredWidth(200);
-		scrollPaneTotalServicos.setViewportView(table); 
+		scrollPaneTotalServicos.setViewportView(table);
 		listarTotalFinalVendaServicos();
 		
 	
@@ -564,6 +570,7 @@ public class TelaFinanceiro extends JFrame {
 				table.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
 	
 				
+				 
 				for (EventoVO eventoVO : listaAgendamentos) {
 
 					if (eventoVO.getId() != null) {
@@ -576,7 +583,6 @@ public class TelaFinanceiro extends JFrame {
 						rowData.getValues().put(4, eventoVO.getTotalServico() + " R$");
 						
 						
-
 						rowData.setElement(eventoVO);
 						tableModel.addRow(rowData);
 						
