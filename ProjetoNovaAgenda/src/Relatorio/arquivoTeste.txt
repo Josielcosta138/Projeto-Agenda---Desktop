@@ -1,0 +1,4 @@
+1, 1212, Shampoo Dove, Dove, shampop, 25.35, 5, 2028-10-10 00:00:00.0, null
+2, 3344, Creme, Clear man, Creme capilar, 55.02, 5, 2029-10-25 00:00:00.0, null
+3, 56355, Gel, Clear, Gel para cabelos secos, 11.00, 5, 2029-11-11 00:00:00.0, Sim
+4, 1311, Navalha, Wilkson, Laminha da navalha, 15.00, 1, 2038-10-10 00:00:00.0, Não
