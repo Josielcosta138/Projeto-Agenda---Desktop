@@ -38,7 +38,9 @@ public class RelatorioVendas implements IRelatorio {
 	List<String> strings1 = new ArrayList<>();
 	TelaProdutos produtos = null;
 	TelaVendasView telaVendasView = null;
-	int qntd;
+	int qntdClientes;
+	int qntProdutoVendas;
+	int qntdProdutoNome;
 
 	public void preparador() {
 
@@ -83,6 +85,12 @@ public class RelatorioVendas implements IRelatorio {
 
 			paragrafoCliente.add(Chunk.NEWLINE);
 		}
+		
+		Paragraph paragrafoQntdCliente = new Paragraph();
+		paragrafoQntdCliente.setAlignment(Element.ALIGN_RIGHT);
+		paragrafoQntdCliente.add(new Chunk("Qntde: " + qntdClientes, new Font(Font.HELVETICA, 10)));
+		
+		
 
 		Paragraph paragrafoSessao = new Paragraph(
 				"---------------------------------------------------------------------------------------------------------------------------");
@@ -104,6 +112,7 @@ public class RelatorioVendas implements IRelatorio {
 			documentPDF.add(new Paragraph(paragrafoSubTitulo));
 			documentPDF.add(new Paragraph(" "));
 			documentPDF.add(new Paragraph(paragrafoCliente));
+			documentPDF.add(new Paragraph(paragrafoQntdCliente));
 			documentPDF.add(new Paragraph(paragrafoSessao));
 			documentPDF.add(new Paragraph(" "));
 
@@ -152,6 +161,12 @@ public class RelatorioVendas implements IRelatorio {
 
 		Paragraph paragrafoQntdProduto = new Paragraph();
 		paragrafoQntdProduto.setAlignment(Element.ALIGN_RIGHT);
+		Paragraph paragrafoQntdVenda = new Paragraph();
+		paragrafoQntdVenda.setAlignment(Element.ALIGN_RIGHT);
+		Paragraph paragrafoQntdNomeProduto= new Paragraph();
+		paragrafoQntdNomeProduto.setAlignment(Element.ALIGN_RIGHT);
+		
+		
 
 		for (String produtoStringNome : listaNomeProdutos) {
 			paragrafoProdutoNome.add(new Chunk(produtoStringNome, new Font(Font.HELVETICA, 14)));
@@ -159,14 +174,15 @@ public class RelatorioVendas implements IRelatorio {
 
 			paragrafoProduto.setAlignment(Element.ALIGN_LEFT);
 
-			for (String stringListProduto : listaProdutos) {
-				paragrafoProduto.add(new Chunk(stringListProduto, new Font(Font.HELVETICA, 12)));
-				paragrafoProduto.add(Chunk.NEWLINE);
-			}
-
+		}
+		
+		for (String stringListProduto : listaProdutos) {
+			paragrafoProduto.add(new Chunk(stringListProduto, new Font(Font.HELVETICA, 12)));
+			paragrafoProduto.add(Chunk.NEWLINE);
 		}
 
-		paragrafoQntdProduto.add(new Chunk("Qntde: " + qntd, new Font(Font.HELVETICA, 10)));
+		paragrafoQntdNomeProduto.add(new Chunk("Qntde: " + qntProdutoVendas, new Font(Font.HELVETICA, 10)));
+		paragrafoQntdProduto.add(new Chunk("Qntde: " + qntdProdutoNome, new Font(Font.HELVETICA, 10)));
 
 		// ADICIONANDO AO RELATÓRIO
 		try {
@@ -182,6 +198,8 @@ public class RelatorioVendas implements IRelatorio {
 			documentPDF.add(new Paragraph(paragrafoSubTituloProd));
 			documentPDF.add(new Paragraph(" "));
 			documentPDF.add(new Paragraph(paragrafoProduto));
+			documentPDF.add(new Paragraph(paragrafoQntdNomeProduto));
+			//documentPDF.add(new Paragraph(paragrafoQntdVenda));
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -208,6 +226,7 @@ public class RelatorioVendas implements IRelatorio {
 		// ADICIONANDO AO RELATÓRIO
 		try {
 
+			documentPDF.add(new Paragraph(" "));
 			documentPDF.add(new Paragraph(paragrafoSessao));
 			documentPDF.add(new Paragraph(" "));
 			documentPDF.add(new Paragraph(paragrafoRodape));
@@ -230,6 +249,7 @@ public class RelatorioVendas implements IRelatorio {
 
 	}
 
+	int b = 1;
 	public ArrayList<String> buscarListaDeVendasParaRelatorio(ArrayList<String> retornoListaVendas) {
 		System.out.println("******* Iniciando liestagem de Vendas para Relatório *******");
 		EntityManager em = HibernateUtil.getEntityManager();
@@ -245,6 +265,7 @@ public class RelatorioVendas implements IRelatorio {
 		List<VendaVO> listagemDeVendasParaRelatorio = query.getResultList();
 
 		for (VendaVO venda : listagemDeVendasParaRelatorio) {
+			qntdClientes += b;
 			String string = String.format("Cód: %s | Nome: %s | Telefone: %s | Email: %s | %s", venda.getId(),
 					venda.getNome(), venda.getDd(), venda.getTelefone(), venda.getEmail() + "\n");
 			retornoListaVendas.add(string);
@@ -253,6 +274,8 @@ public class RelatorioVendas implements IRelatorio {
 
 	}
 
+
+	int c = 1;
 	public ArrayList<String> buscarListaDeProdutos(ArrayList<String> retornoLista) {
 		System.out.println("******* Iniciando liestagem de produtos *******");
 		EntityManager em = HibernateUtil.getEntityManager();
@@ -267,9 +290,8 @@ public class RelatorioVendas implements IRelatorio {
 		TypedQuery<VendaVO> query = em.createQuery(criteria);
 		listagemProdutoParaRelatorio = query.getResultList();
 
-		int i = 1;
 		for (VendaVO produto : listagemProdutoParaRelatorio) {
-			qntd += i;
+		//	qntdProdutoNome += c;
 			String string = String.format(
 					"Nome: %s | Descrição: %s | Valor: %.2f | Qntd: %d | Total: %.2f | Form pagto: %s  ",
 					produto.getNome(), produto.getDescricao(), produto.getValor(), produto.getQuantidade(),
@@ -284,6 +306,8 @@ public class RelatorioVendas implements IRelatorio {
 
 	}
 
+	int x = 1;
+	int z = 1;
 	public ArrayList<String> buscarListaDeProdutoNome(ArrayList<String> retornoListaNome) {
 		System.out.println("******* Iniciando liestagem de produtos Nome *******");
 		EntityManager em = HibernateUtil.getEntityManager();
@@ -299,6 +323,8 @@ public class RelatorioVendas implements IRelatorio {
 		listagemProdutoParaRelatorio = query.getResultList();
 
 		for (VendaVO produto : listagemProdutoParaRelatorio) {
+			qntProdutoVendas += x;
+			qntdProdutoNome += z;
 			String string = String.format("Nome: %s ", produto.getDescricao() + "\n");
 			retornoListaNome.add(string);
 		}
