@@ -56,6 +56,17 @@ public class RelatorioPdfSimples implements IRelatorio {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	
+	
+	public void relatorioProduto() {
+		
+		
+		
+	}
+	
+	
 
 	@Override
 	public void gerarCabecalho() throws IOException {
@@ -84,7 +95,7 @@ public class RelatorioPdfSimples implements IRelatorio {
 		}
 
 		Paragraph paragrafoSessao = new Paragraph(
-				"--------------------------------------------------------------------------------------------------------");
+				"---------------------------------------------------------------------------------------------------------------------------");
 		paragrafoSessao.setAlignment(Element.ALIGN_CENTER);
 
 		try {
@@ -92,8 +103,11 @@ public class RelatorioPdfSimples implements IRelatorio {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		produtos.buscarListaDeProdutosParaRelatorio();
+		//produtos.buscarListaDeProdutosParaRelatorio();
 
+		
+		
+		
 		// PDF
 		try {
 			preparador();
@@ -107,7 +121,6 @@ public class RelatorioPdfSimples implements IRelatorio {
 			documentPDF.add(new Paragraph(" "));
 			documentPDF.add(new Paragraph(" "));
 			documentPDF.add(new Paragraph(paragrafoProduto));
-			documentPDF.add(new Paragraph(" "));
 			documentPDF.add(new Paragraph(" "));
 			documentPDF.add(new Paragraph(paragrafoSessao));
 			documentPDF.add(new Paragraph(" "));
@@ -126,13 +139,17 @@ public class RelatorioPdfSimples implements IRelatorio {
 
 	@Override
 	public void gerarCopor() {
-		// TODO Auto-generated method stub
+		
+		
+		
 
 	}
 
 	@Override
 	public void gerarRodape() {
-		// TODO Auto-generated method stub
+		
+		
+		
 
 	}
 

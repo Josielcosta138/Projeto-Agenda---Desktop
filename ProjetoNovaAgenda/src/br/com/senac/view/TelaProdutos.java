@@ -259,6 +259,8 @@ public class TelaProdutos extends JFrame {
 				try {
 					relatorioPdfSimples.gerarImprimir();
 					relatorioPdfSimples.gerarCabecalho();
+					relatorioPdfSimples.gerarCopor();
+					relatorioPdfSimples.gerarRodape();
 					
 					
 				} catch (IOException e1) {

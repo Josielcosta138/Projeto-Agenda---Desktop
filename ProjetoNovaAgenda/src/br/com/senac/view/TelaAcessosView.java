@@ -42,6 +42,7 @@ public class TelaAcessosView extends JFrame {
 	private TelaProdutos telaProdutos;
 	private TelaVendasView telaVendasView;
 	private TelaFinanceiro telaFinanceiro;
+	private TelaRelatorios telaRelatorios;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -288,6 +289,17 @@ public class TelaAcessosView extends JFrame {
 		panel.add(btnSuporte);
 		
 		JButton btnRelatrios = new JButton("Relatórios");
+		btnRelatrios.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (telaRelatorios == null) { 	
+					telaRelatorios = new TelaRelatorios();
+				}
+				telaRelatorios.setVisible(true);
+				dispose();
+				
+				
+			}
+		});
 		btnRelatrios.setIcon(new ImageIcon(TelaAcessosView.class.getResource("/br/com/senac/view/img/relatorio.png")));
 		btnRelatrios.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnRelatrios.setBackground(new Color(214, 214, 214));
