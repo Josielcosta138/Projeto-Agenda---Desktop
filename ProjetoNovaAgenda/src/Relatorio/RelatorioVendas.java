@@ -3,6 +3,7 @@ package Relatorio;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -41,6 +42,9 @@ public class RelatorioVendas implements IRelatorio {
 	int qntdClientes;
 	int qntProdutoVendas;
 	int qntdProdutoNome;
+	String totalValor;
+	String totalValorProduto;
+	String totalProduto;
 
 	public void preparador() {
 
@@ -165,6 +169,12 @@ public class RelatorioVendas implements IRelatorio {
 		paragrafoQntdVenda.setAlignment(Element.ALIGN_RIGHT);
 		Paragraph paragrafoQntdNomeProduto= new Paragraph();
 		paragrafoQntdNomeProduto.setAlignment(Element.ALIGN_RIGHT);
+		Paragraph paragrafoValorTotalFim= new Paragraph();
+		paragrafoValorTotalFim.setAlignment(Element.ALIGN_LEFT);
+		Paragraph paragrafoQntTotalFimProd= new Paragraph();
+		paragrafoQntTotalFimProd.setAlignment(Element.ALIGN_LEFT);
+		Paragraph paragrafoQntTotalFimVALOR= new Paragraph();
+		paragrafoQntTotalFimVALOR.setAlignment(Element.ALIGN_LEFT);
 		
 		
 
@@ -181,8 +191,15 @@ public class RelatorioVendas implements IRelatorio {
 			paragrafoProduto.add(Chunk.NEWLINE);
 		}
 
-		paragrafoQntdNomeProduto.add(new Chunk("Qntde: " + qntProdutoVendas, new Font(Font.HELVETICA, 10)));
-		paragrafoQntdProduto.add(new Chunk("Qntde: " + qntdProdutoNome, new Font(Font.HELVETICA, 10)));
+		paragrafoQntdNomeProduto.add(new Chunk("Qtde: " + qntProdutoVendas, new Font(Font.HELVETICA, 10)));
+		paragrafoQntdProduto.add(new Chunk("Qtde: " + qntdProdutoNome, new Font(Font.HELVETICA, 10)));
+		
+		paragrafoQntTotalFimVALOR.add(new Chunk("Valor total un R$: " + totalValorProduto, new Font(Font.HELVETICA, 11)));
+		paragrafoQntTotalFimProd.add(new Chunk("Qtde total produtos: " + totalProduto, new Font(Font.HELVETICA, 11)));
+		paragrafoValorTotalFim.add(new Chunk("Valor total vendas R$: " + totalValor, new Font(Font.HELVETICA, 11)));
+		
+		
+		
 
 		// ADICIONANDO AO RELATÓRIO
 		try {
@@ -198,8 +215,12 @@ public class RelatorioVendas implements IRelatorio {
 			documentPDF.add(new Paragraph(paragrafoSubTituloProd));
 			documentPDF.add(new Paragraph(" "));
 			documentPDF.add(new Paragraph(paragrafoProduto));
+			documentPDF.add(new Paragraph(" "));
+			documentPDF.add(new Paragraph(" "));
+			documentPDF.add(new Paragraph(paragrafoQntTotalFimVALOR));
+			documentPDF.add(new Paragraph(paragrafoQntTotalFimProd));
+			documentPDF.add(new Paragraph(paragrafoValorTotalFim));
 			documentPDF.add(new Paragraph(paragrafoQntdNomeProduto));
-			//documentPDF.add(new Paragraph(paragrafoQntdVenda));
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -276,6 +297,9 @@ public class RelatorioVendas implements IRelatorio {
 
 
 	int c = 1;
+	BigDecimal totalFim = BigDecimal.ZERO;
+	BigDecimal totalFimProduto = BigDecimal.ZERO;
+	int qntProdutos;
 	public ArrayList<String> buscarListaDeProdutos(ArrayList<String> retornoLista) {
 		System.out.println("******* Iniciando liestagem de produtos *******");
 		EntityManager em = HibernateUtil.getEntityManager();
@@ -291,19 +315,27 @@ public class RelatorioVendas implements IRelatorio {
 		listagemProdutoParaRelatorio = query.getResultList();
 
 		for (VendaVO produto : listagemProdutoParaRelatorio) {
-		//	qntdProdutoNome += c;
+	
 			String string = String.format(
-					"Nome: %s | Descrição: %s | Valor: %.2f | Qntd: %d | Total: %.2f | Form pagto: %s  ",
+					"Nome: %s | Descrição: %s | Valor un R$: %.2f | Qntd: %d | Total R$: %.2f | Form pagto: %s  ",
 					produto.getNome(), produto.getDescricao(), produto.getValor(), produto.getQuantidade(),
 					produto.getTotal(), produto.getStatusFormaPagto() == null ? ""
 							: produto.getStatusFormaPagto().toString() + "\n" + "------------------------------------");
+			
+			totalFim = totalFim.add(produto.getTotal());
+			totalFimProduto = totalFimProduto.add(produto.getValor());
+			qntProdutos += produto.getQuantidade();
+						
 			retornoLista.add(string);
-
-		
-
+			
+			totalValor = totalFim.toString();
+			totalValorProduto = totalFimProduto.toString();
+			totalProduto = Integer.toString((qntProdutos));
+			
+			
 		}
 		return retornoLista;
-
+		
 	}
 
 	int x = 1;

@@ -71,6 +71,7 @@ public class CadastroPessoaView extends JFrame {
 	private JTextField tftHoraAtual;
 	private TelaVendasView telaVendasView;
 	private TelaFinanceiro telaFinanceiro; 
+	private TelaRelatorios telaRelatorios;
 	
 
 	public static void main(String[] args) {
@@ -682,7 +683,6 @@ public class CadastroPessoaView extends JFrame {
 		
 		pesquisar();
 		
-		
 	}
 
 
@@ -693,10 +693,13 @@ public class CadastroPessoaView extends JFrame {
 	}
 
 	protected void relatorios() {
-		JOptionPane.showMessageDialog(this, "Módulo em desenvolvimento. \nAguarde, ficará disponível na próxima versão. Obrigada :)",
-				"Atenção.", JOptionPane.WARNING_MESSAGE);
-		
+		if (telaRelatorios == null) {
+			telaRelatorios = new TelaRelatorios();
+		}
+		telaRelatorios.setVisible(true);
+		dispose();
 	}
+	
 
 	protected void parametros() {
 		JOptionPane.showMessageDialog(this, "Módulo em desenvolvimento. \nAguarde, ficará disponível na próxima versão. Obrigada :)",

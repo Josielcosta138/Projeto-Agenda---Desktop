@@ -362,6 +362,14 @@ public class TelaAgendamentos extends JFrame {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		
 		for (EventoVO eventoVO : listaAgendamentos) {
+			
+			
+			StatusServico statusServicoEnum = StatusServico.valueOf(eventoVO.getTipoServico());
+			String tipoServico2 = statusServicoEnum.getDescricao();
+			
+			StatusAgendamento statusServicoEnum2 = StatusAgendamento.valueOf(eventoVO.getStatus()); 
+			String status2 = statusServicoEnum2.getStatus();
+			
 
 			if (eventoVO.getId() != null) {
 				System.out.println("Lista agendamentos --> " + listaAgendamentos);
@@ -370,8 +378,8 @@ public class TelaAgendamentos extends JFrame {
 				rowData.getValues().put(1, eventoVO.getLocal());
 				rowData.getValues().put(2, sdf.format(eventoVO.getDataHoraInicio()));
 		        rowData.getValues().put(3, sdf.format(eventoVO.getDataHoraFim()));
-				rowData.getValues().put(4, eventoVO.getStatus());
-				rowData.getValues().put(5, eventoVO.getTipoServico());
+				rowData.getValues().put(4, status2);
+				rowData.getValues().put(5, tipoServico2);
 				rowData.getValues().put(6, eventoVO.getValor() + " R$");
 				rowData.getValues().put(7, eventoVO.getTotalServico() + " R$");
 				rowData.getValues().put(8, eventoVO.getNomeCliente());
